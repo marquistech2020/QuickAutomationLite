@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class ActionUtil(private val uiDevice: UiDevice) {
+class ActionHelper(private val uiDevice: UiDevice) {
 
     companion object {
         const val TAG = "ActionUtil"
@@ -59,7 +59,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
     /**
      * Launch app using unique package name
      */
-    fun performLaunchPackage(context: Context?, packageName: String, launcher: Boolean) {
+    fun performLaunchPackage(context: Context?, packageName: String, launcher: Boolean): Boolean {
 
         if (launcher) {
             val intent = context?.packageManager?.getLaunchIntentForPackage(packageName)
@@ -79,6 +79,8 @@ class ActionUtil(private val uiDevice: UiDevice) {
             LAUNCH_TIMEOUT
         )
 
+        return true
+
     }
 
 
@@ -87,13 +89,14 @@ class ActionUtil(private val uiDevice: UiDevice) {
      */
     fun performClick(
         bySelector: BySelector
-    ) {
+    ): Boolean {
 
         val uiObject2 = uiDevice.findObject(bySelector)
 
         uiObject2?.click()
         Log.e(TAG, " isClick ")
 
+        return true
     }
 
     /**
@@ -101,7 +104,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
      */
     fun performSwitchOn(
         action: Action.SwitchOn
-    ) {
+    ): Boolean {
 
 
         var uiObject: UiObject? = null
@@ -118,7 +121,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
 
         uiSelector?.let {
             val uo = uiDevice.findObject(it)
-            if (uo.exists()){
+            if (uo.exists()) {
                 uiObject = uo
             }
         }
@@ -126,10 +129,10 @@ class ActionUtil(private val uiDevice: UiDevice) {
         uiObject?.let { rootObject ->
 
 
-            var requiredObject:UiObject? = null
+            var requiredObject: UiObject? = null
             val len = rootObject.childCount - 1
 
-            for (i in 0..len){
+            for (i in 0..len) {
                 uiSelector?.let {
                     if (i == action.position) {
                         requiredObject = rootObject.getChild(uiSelector)
@@ -147,6 +150,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
             wifiOnOffReport?.onTime = System.currentTimeMillis()
             wifiOnOffReport?.onStatus = requiredObject?.isChecked.toString()
 
+            return true
         }
 
 
@@ -186,6 +190,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
             wifiOnOffReport?.onStatus = requiredObject?.isChecked.toString()
         }
 
+        return true
     }
 
     /**
@@ -193,7 +198,7 @@ class ActionUtil(private val uiDevice: UiDevice) {
      */
     fun performSwitchOff(
         action: Action.SwitchOFF
-    ) {
+    ): Boolean {
 
         var uiObject: UiObject? = null
         var uiObject2: List<UiObject2>? = null
@@ -270,23 +275,23 @@ class ActionUtil(private val uiDevice: UiDevice) {
             wifiOnOffReport?.offTime = System.currentTimeMillis()
             wifiOnOffReport?.offStatus = if (requiredObject?.isChecked == false) "true" else "false"
 
-
+        }
+        return true
     }
-}
 
-fun pressHomeButton() {
-    val isPressed = uiDevice.pressHome()
-}
+    fun pressHomeButton() {
+        uiDevice.pressHome()
+    }
 
-var wifiOnOffReport: WifiOnOffReport? = null
+    var wifiOnOffReport: WifiOnOffReport? = null
 
-fun setReport(report: WifiOnOffReport) {
-    wifiOnOffReport = report
-}
+    fun setReport(report: WifiOnOffReport) {
+        wifiOnOffReport = report
+    }
 
-fun getReport(): WifiOnOffReport? {
-    return wifiOnOffReport
-}
+    fun getReport(): WifiOnOffReport? {
+        return wifiOnOffReport
+    }
 
 
 }
