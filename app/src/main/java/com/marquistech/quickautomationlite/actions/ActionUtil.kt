@@ -100,75 +100,193 @@ class ActionUtil(private val uiDevice: UiDevice) {
      * perform switch ON operation of objects
      */
     fun performSwitchOn(
-        bySelector: BySelector,
-        position: Int
+        action: Action.SwitchOn
     ) {
 
-        var uiObject2: UiObject2? = null
 
-        val elementList = uiDevice.findObjects(bySelector)
+        var uiObject: UiObject? = null
+        var uiObject2: List<UiObject2>? = null
+        var uiSelector: UiSelector? = null
 
-        for (element in elementList) {
+        if (action.byClass.isNotEmpty()) {
+            uiSelector = UiSelector().className(action.byClass)
+        } else if (action.byPackage.isNotEmpty()) {
+            uiSelector = UiSelector().packageName(action.byPackage)
+        } else if (action.byText.isNotEmpty()) {
+            uiSelector = UiSelector().text(action.byText)
+        }
 
-            if (elementList.indexOf(element) == position) {
-                uiObject2 = element
+        uiSelector?.let {
+            val uo = uiDevice.findObject(it)
+            if (uo.exists()){
+                uiObject = uo
             }
         }
 
-        Log.e(TAG, " Switch button found  $uiObject2")
+        uiObject?.let { rootObject ->
 
-        if (uiObject2?.isChecked == false) {
-            uiObject2.click()
-            Log.e(TAG, " Switching on ${uiObject2.isChecked}")
+
+            var requiredObject:UiObject? = null
+            val len = rootObject.childCount - 1
+
+            for (i in 0..len){
+                uiSelector?.let {
+                    if (i == action.position) {
+                        requiredObject = rootObject.getChild(uiSelector)
+                    }
+                }
+            }
+
+            Log.e(TAG, " Switch button found  $requiredObject")
+            requiredObject?.click()
+            /*if (!requiredObject?.isChecked) {
+                requiredObject?.click()
+                Log.e(TAG, " Switching on ${requiredObject?.isChecked}")
+            }*/
+
+            wifiOnOffReport?.onTime = System.currentTimeMillis()
+            wifiOnOffReport?.onStatus = requiredObject?.isChecked.toString()
+
         }
-        wifiOnOffReport?.onTime = System.currentTimeMillis()
-        wifiOnOffReport?.onStatus = uiObject2?.isChecked.toString()
+
+
+        if (uiObject == null) {
+
+            if (action.byClass.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.clazz(action.byClass))
+            } else if (action.byPackage.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.pkg(action.byPackage))
+            } else if (action.byText.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.text(action.byText))
+            }
+
+        }
+
+
+        uiObject2?.let { elementList ->
+
+            var requiredObject: UiObject2? = null
+
+            for (element in elementList) {
+
+                if (elementList.indexOf(element) == action.position) {
+                    requiredObject = element
+                    break
+                }
+            }
+
+            Log.e(TAG, " Switch button found  $requiredObject")
+
+            if (requiredObject?.isChecked == false) {
+                requiredObject?.click()
+                Log.e(TAG, " Switching on ${requiredObject?.isChecked}")
+            }
+
+            wifiOnOffReport?.onTime = System.currentTimeMillis()
+            wifiOnOffReport?.onStatus = requiredObject?.isChecked.toString()
+        }
+
     }
 
     /**
      * perform switch OFF operation of objects
      */
     fun performSwitchOff(
-        bySelector: BySelector,
-        position: Int
+        action: Action.SwitchOFF
     ) {
 
-        var uiObject2: UiObject2? = null
+        var uiObject: UiObject? = null
+        var uiObject2: List<UiObject2>? = null
 
-        var elementList = uiDevice.findObjects(bySelector)
+        if (action.byClass.isNotEmpty()) {
+            uiObject = uiDevice.findObject(UiSelector().className(action.byClass))
+        } else if (action.byPackage.isNotEmpty()) {
+            uiObject = uiDevice.findObject(UiSelector().packageName(action.byPackage))
+        } else if (action.byText.isNotEmpty()) {
+            uiObject = uiDevice.findObject(UiSelector().text(action.byText))
+        }
 
-        for (element in elementList) {
 
-            if (elementList.indexOf(element) == position) {
-                uiObject2 = element
+        uiObject?.let { rootObject ->
+
+            Log.e(TAG, " Using UiSelector")
+            var requiredObject = rootObject
+            /*val len = rootObject.childCount - 1
+
+            for (i in 0..len){
+                if (i == action.position) {
+                    requiredObject = rootObject.getChild(i)
+                    break
+                }
+            }*/
+
+            Log.e(TAG, " Switch button found  $requiredObject")
+
+            if (requiredObject.isChecked) {
+                requiredObject.click()
+                Log.e(TAG, " Switching on ${requiredObject.isChecked}")
             }
+
+            wifiOnOffReport?.onTime = System.currentTimeMillis()
+            wifiOnOffReport?.onStatus = requiredObject.isChecked.toString()
+
         }
 
 
-        Log.e(TAG, " Switch button found  $uiObject2")
+        if (uiObject == null) {
 
-        if (uiObject2?.isChecked == true) {
-            uiObject2.click()
-            Log.e(TAG, " Switching off ${uiObject2.isChecked}")
+            if (action.byClass.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.clazz(action.byClass))
+            } else if (action.byPackage.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.pkg(action.byPackage))
+            } else if (action.byText.isNotEmpty()) {
+                uiObject2 = uiDevice.findObjects(By.text(action.byText))
+            }
+
         }
-        wifiOnOffReport?.offTime = System.currentTimeMillis()
-        wifiOnOffReport?.offStatus = if (uiObject2?.isChecked == false) "true" else "false"
+
+
+        uiObject2?.let { elementList ->
+
+            Log.e(TAG, " Using BySelector")
+
+            var requiredObject: UiObject2? = null
+
+            for (element in elementList) {
+
+                if (elementList.indexOf(element) == action.position) {
+                    requiredObject = element
+                    break
+                }
+            }
+
+            Log.e(TAG, " Switch button found  $requiredObject")
+
+            if (requiredObject?.isChecked == false) {
+                requiredObject.click()
+                Log.e(TAG, " Switching off ${requiredObject.isChecked}")
+            }
+
+            wifiOnOffReport?.offTime = System.currentTimeMillis()
+            wifiOnOffReport?.offStatus = if (requiredObject?.isChecked == false) "true" else "false"
+
 
     }
+}
 
-    fun pressHomeButton() {
-        val isPressed = uiDevice.pressHome()
-    }
+fun pressHomeButton() {
+    val isPressed = uiDevice.pressHome()
+}
 
-    var wifiOnOffReport: WifiOnOffReport? = null
+var wifiOnOffReport: WifiOnOffReport? = null
 
-    fun setReport(report: WifiOnOffReport) {
-        wifiOnOffReport = report
-    }
+fun setReport(report: WifiOnOffReport) {
+    wifiOnOffReport = report
+}
 
-    fun getReport(): WifiOnOffReport? {
-        return wifiOnOffReport
-    }
+fun getReport(): WifiOnOffReport? {
+    return wifiOnOffReport
+}
 
 
 }

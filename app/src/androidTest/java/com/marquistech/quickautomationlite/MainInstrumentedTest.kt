@@ -31,15 +31,16 @@ class MainInstrumentedTest {
         actionUtil = ActionUtil(mDevice)
 
 
-
     }
 
     @Test
     fun mainTest() {
+
         val bundle = InstrumentationRegistry.getArguments()
         loop = bundle.getString("loop")?.toInt() ?: 3
         Log.e(ActionUtil.TAG, "loop $loop")
         val actions = AirplaneUtil.getScript()
+
 
         (1..loop).forEach { count ->
             val report = WifiOnOffReport(count)
@@ -82,12 +83,12 @@ class MainInstrumentedTest {
                 actionUtil.performClick(action.bySelector)
             }
             is Action.SwitchOn -> {
-                Log.e(ActionUtil.TAG, "Switch On  ${action.bySelector}")
-                actionUtil.performSwitchOn(action.bySelector,action.position)
+                Log.e(ActionUtil.TAG, "Switch On ")
+                actionUtil.performSwitchOn(action)
             }
             is Action.SwitchOFF -> {
-                Log.e(ActionUtil.TAG, "Switch Off  ${action.bySelector}")
-                actionUtil.performSwitchOff(action.bySelector,action.position)
+                Log.e(ActionUtil.TAG, "Switch Off")
+                actionUtil.performSwitchOff(action)
             }
             is Action.Delay -> {
                 Log.e(ActionUtil.TAG, "Delay  ${action.time}")
