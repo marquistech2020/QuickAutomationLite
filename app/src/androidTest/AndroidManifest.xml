@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.marquistech.quickautomationlite.test">
+
+    <instrumentation
+        android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:targetPackage="com.marquistech.quickautomationlite" />
+
+
+    <application
+        android:label="QA"
+        tools:replace="label" />
+
+</manifest>
