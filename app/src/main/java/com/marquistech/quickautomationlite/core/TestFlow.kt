@@ -1,27 +1,20 @@
 package com.marquistech.quickautomationlite.core
 
-import android.content.Context
+import android.os.Build
 import android.util.Log
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import com.marquistech.quickautomationlite.actions.Action
-import com.marquistech.quickautomationlite.actions.ActionHelper
+import com.marquistech.quickautomationlite.factory.ActionFactory
+import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 
-abstract class TestFlow : Core() {
+abstract class TestFlow : Flow() {
 
-    private val context: Context
-    private val uiDevice: UiDevice
-    private val actionHelper: ActionHelper
-
+    private val helper: Helper
 
     init {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        context = instrumentation.targetContext
-        uiDevice = UiDevice.getInstance(instrumentation)
-        actionHelper = ActionHelper(uiDevice)
-        TAG = javaClass.simpleName
+        tag = javaClass.simpleName
+        val factory = ActionFactory()
+        helper = factory.getHelper(tag, Build.BRAND)
     }
 
     abstract fun onCreateScript(): List<Action>
@@ -33,16 +26,16 @@ abstract class TestFlow : Core() {
     fun mainTest() {
         val actions = onCreateScript()
 
-        (1..2).forEach { count ->
+        (1..10).forEach { count ->
             onStartIteration("Wifi", count)
-            Log.e(TAG, "################ Start Iteration $count  ################ ")
+            Log.e(tag, "################ Start Iteration $count  ################ ")
             actions.forEach {
                 val latch = CountDownLatch(1)
                 executeStepAndLatch(count, it, latch)
                 latch.await()
             }
-            Log.e(TAG, "################ End Iteration $count  ################ ")
-            //Log.e(TAG, "Report == ${getReport()}")
+            Log.e(tag, "################ End Iteration $count  ################ ")
+            //Log.e(tag, "Report == ${getReport()}")
             onEndIteration("Wifi", count)
         }
 
@@ -57,36 +50,39 @@ abstract class TestFlow : Core() {
         when (action) {
 
             is Action.Home -> {
-                Log.e(TAG, "Home")
-                actionHomeResult(count, uiDevice.pressHome())
+                Log.e(tag, "Home")
+                actionHomeResult(count, helper.pressHome())
 
             }
             is Action.ClearRecentApps -> {
-                Log.e(TAG, "ClearRecentApps")
-                actionClearRecentResult(count, uiDevice.pressRecentApps())
+                Log.e(tag, "ClearRecentApps")
+                actionClearRecentResult(count, helper.pressRecentApps())
             }
             is Action.LaunchPackage -> {
-                Log.e(TAG, "LAUNCH ${action.packageName}")
-                val isDone = actionHelper.performLaunchPackage(context,action.packageName,action.isLauncher)
+                Log.e(tag, "LAUNCH ${action.packageName}")
+                val isDone = helper.performLaunchPackage(
+                    action.packageName,
+                    action.isLauncher
+                )
                 actionLaunchPackageResult(count, isDone)
             }
             is Action.Click -> {
-                Log.e(TAG, "CLICK  ${action.bySelector}")
-                val isDone = actionHelper.performClick(action.bySelector)
+                Log.e(tag, "CLICK  ${action.bySelector}")
+                val isDone = helper.performClick(action.bySelector)
                 actionClickResult(count, isDone)
             }
             is Action.SwitchOn -> {
-                Log.e(TAG, "Switch On ")
-                val isDone = actionHelper.performSwitchOn(action)
+                Log.e(tag, "Switch On ")
+                val isDone = helper.performSwitchOn(action)
                 actionSwitchOnResult(count, isDone)
             }
             is Action.SwitchOFF -> {
-                Log.e(TAG, "Switch Off")
-                val isDone = actionHelper.performSwitchOff(action)
+                Log.e(tag, "Switch Off")
+                val isDone = helper.performSwitchOff(action)
                 actionSwitchOffResult(count, isDone)
             }
             is Action.Delay -> {
-                Log.e(TAG, "Delay  ${action.time}")
+                Log.e(tag, "Delay  ${action.time}")
                 Thread.sleep(action.time)
             }
         }

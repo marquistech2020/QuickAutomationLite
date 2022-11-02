@@ -1,12 +1,14 @@
 package com.marquistech.quickautomationlite
 
 import android.provider.Settings
-import com.marquistech.quickautomationlite.actions.Action
+import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.TestFlow
 
 class ApnTest : TestFlow() {
 
+
     override fun onCreateScript(): List<Action> {
+
         val actions = mutableListOf<Action>()
 
         actions.add(Action.Home)

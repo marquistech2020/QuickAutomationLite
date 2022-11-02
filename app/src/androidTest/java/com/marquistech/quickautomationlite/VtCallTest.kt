@@ -1,8 +1,7 @@
 package com.marquistech.quickautomationlite
 
 import android.provider.Settings
-import android.util.Log
-import com.marquistech.quickautomationlite.actions.Action
+import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.TestFlow
 import com.marquistech.quickautomationlite.reports.WifiOnOffReport
 

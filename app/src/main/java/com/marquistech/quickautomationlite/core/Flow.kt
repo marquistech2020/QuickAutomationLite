@@ -1,8 +1,8 @@
 package com.marquistech.quickautomationlite.core
 
-open class Core {
+open class Flow {
 
-    var TAG:String = ""
+    var tag:String = ""
     open fun actionHomeResult(count: Int, result: Boolean) {}
     open fun actionClearRecentResult(count: Int, result: Boolean) {}
     open fun actionLaunchPackageResult(count: Int, result: Boolean) {}

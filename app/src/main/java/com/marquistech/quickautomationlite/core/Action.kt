@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite.actions
+package com.marquistech.quickautomationlite.core
 
 import androidx.test.uiautomator.BySelector
 
