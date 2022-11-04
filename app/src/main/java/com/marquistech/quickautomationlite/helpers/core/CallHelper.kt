@@ -31,62 +31,32 @@ class CallHelper : Helper() {
 
     override fun performClick(selector: Selector, position: Int): Boolean {
         return try {
-            var bySelector: BySelector? = null
             var uiSelector: UiSelector? = null
 
             when (selector) {
                 is Selector.ByCls -> {
-                    bySelector = By.clazz(selector.clsName)
                     uiSelector = UiSelector().className(selector.clsName)
                 }
                 is Selector.ByPkg -> {
-                    bySelector = By.pkg(selector.pkgName)
                     uiSelector = UiSelector().packageName(selector.pkgName)
                 }
                 is Selector.ByRes -> {
-                    bySelector = By.res(selector.resName)
                     uiSelector = UiSelector().resourceId(selector.resName)
                 }
                 is Selector.ByText -> {
-                    bySelector = By.text(selector.text)
                     uiSelector = UiSelector().text(selector.text)
                 }
             }
 
+            val uiObject = uiDevice.findObject(uiSelector)
 
-            val uiObject2List = uiDevice.findObjects(bySelector)
-
-            if (uiObject2List.size > 0 && uiObject2List[position] != null) {
-                waitFor(500L)
-                uiObject2List[position].click()
+            if (uiObject.exists()){
+                uiObject.getChild(UiSelector().clickable(true).index(position)).click()
             }
-
-
-            if (uiObject2List.size == 0){
-                val uiObjectList = uiDevice.findObject(UiSelector().className("android.view.ViewGroup").index(0))
-                uiObject2List.get(0).click()
-                Log.e("Helper"," exception 1 ${uiObjectList.exists()}")
-                //val childCount = uiObjectList.childCount
-                //Log.e("Helper"," child count $childCount")
-            }
-
-
-            /*if (childCount > 0) {
-                (0 until childCount).forEach {
-                    if (position == it) {
-                        val btn = uiObjectList.getChild(uiSelector)
-                        if (btn.exists()) {
-                            waitFor(500L)
-                            btn.click()
-                        }
-                    }
-
-                }
-            }
-            */
+            
             return true
         } catch (e: Exception) {
-            Log.e("Helper"," exception ${e.message}")
+            Log.e("Helper", " exception ${e.message}")
             false
         }
     }

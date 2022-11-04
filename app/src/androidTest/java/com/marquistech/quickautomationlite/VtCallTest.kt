@@ -3,10 +3,14 @@ package com.marquistech.quickautomationlite
 import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
+import com.marquistech.quickautomationlite.helpers.core.Helper
 
-class VtCallTest : TestFlow<CallHelper>() {
+class VtCallTest : TestFlow() {
 
 
+    override fun onCreateHelper(): Helper {
+        return CallHelper()
+    }
 
     override fun onCreateScript(): List<Action> {
         val actions = mutableListOf<Action>()

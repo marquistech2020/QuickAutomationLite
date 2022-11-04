@@ -5,9 +5,10 @@ import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 
-abstract class TestFlow<T : Helper> {
+abstract class TestFlow {
 
     // Abstract method
+    abstract fun onCreateHelper(): Helper
     abstract fun onCreateScript(): List<Action>
     abstract fun onStartIteration(testName: String, count: Int)
     abstract fun onEndIteration(testName: String, count: Int)
@@ -25,12 +26,12 @@ abstract class TestFlow<T : Helper> {
     open fun actionCloseAppResult(count: Int, result: Boolean) {}
 
 
-    private lateinit var helper: T
     val tag: String = javaClass.simpleName
-
+    private lateinit var helper: Helper
 
     @Test
     fun mainTest() {
+        helper = onCreateHelper()
         val actions = onCreateScript()
 
         (1..1).forEach { count ->
