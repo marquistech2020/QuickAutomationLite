@@ -1,6 +1,7 @@
 package com.marquistech.quickautomationlite.helpers.core
 
 import android.util.Log
+import android.view.KeyEvent
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.UiSelector
@@ -51,7 +52,12 @@ class MmsHelper : Helper() {
             val uiObject = uiDevice.findObject(uiSelector)
 
             if (uiObject.exists()){
-                uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                if(uiObject.childCount==0){
+                    uiObject.click()
+                }else{
+                    uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                }
+
             }
             
             return true
@@ -62,7 +68,34 @@ class MmsHelper : Helper() {
     }
 
     override fun performSetText(selector: Selector, text: String): Boolean {
-        uiDevice.executeShellCommand("input text $text")
+        //uiDevice.executeShellCommand("input text $text")
+        var bySelector: BySelector? = null
+        var uiSelector: UiSelector? = null
+
+        when (selector) {
+            is Selector.ByCls -> {
+                uiSelector = UiSelector().className(selector.clsName)
+            }
+            is Selector.ByPkg -> {
+                uiSelector = UiSelector().packageName(selector.pkgName)
+            }
+            is Selector.ByRes -> {
+                uiSelector = UiSelector().resourceId(selector.resName)
+            }
+            is Selector.ByText -> {
+                uiSelector = UiSelector().text(selector.text)
+            }
+        }
+        uiSelector?.let {
+            var uiObj = uiDevice.findObject(it)
+            if(uiObj.exists()){
+                uiObj.setText(text)
+            }
+
+
+            waitFor(1)
+
+        }
         return true
     }
 
@@ -82,10 +115,12 @@ class MmsHelper : Helper() {
 
             var outputText = ""
 
-            bySelector?.let {
+            uiSelector?.let {
                 val uiObj = uiDevice.findObject(it)
                 waitFor(1)
-                outputText = uiObj.text
+                if(uiObj.exists()) {
+                    outputText = uiObj.text
+                }
             }
             outputText
         } catch (e: Exception) {
