@@ -1,49 +1,71 @@
 package com.marquistech.quickautomationlite
 
-import android.provider.Settings
-import com.marquistech.quickautomationlite.core.Action
-import com.marquistech.quickautomationlite.core.TestFlow
-import com.marquistech.quickautomationlite.reports.WifiOnOffReport
+import android.util.Log
+import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.helpers.core.CallHelper
 
-class VtCallTest : TestFlow() {
+class VtCallTest : TestFlow<CallHelper>() {
+
 
 
     override fun onCreateScript(): List<Action> {
         val actions = mutableListOf<Action>()
 
-        actions.add(Action.Home)
+        actions.add(Action.SendEvent(EventType.HOME))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.SendEvent(EventType.RECENT_APP))
+        actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps)
-        actions.add(Action.LaunchPackage(Settings.ACTION_AIRPLANE_MODE_SETTINGS, false))
+        actions.add(Action.Delay(second = 1))
+        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.contacts")))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.contacts:id/open_search_bar_text_view")),)
+        actions.add(Action.Delay(1))
         actions.add(
-            Action.SwitchOn(
-                byClass = "android.widget.Switch",
-                isUiSelector = true,
-                position = 0
+            Action.SetText(
+                Selector.ByRes("com.google.android.contacts:id/open_search_bar_text_view"),
+                "contact1"
             )
         )
-        actions.add(Action.Delay(2000))
-        actions.add(
-            Action.SwitchOFF(
-                byClass = "android.widget.Switch",
-                isUiSelector = true,
-                position = 0
-            )
-        )
-        actions.add(Action.Delay(2000))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Click(Selector.ByRes("android:id/list")))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.contacts:id/verb_video")))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.GetText(Selector.ByText("Flip camera")))
+
 
         return actions
     }
 
-    var report: WifiOnOffReport? = null
-
     override fun onStartIteration(testName: String, count: Int) {
-        report = WifiOnOffReport(count)
 
     }
 
-    override fun actionHomeResult(count: Int, result: Boolean) {
-
+    override fun actionSendEventResult(count: Int, reqCode: EventType, result: Boolean) {
+        Log.e(tag,"actionSendEventResult  code $reqCode  result $result")
     }
+
+    override fun actionClearRecentResult(count: Int, result: Boolean) {
+        Log.e(tag,"actionClearRecentResult  result $result")
+    }
+
+    override fun actionLaunchAppResult(count: Int, result: Boolean) {
+        Log.e(tag,"actionLaunchAppResult  result $result")
+    }
+
+    override fun actionSetTextResult(count: Int, reqSelector: Selector, result: Boolean) {
+        Log.e(tag,"actionSetTextResult  requester = $reqSelector result $result")
+    }
+
+    override fun actionClickResult(count: Int, reqSelector: Selector, result: Boolean) {
+        Log.e(tag,"actionClickResult  requester = $reqSelector result $result")
+    }
+
+    override fun actionGetTextResult(count: Int, reqSelector: Selector, result: String) {
+        Log.e(tag,"actionGetTextResult  requester = $reqSelector result $result")
+    }
+
+
 
     override fun onEndIteration(testName: String, count: Int) {
 

@@ -1,33 +1,40 @@
 package com.marquistech.quickautomationlite.core
 
-import android.os.Build
 import android.util.Log
-import com.marquistech.quickautomationlite.factory.ActionFactory
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 
-abstract class TestFlow : Flow() {
+abstract class TestFlow<T : Helper> {
 
-    private val helper: Helper
-
-    init {
-        tag = javaClass.simpleName
-        val factory = ActionFactory()
-        helper = factory.getHelper(tag, Build.BRAND)
-    }
-
+    // Abstract method
     abstract fun onCreateScript(): List<Action>
     abstract fun onStartIteration(testName: String, count: Int)
     abstract fun onEndIteration(testName: String, count: Int)
+
+    // override methods
+    open fun actionSendEventResult(count: Int, reqCode: EventType, result: Boolean) {}
+    open fun actionClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionClearRecentResult(count: Int, result: Boolean) {}
+    open fun actionSwipeResult(count: Int, result: Boolean) {}
+    open fun actionDragResult(count: Int, result: Boolean) {}
+    open fun actionSetTextResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionGetTextResult(count: Int, reqSelector: Selector, result: String) {}
+    open fun actionSwitchResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionLaunchAppResult(count: Int, result: Boolean) {}
+    open fun actionCloseAppResult(count: Int, result: Boolean) {}
+
+
+    private lateinit var helper: T
+    val tag: String = javaClass.simpleName
 
 
     @Test
     fun mainTest() {
         val actions = onCreateScript()
 
-        (1..10).forEach { count ->
-            onStartIteration("Wifi", count)
+        (1..1).forEach { count ->
+            onStartIteration(tag, count)
             Log.e(tag, "################ Start Iteration $count  ################ ")
             actions.forEach {
                 val latch = CountDownLatch(1)
@@ -36,7 +43,7 @@ abstract class TestFlow : Flow() {
             }
             Log.e(tag, "################ End Iteration $count  ################ ")
             //Log.e(tag, "Report == ${getReport()}")
-            onEndIteration("Wifi", count)
+            onEndIteration(tag, count)
         }
 
     }
@@ -48,45 +55,71 @@ abstract class TestFlow : Flow() {
     ) {
 
         when (action) {
-
-            is Action.Home -> {
-                Log.e(tag, "Home")
-                actionHomeResult(count, helper.pressHome())
-
-            }
             is Action.ClearRecentApps -> {
                 Log.e(tag, "ClearRecentApps")
-                actionClearRecentResult(count, helper.pressRecentApps())
-            }
-            is Action.LaunchPackage -> {
-                Log.e(tag, "LAUNCH ${action.packageName}")
-                val isDone = helper.performLaunchPackage(
-                    action.packageName,
-                    action.isLauncher
-                )
-                actionLaunchPackageResult(count, isDone)
+                actionClearRecentResult(count, helper.clearRecentApps())
             }
             is Action.Click -> {
-                Log.e(tag, "CLICK  ${action.bySelector}")
-                val isDone = helper.performClick(action.bySelector)
-                actionClickResult(count, isDone)
+                Log.e(tag, "Click")
+                val isDone = helper.performClick(action.selector, action.position)
+                actionClickResult(count, action.selector, isDone)
             }
-            is Action.SwitchOn -> {
-                Log.e(tag, "Switch On ")
-                val isDone = helper.performSwitchOn(action)
-                actionSwitchOnResult(count, isDone)
+            is Action.LaunchApp -> {
+                Log.e(tag, "LaunchApp")
+                val isDone = helper.launchApp(action.appSelector)
+                helper.waitFor(2)
+                actionLaunchAppResult(count, isDone)
+                Log.e(tag, "LaunchApp end")
             }
-            is Action.SwitchOFF -> {
-                Log.e(tag, "Switch Off")
-                val isDone = helper.performSwitchOff(action)
-                actionSwitchOffResult(count, isDone)
+            is Action.CloseApp -> {
+                Log.e(tag, "CloseApp")
+                val isDone = helper.closeApp(action.packageName)
+                actionCloseAppResult(count, isDone)
             }
             is Action.Delay -> {
-                Log.e(tag, "Delay  ${action.time}")
-                Thread.sleep(action.time)
+
+                if (action.milli > 0) {
+                    Log.e(tag, "Delay  milli ${action.milli}")
+                    helper.waitDeviceForIdle((action.milli / 2).toLong())
+                    helper.waitFor(action.milli.toLong())
+                } else if (action.second > 0) {
+                    Log.e(tag, "Delay seconds ${action.second}")
+                    helper.waitDeviceForIdle(((action.second * 1000) / 2).toLong())
+                    helper.waitFor((action.second * 1000).toLong())
+                }
+            }
+            is Action.Drag -> {
+                Log.e(tag, "Drag")
+                val isDone = helper.drag(action.coordinate)
+                actionDragResult(count, isDone)
+            }
+            is Action.GetText -> {
+                Log.e(tag, "GetText")
+                val output = helper.performGetText(action.selector)
+                actionGetTextResult(count, action.selector, output)
+            }
+            is Action.SetText -> {
+                Log.e(tag, "SetText")
+                val isDone = helper.performSetText(action.selector, action.text)
+                actionSetTextResult(count, action.selector, isDone)
+            }
+            is Action.SendEvent -> {
+                Log.e(tag, "SendEvent")
+                val isDone = helper.performSendEvent(action.type)
+                actionSendEventResult(count, action.type, isDone)
+            }
+
+            is Action.Swipe -> {
+                Log.e(tag, "Swipe")
+                val isDone = helper.performSwipe(action.coordinate, action.steps)
+                actionSwipeResult(count, isDone)
+            }
+            is Action.Switch -> {
+                Log.e(tag, "Switch")
+                val isDone = helper.performSwitch(action.selector)
+                actionSwitchResult(count, action.selector, isDone)
             }
         }
-
 
         latch.countDown()
     }

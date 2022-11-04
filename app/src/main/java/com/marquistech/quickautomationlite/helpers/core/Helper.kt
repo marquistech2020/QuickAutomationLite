@@ -1,14 +1,18 @@
 package com.marquistech.quickautomationlite.helpers.core
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.UiDevice
-import com.marquistech.quickautomationlite.core.Action
+import com.marquistech.quickautomationlite.core.AppSelector
+import com.marquistech.quickautomationlite.core.Coordinate
+import com.marquistech.quickautomationlite.core.EventType
+import com.marquistech.quickautomationlite.core.Selector
 
 open class Helper {
 
-    val context: Context
+    private val context: Context
     val uiDevice: UiDevice
     var tag: String
 
@@ -20,44 +24,99 @@ open class Helper {
     }
 
 
-    fun pressHome(): Boolean {
-        return uiDevice.pressHome()
-    }
-
-    fun pressRecentApps(): Boolean {
-        return uiDevice.pressRecentApps()
-    }
-
-    fun pressBack(): Boolean {
-        return uiDevice.pressBack()
-    }
-
-    open fun performLaunchPackage(
-        packageName: String,
-        launcher: Boolean
+    fun launchApp(
+        appSelector: AppSelector
     ): Boolean {
-        return true
+
+        try {
+
+            when (appSelector) {
+                is AppSelector.ByAction -> {
+                    val intent = Intent(appSelector.actionName).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+
+                    context.startActivity(intent)
+                }
+                is AppSelector.ByPkg -> {
+                    val intent = Intent()
+                    intent.apply {
+                        `package` = "com.google.android.contacts"
+                        action = Intent.ACTION_MAIN
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                }
+            }
+
+            return true
+
+        } catch (e: ActivityNotFoundException) {
+            return false
+        }
     }
 
-    open fun performClick(
-        bySelector: BySelector
-    ): Boolean {
-        return true
+
+    open fun waitFor(second: Int) {
+        Thread.sleep((second * 1000).toLong())
     }
 
-    open fun performSwitchOn(
-        action: Action.SwitchOn
-    ): Boolean {
-        return true
+    open fun waitFor(milli: Long) {
+        Thread.sleep(milli)
     }
 
-
-    open fun performSwitchOff(
-        action: Action.SwitchOFF
-    ): Boolean {
-        return true
+    open fun waitDeviceForIdle(milli: Long) {
+        uiDevice.waitForIdle(milli)
     }
 
+    open fun clearRecentApps(): Boolean {
+        return false
+    }
+
+    open fun performClick(selector: Selector, position: Int): Boolean {
+        return false
+    }
+
+    open fun closeApp(packageName: String): Boolean {
+        return false
+    }
+
+    open fun drag(coordinate: Coordinate): Boolean {
+        return false
+    }
+
+    open fun performGetText(selector: Selector): String {
+        return ""
+    }
+
+    open fun performSetText(selector: Selector, text: String): Boolean {
+        return false
+    }
+
+    fun performSendEvent(type: EventType): Boolean {
+        return when (type) {
+            EventType.HOME -> uiDevice.pressHome()
+            EventType.BACK -> uiDevice.pressBack()
+            EventType.RECENT_APP -> uiDevice.pressRecentApps()
+            EventType.ENTER -> uiDevice.pressEnter()
+        }
+    }
+
+    open fun performSwipe(coordinate: Coordinate, steps: Int): Boolean {
+        return uiDevice.swipe(
+            coordinate.startX,
+            coordinate.startY,
+            coordinate.endX,
+            coordinate.endY,
+            steps
+        )
+    }
+
+    open fun performSwitch(selector: Selector): Boolean {
+        return false
+    }
 
 }
 

@@ -1,45 +1,22 @@
 package com.marquistech.quickautomationlite
 
-import android.provider.Settings
-import com.marquistech.quickautomationlite.core.Action
-import com.marquistech.quickautomationlite.core.TestFlow
+import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.helpers.ApnOppoHelper
 
-class ApnTest : TestFlow() {
-
+class ApnTest : TestFlow<ApnOppoHelper>() {
 
     override fun onCreateScript(): List<Action> {
-
         val actions = mutableListOf<Action>()
-
-        actions.add(Action.Home)
-        actions.add(Action.ClearRecentApps)
-        actions.add(Action.LaunchPackage(Settings.ACTION_AIRPLANE_MODE_SETTINGS, false))
-        actions.add(
-            Action.SwitchOn(
-                byClass = "android.widget.Switch",
-                isUiSelector = true,
-                position = 0
-            )
-        )
-        actions.add(Action.Delay(2000))
-        actions.add(
-            Action.SwitchOFF(
-                byClass = "android.widget.Switch",
-                isUiSelector = true,
-                position = 0
-            )
-        )
-        actions.add(Action.Delay(2000))
-
+        actions.add(Action.SendEvent(EventType.HOME))
+        actions.add(Action.Click(Selector.ByText("abc"), position = 1))
         return actions
-
     }
 
     override fun onStartIteration(testName: String, count: Int) {
-
+        TODO("Not yet implemented")
     }
 
     override fun onEndIteration(testName: String, count: Int) {
-
+        TODO("Not yet implemented")
     }
 }
