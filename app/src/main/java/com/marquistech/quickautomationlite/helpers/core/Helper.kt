@@ -119,6 +119,11 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-
+    open fun performListItemClick(selector: Selector, position: Int,itemClassname:String,itemSearch:String): Boolean {
+        return false
+    }
+    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int): Boolean {
+        return false
+    }
 }
 

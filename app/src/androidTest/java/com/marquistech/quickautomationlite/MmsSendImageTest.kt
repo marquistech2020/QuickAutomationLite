@@ -7,7 +7,7 @@ import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 
-class MmsTest : TestFlow() {
+class MmsSendImageTest : TestFlow() {
 
     override fun onCreateHelper(): Helper {
         return MmsHelper()
@@ -16,30 +16,10 @@ class MmsTest : TestFlow() {
 
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
-        actions=sendLargeTextSmsOnePlusDevice()
-       /* actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SendEvent(EventType.RECENT_APP))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps)
-        actions.add(Action.Delay(second = 1))
-        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.contacts")))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.Click(Selector.ByRes("com.google.android.contacts:id/open_search_bar_text_view")),)
-        actions.add(Action.Delay(1))
-        actions.add(
-            Action.SetText(
-                Selector.ByRes("com.google.android.contacts:id/open_search_bar_text_view"),
-                "contact1"
-            )
-        )
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.Click(Selector.ByRes("android:id/list")))
-        actions.add(Action.Click(Selector.ByRes("com.google.android.contacts:id/verb_video")))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.GetText(Selector.ByText("Flip camera")))
 
-*/
+        actions=sendImageOnePlusDevice()
+
+
         return actions
     }
 
@@ -96,7 +76,7 @@ class MmsTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view")))
         actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"9650108704"))
+        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7011046214"))
         actions.add(Action.Delay(1))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/plus_button")))
@@ -104,11 +84,11 @@ class MmsTest : TestFlow() {
         actions.add(Action.Click(Selector.ByText("Files")))
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByText("Images")))
-        actions.add(Action.Delay(2))
+        actions.add(Action.Delay(1))
 /*        var mmsHelper=MmsHelper()
         mmsHelper.clickListViewItem(1)*/
         actions.add(Action.Click(Selector.ByText("1.jpg")))
-        actions.add(Action.Delay(2))
+        actions.add(Action.Delay(1))
        // actions.add(Action.Click(Selector.ByText("SIM1")))
         //actions.add(Action.Delay(2000))
 
@@ -119,7 +99,7 @@ class MmsTest : TestFlow() {
         actions.add(Action.Click(By.res("com.google.android.apps.messaging:id/container_action_button")))
         actions.add(Action.Delay(1000))*/
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon")))
-        actions.add(Action.Delay(3))
+        actions.add(Action.Delay(1))
 
         return actions
 

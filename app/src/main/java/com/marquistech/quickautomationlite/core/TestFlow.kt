@@ -24,7 +24,8 @@ abstract class TestFlow {
     open fun actionSwitchResult(count: Int, reqSelector: Selector, result: Boolean) {}
     open fun actionLaunchAppResult(count: Int, result: Boolean) {}
     open fun actionCloseAppResult(count: Int, result: Boolean) {}
-
+    open fun actionListItemClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean) {}
 
     val tag: String = javaClass.simpleName
     private lateinit var helper: Helper
@@ -119,6 +120,16 @@ abstract class TestFlow {
                 Log.e(tag, "Switch")
                 val isDone = helper.performSwitch(action.selector)
                 actionSwitchResult(count, action.selector, isDone)
+            }
+            is Action.ClickListItem -> {
+                Log.e(tag, "Click")
+                val isDone = helper.performListItemClick(action.selector, action.position,action.itemClassname,action.itemSearch)
+                actionListItemClickResult(count, action.selector, isDone)
+            }
+            is Action.ClickListItemByIndex -> {
+                Log.e(tag, "Click")
+                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex)
+                actionListItemClickByindexResult(count, action.selector, isDone)
             }
         }
 

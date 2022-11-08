@@ -11,6 +11,8 @@ sealed class Action {
     data class LaunchApp(val appSelector: AppSelector) : Action()
     data class CloseApp(val packageName: String) : Action()
     data class Switch(val selector: Selector) : Action()
+    data class ClickListItem(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearch:String) : Action()
+    data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int) : Action()
     object ClearRecentApps : Action()
 }
 
@@ -33,6 +35,8 @@ data class Coordinate(
     val endX: Int,
     val endY: Int
 )
+
+
 
 enum class EventType{
     HOME,BACK,RECENT_APP,ENTER,SPACE
