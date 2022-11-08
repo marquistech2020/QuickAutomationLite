@@ -35,12 +35,12 @@ android {
             signingConfig signingConfigs.release
         }
 
-       /* debug {
-            signingConfig signingConfigs.release
-        }*/
+        /* debug {
+             signingConfig signingConfigs.release
+         }*/
     }
 
-    ///testBuildType "release"
+    //testBuildType "release"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,6 +48,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
@@ -66,4 +70,6 @@ dependencies {
     // Hilt dependencies
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation 'org.apache.poi:poi:4.0.0'
+    implementation 'org.apache.poi:poi-ooxml:4.0.0'
 }

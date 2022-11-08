@@ -1,14 +1,14 @@
 package com.marquistech.quickautomationlite.helpers.core
 
 import android.util.Log
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.UiSelector
 import com.marquistech.quickautomationlite.core.Selector
+import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 
 class CallHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
+
 
         val uiSelector = UiSelector().className("android.widget.ListView")
 
@@ -29,7 +29,56 @@ class CallHelper : Helper() {
     }
 
 
-    override fun performClick(selector: Selector, position: Int): Boolean {
+    override fun performClick(selector: Selector, position: Int, isLongClick: Boolean): Boolean {
+        return try {
+            var uiSelector: UiSelector? = null
+            var isResId = false
+
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector = UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                    isResId = true
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+            }
+
+
+            var isClicked = false
+
+            val uiObject = uiDevice.findObject(uiSelector)
+
+            if (uiObject.exists()) {
+                isClicked = if (uiObject.childCount == 0 || isResId) {
+                    if (isLongClick) uiObject.longClick() else uiObject.click()
+                } else {
+                    val btn = uiObject.getChild(UiSelector().clickable(true).index(position))
+                    if (btn.exists()) {
+                        if (isLongClick) btn.longClick() else btn.click()
+                    } else false
+                }
+            }
+
+            return isClicked
+        } catch (e: Exception) {
+            writeLog("Helper", " exception ${e.cause?.message}")
+            false
+        }
+    }
+
+    override fun performSetText(selector: Selector, text: String): Boolean {
+        uiDevice.executeShellCommand("input text $text")
+        return true
+    }
+
+    override fun performGetText(selector: Selector, position: Int): String {
         return try {
             var uiSelector: UiSelector? = null
 
@@ -48,44 +97,25 @@ class CallHelper : Helper() {
                 }
             }
 
-            val uiObject = uiDevice.findObject(uiSelector)
-
-            if (uiObject.exists()){
-                uiObject.getChild(UiSelector().clickable(true).index(position)).click()
-            }
-            
-            return true
-        } catch (e: Exception) {
-            Log.e("Helper", " exception ${e.message}")
-            false
-        }
-    }
-
-    override fun performSetText(selector: Selector, text: String): Boolean {
-        uiDevice.executeShellCommand("input text $text")
-        return true
-    }
-
-    override fun performGetText(selector: Selector): String {
-        return try {
-            var bySelector: BySelector? = null
-            var uiSelector: UiSelector? = null
-
-            when (selector) {
-                is Selector.ByCls -> {}
-                is Selector.ByPkg -> {}
-                is Selector.ByRes -> {
-                    bySelector = By.res(selector.resName)
-                }
-                is Selector.ByText -> {}
-            }
-
             var outputText = ""
 
-            bySelector?.let {
-                val uiObj = uiDevice.findObject(it)
-                waitFor(1)
-                outputText = uiObj.text
+            val uiObject = uiDevice.findObject(uiSelector)
+
+            if (uiObject.exists()) {
+                outputText = if (uiObject.childCount == 0) {
+                    uiObject.text
+                } else {
+                    val ib = uiObject.getChild(
+                        UiSelector().className("android.widget.ImageButton").index(position)
+                    )
+                    val tv = uiObject.getChild(
+                        UiSelector().className("android.widget.TextView").index(position)
+                    )
+                    val iv = uiObject.getChild(
+                        UiSelector().className("android.widget.ImageView").index(position)
+                    )
+                    if (ib.exists()) ib.text else if (tv.exists()) tv.text else if (iv.exists()) iv.text else ""
+                }
             }
             outputText
         } catch (e: Exception) {

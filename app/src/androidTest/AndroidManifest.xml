@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.marquistech.quickautomationlite.test"
     android:versionCode="1"
     android:versionName="1.0">
+
 
     <instrumentation
         android:name="androidx.test.runner.AndroidJUnitRunner"
@@ -11,8 +11,8 @@
 
 
     <application
-        android:label="Lite"
-        tools:replace="label" >
+        android:debuggable="true"
+        android:label="QuickAutomationLite">
         <uses-library android:name="android.test.runner" />
     </application>
 
