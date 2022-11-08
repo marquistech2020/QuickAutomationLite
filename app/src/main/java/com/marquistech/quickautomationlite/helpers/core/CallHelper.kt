@@ -20,7 +20,7 @@ class CallHelper : Helper() {
             while (list.getChild(UiSelector().className("android.widget.FrameLayout"))
                     .exists()
             ) {
-                uiDevice.swipe(542, 1005, 542, 157, 50)
+                uiDevice.swipe(542, 1005, 542, 157, 30)
             }
         }
 
@@ -79,21 +79,25 @@ class CallHelper : Helper() {
     }
 
     override fun performGetText(selector: Selector, position: Int): String {
+        var reqStr = ""
         return try {
             var uiSelector: UiSelector? = null
-
             when (selector) {
                 is Selector.ByCls -> {
                     uiSelector = UiSelector().className(selector.clsName)
+                    reqStr = selector.clsName
                 }
                 is Selector.ByPkg -> {
                     uiSelector = UiSelector().packageName(selector.pkgName)
+                    reqStr = selector.pkgName
                 }
                 is Selector.ByRes -> {
                     uiSelector = UiSelector().resourceId(selector.resName)
+                    reqStr = selector.resName
                 }
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
+                    reqStr = selector.text
                 }
             }
 
@@ -117,9 +121,9 @@ class CallHelper : Helper() {
                     if (ib.exists()) ib.text else if (tv.exists()) tv.text else if (iv.exists()) iv.text else ""
                 }
             }
-            outputText
+            "$reqStr#$outputText"
         } catch (e: Exception) {
-            ""
+            "$reqStr#"
         }
     }
 

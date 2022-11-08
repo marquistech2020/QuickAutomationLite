@@ -71,25 +71,12 @@ class VtCallTest : TestFlow() {
 
     override fun actionGetTextResult(
         count: Int,
-        reqSelector: Selector,
         result: String,
         stepName: String
     ) {
 
-        if (reqSelector is Selector.ByText) {
-            when (reqSelector.text) {
-                FLIP_CAMERA_TEXT -> {
-                    if (result.isNotEmpty()) {
-                        report?.status = "Pass"
-                    } else {
-                        report?.status = "Fail"
-                    }
-                }
-            }
-        }
 
-
-        writeLog(tag, "actionGetTextResult  requester = $reqSelector result $result")
+        writeLog(tag, "actionGetTextResult  result $result")
     }
 
 

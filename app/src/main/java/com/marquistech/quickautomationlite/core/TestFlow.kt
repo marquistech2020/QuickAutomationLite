@@ -51,7 +51,6 @@ abstract class TestFlow {
 
     protected open fun actionGetTextResult(
         count: Int,
-        reqSelector: Selector,
         result: String,
         stepName: String
     ) {
@@ -143,7 +142,7 @@ abstract class TestFlow {
             is Action.GetText -> {
                 writeLog(tag, "GetText")
                 val output = helper.performGetText(action.selector, action.position)
-                actionGetTextResult(count, action.selector, output, action.stepName)
+                actionGetTextResult(count,output, action.stepName)
             }
             is Action.SetText -> {
                 writeLog(tag, "SetText")

@@ -75,7 +75,7 @@ open class Helper {
         return false
     }
 
-    open fun performClick(selector: Selector, position: Int, longClick: Boolean): Boolean {
+    open fun performClick(selector: Selector, position: Int, lgClick: Boolean): Boolean {
         return false
     }
 
