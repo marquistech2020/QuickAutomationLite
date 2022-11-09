@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MmsHelper : Helper() {
+class SmsReadHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
 
@@ -253,10 +253,14 @@ fun textWatcher(){
                     val item: UiObject = uiObject.getChild(UiSelector()
                         .className(itemClassname).instance(itemIndex))
                     if(item.exists()) {
+                        Log.e("ReadSms",""+item.text)
                         //item.clickAndWaitForNewWindow(200)
                         item.dragTo(item,200)
+
                     }
                 }
+
+
 
             }
 

@@ -34,19 +34,9 @@ class MmsReceivedImageTest : TestFlow() {
         actions.add(Action.Delay(1))
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214"))
-        /*actions.add(Action.Delay(7))
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout","android.widget.ImageView"))
-        actions.add(Action.Delay(1))
-        actions.add(Action.Delay(7))
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout","android.widget.ImageView"))
-        */
-       /* actions.add(Action.Delay(7))
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout","android.widget.ImageView"))
-*/
+
         actions.add(Action.Delay(1))
 
-    /*    actions.add(Action.GetText(Selector.ByText("Now")))
-        actions.add(Action.Delay(1))*/
         actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout",3))
 
         actions.add(Action.Delay(second = 1))
