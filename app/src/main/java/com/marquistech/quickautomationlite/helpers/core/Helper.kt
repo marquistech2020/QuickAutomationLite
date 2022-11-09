@@ -10,6 +10,10 @@ import com.marquistech.quickautomationlite.core.AppSelector
 import com.marquistech.quickautomationlite.core.Coordinate
 import com.marquistech.quickautomationlite.core.EventType
 import com.marquistech.quickautomationlite.core.Selector
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 open class Helper {
 
@@ -125,5 +129,36 @@ open class Helper {
     open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int): Boolean {
         return false
     }
+    open fun dateFormate(dateStr:String): Date? {
+        val knownPatterns: MutableList<SimpleDateFormat> = ArrayList<SimpleDateFormat>()
+        knownPatterns.add(SimpleDateFormat("MM/d/yy, HH:mm a"))
+        knownPatterns.add(SimpleDateFormat("MM/dd/yy, HH:mm a"))
+        knownPatterns.add(SimpleDateFormat("MM/d/yyyy, HH:mm a"))
+        knownPatterns.add(SimpleDateFormat("MM/d/yy, hh:mm a"))
+        knownPatterns.add(SimpleDateFormat("MM/d/yy, HH:mm "))
+        knownPatterns.add(SimpleDateFormat("d/MM/yyyy, HH:mm"))
+        knownPatterns.add(SimpleDateFormat("d/MM/yyyy, HH:mm a"))
+
+        knownPatterns.add(SimpleDateFormat("d/MM/yyyy, hh:mm"))
+        knownPatterns.add(SimpleDateFormat("dd/MM/yyyy, hh:mm"))
+        knownPatterns.add(SimpleDateFormat("dd/MM/yyyy, hh:mm a"))
+        knownPatterns.add(SimpleDateFormat("dd/MM/yyyy, HH:mm"))
+        knownPatterns.add(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"))
+        knownPatterns.add(SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss"))
+        knownPatterns.add(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX"))
+
+        for (pattern in knownPatterns) {
+            try {
+                // Take a try
+                return Date(pattern.parse(dateStr).getTime())
+            } catch (pe: ParseException) {
+                // Loop on
+            }
+        }
+        System.err.println("No known Date format found: $dateStr")
+
+        return null
+    }
+
 }
 

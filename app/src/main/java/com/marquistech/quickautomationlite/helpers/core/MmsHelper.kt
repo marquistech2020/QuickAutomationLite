@@ -2,8 +2,10 @@ package com.marquistech.quickautomationlite.helpers.core
 
 import android.util.Log
 import androidx.test.uiautomator.*
-import androidx.test.uiautomator.UiSelector
 import com.marquistech.quickautomationlite.core.Selector
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MmsHelper : Helper() {
@@ -127,9 +129,14 @@ class MmsHelper : Helper() {
                 if(uiObj.exists()) {
                     outputText = uiObj.text
                     Log.e("GetText","Text "+uiObj.text)
-                    if(uiObj.text.equals("Now"
-                    )){
+                    val str:String=uiObj.text
+                    if(str.contains("Received")){
+                        val pos_1: Int = str.indexOf("Received:")
+                        var recivedTime=str.substring(pos_1+10,pos_1+27)
+                        var status=dateDiffrence(recivedTime)
                         Log.e("GetText","Condition Matched")
+                        Log.e("GetText","receivedTime "+recivedTime)
+                        Log.e("GetText","status "+status)
                     }else{
 
                     }
@@ -255,9 +262,10 @@ fun textWatcher(){
                 }else{
 
                     val item: UiObject = uiObject.getChild(UiSelector()
-                        .className(itemClassname).instance(8))
+                        .className(itemClassname).instance(itemIndex))
                     if(item.exists()) {
-                        item.longClick()
+                        //item.clickAndWaitForNewWindow(200)
+                        item.dragTo(item,200)
                     }
                 }
 
@@ -274,7 +282,7 @@ fun textWatcher(){
      fun performListItemText(): Boolean {
 
          val settingsItem = UiScrollable(UiSelector().className("android.support.v7.widget.RecyclerView"))
-val uiObject=UiScrollable(UiSelector().className("android.view.ViewGroup"))
+            val uiObject=UiScrollable(UiSelector().className("android.view.ViewGroup"))
          Log.e("Watcher", "ChildCount"+settingsItem.childCount)
          val about: UiObject = uiObject.getChildByText(
              UiSelector().className("android.widget.FrameLayout"),"Now")
@@ -282,5 +290,41 @@ val uiObject=UiScrollable(UiSelector().className("android.view.ViewGroup"))
          Log.e("GetText", "text "+about.text)
         return true
     }
+    fun dateDiffrence( recivedtime:String):Boolean{
+        val toyBornTime = "11/9/22, 8:32 AM"
+        val dateFormat = SimpleDateFormat(
+            "MM/d/yy, HH:mm a"
+        )
+
+        try {
+            val oldDate: Date = dateFormate(recivedtime)!!
+            System.out.println(oldDate)
+            Log.e(
+                "GetText", " OldDate: " + oldDate    )
+            val currentDate = System.currentTimeMillis()
+            val diff: Long = currentDate - oldDate.time
+            Log.e(
+                "GetText", " Diff: " + diff
+            )
+            val seconds = diff / 1000
+            val minutes = seconds / 60
+            val hours = minutes / 60
+            val days = hours / 24
+            Log.e(
+                "GetText", " seconds: " + seconds + " minutes: " + minutes
+                        + " hours: " + hours + " days: " + days
+            )
+            if(seconds<=100){
+                return true
+            }
+
+
+            // Log.e("toyBornTime", "" + toyBornTime);
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
 }
 
