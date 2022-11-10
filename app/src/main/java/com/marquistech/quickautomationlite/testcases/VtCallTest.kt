@@ -2,7 +2,6 @@ package com.marquistech.quickautomationlite.testcases
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
-import com.marquistech.quickautomationlite.data.reports.VtCallReport
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
@@ -51,10 +50,9 @@ class VtCallTest : TestFlow() {
         return actions
     }
 
-    private var report: VtCallReport? = null
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = VtCallReport(count)
+
     }
 
 
@@ -81,7 +79,7 @@ class VtCallTest : TestFlow() {
 
 
     override fun onEndIteration(testName: String, count: Int) {
-        writeLog(tag, "onEndIteration  report $report")
+        writeLog(tag, "onEndIteration")
     }
 
     override fun onTestStart(testName: String) {

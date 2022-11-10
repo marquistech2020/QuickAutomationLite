@@ -1,14 +1,12 @@
 package com.marquistech.quickautomationlite.testcases
 
 import android.content.Intent
-import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.data.reports.VtCallReport
 
 class VtCallTestUsingDialer : TestFlow() {
 
@@ -18,12 +16,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     companion object {
-        private const val CONTACT_SEARCH_BAR_RES =
-            "com.google.android.contacts:id/open_search_bar_text_view"
-        private const val CONTACT_BUTTON_RES = "com.google.android.contacts:id/search_result_list"
-        private const val VIDEO_BUTTON_RES = "com.google.android.contacts:id/verb_video"
         private const val FLIP_CAMERA_TEXT = "Flip camera"
-        private const val PHONE_BOOK_CONTACT_NAME = "contact2"
     }
 
     override fun onInitTestLoop(): Int {
@@ -37,15 +30,16 @@ class VtCallTestUsingDialer : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
+        actions.add(Action.ClearRecentApps("Clear all apps from recent"))
         actions.add(
             Action.LaunchApp(
                 AppSelector.ByAction(Intent.ACTION_DIAL),
-                stepName = "Launch Calling App"
+                stepName = "Launch calling app"
             )
         )
         actions.add(Action.Delay(milli = 500))
         actions.addAll(dialNoActions("+917011998220".toCharArray()))
+        //actions.addAll(dialNoActions("+919650108704".toCharArray()))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
@@ -54,7 +48,12 @@ class VtCallTestUsingDialer : TestFlow() {
             )
         )
         actions.add(Action.Delay(2))
-        actions.add(Action.GetText(Selector.ByText(FLIP_CAMERA_TEXT), stepName = "Video Call established"))
+        actions.add(
+            Action.GetText(
+                Selector.ByText(FLIP_CAMERA_TEXT),
+                stepName = "Video call established"
+            )
+        )
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
@@ -104,7 +103,7 @@ class VtCallTestUsingDialer : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        writeLog(tag, "actionClickResult  result $result")
+        writeLog(tag, "actionClickResult  $stepName  result $result")
     }
 
 
@@ -139,7 +138,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "VTCAll")
+        StorageHandler.writeXLSFile(reportList, "Video_call_using_dialer")
     }
 
 
@@ -149,7 +148,7 @@ class VtCallTestUsingDialer : TestFlow() {
         charArray.forEach {
             var str = ""
             if (charArray.first() == it) {
-                str = "Dialing the Number $charArray"
+                str = "Dialing the Number ${String(charArray)}"
             }
             when (it) {
                 '+' -> actions.add(

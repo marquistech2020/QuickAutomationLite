@@ -35,7 +35,7 @@ data class Coordinate(
 )
 
 enum class EventType{
-    HOME,BACK,RECENT_APP,ENTER
+    HOME,BACK,RECENT_APP,ENTER,RECEIVE_CALL
 }
 
 

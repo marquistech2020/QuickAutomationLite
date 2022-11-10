@@ -3,6 +3,7 @@ package com.marquistech.quickautomationlite.helpers.core
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.view.KeyEvent
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.marquistech.quickautomationlite.core.AppSelector
@@ -102,6 +103,7 @@ open class Helper {
             EventType.BACK -> uiDevice.pressBack()
             EventType.RECENT_APP -> uiDevice.pressRecentApps()
             EventType.ENTER -> uiDevice.pressEnter()
+            EventType.RECEIVE_CALL -> uiDevice.pressKeyCode(KeyEvent.KEYCODE_CALL)
         }
     }
 
