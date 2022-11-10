@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite
+package com.marquistech.quickautomationlite.testcases
 
 import android.util.Log
 import androidx.test.uiautomator.By
@@ -21,35 +21,18 @@ class MmsSendAudioTest : TestFlow() {
         return actions
     }
 
+    override fun onTestStart(testName: String) {
+
+
+    }
+
+    override fun onTestEnd(testName: String) {
+
+    }
+
     override fun onStartIteration(testName: String, count: Int) {
 
     }
-
-    override fun actionSendEventResult(count: Int, reqCode: EventType, result: Boolean) {
-        Log.e(tag,"actionSendEventResult  code $reqCode  result $result")
-    }
-
-    override fun actionClearRecentResult(count: Int, result: Boolean) {
-        Log.e(tag,"actionClearRecentResult  result $result")
-    }
-
-    override fun actionLaunchAppResult(count: Int, result: Boolean) {
-        Log.e(tag,"actionLaunchAppResult  result $result")
-    }
-
-    override fun actionSetTextResult(count: Int, reqSelector: Selector, result: Boolean) {
-        Log.e(tag,"actionSetTextResult  requester = $reqSelector result $result")
-    }
-
-    override fun actionClickResult(count: Int, reqSelector: Selector, result: Boolean) {
-        Log.e(tag,"actionClickResult  requester = $reqSelector result $result")
-    }
-
-    override fun actionGetTextResult(count: Int, reqSelector: Selector, result: String) {
-        Log.e(tag,"actionGetTextResult  requester = $reqSelector result $result")
-    }
-
-
 
     override fun onEndIteration(testName: String, count: Int) {
 
@@ -62,7 +45,7 @@ class MmsSendAudioTest : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps)
+        actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
 
         actions.add(Action.Delay(4))

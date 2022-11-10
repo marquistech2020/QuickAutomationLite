@@ -1,13 +1,10 @@
-package com.marquistech.quickautomationlite
+package com.marquistech.quickautomationlite.testcases
 
-import android.util.Log
-import androidx.test.uiautomator.By
 import com.marquistech.quickautomationlite.core.*
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 
-class MmsSendImageTest : TestFlow() {
+class MmsSendLargeTextTest : TestFlow() {
 
     override fun onCreateHelper(): Helper {
         return MmsHelper()
@@ -17,53 +14,38 @@ class MmsSendImageTest : TestFlow() {
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
 
-        actions=sendImageOnePlusDevice()
 
+        actions = sendLargeTextSmsOnePlusDevice()
 
         return actions
     }
+
+    override fun onTestStart(testName: String) {
+
+    }
+
+    override fun onTestEnd(testName: String) {
+
+    }
+
 
     override fun onStartIteration(testName: String, count: Int) {
 
     }
 
-    override fun actionSendEventResult(count: Int, reqCode: EventType, result: Boolean) {
-        Log.e(tag,"actionSendEventResult  code $reqCode  result $result")
-    }
-
-    override fun actionClearRecentResult(count: Int, result: Boolean) {
-        Log.e(tag,"actionClearRecentResult  result $result")
-    }
-
-    override fun actionLaunchAppResult(count: Int, result: Boolean) {
-        Log.e(tag,"actionLaunchAppResult  result $result")
-    }
-
-    override fun actionSetTextResult(count: Int, reqSelector: Selector, result: Boolean) {
-        Log.e(tag,"actionSetTextResult  requester = $reqSelector result $result")
-    }
-
-    override fun actionClickResult(count: Int, reqSelector: Selector, result: Boolean) {
-        Log.e(tag,"actionClickResult  requester = $reqSelector result $result")
-    }
-
-    override fun actionGetTextResult(count: Int, reqSelector: Selector, result: String) {
-        Log.e(tag,"actionGetTextResult  requester = $reqSelector result $result")
-    }
-
-
 
     override fun onEndIteration(testName: String, count: Int) {
 
     }
-    fun sendImageOnePlusDevice():MutableList<Action>{
+
+    fun sendImageOnePlusDevice(): MutableList<Action> {
         val actions = mutableListOf<Action>()
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps)
+        actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
 
         actions.add(Action.Delay(4))
@@ -76,7 +58,12 @@ class MmsSendImageTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view")))
         actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7011046214"))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
+                "9650108704"
+            )
+        )
         actions.add(Action.Delay(1))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/plus_button")))
@@ -89,7 +76,7 @@ class MmsSendImageTest : TestFlow() {
         mmsHelper.clickListViewItem(1)*/
         actions.add(Action.Click(Selector.ByText("1.jpg")))
         actions.add(Action.Delay(1))
-       // actions.add(Action.Click(Selector.ByText("SIM1")))
+        // actions.add(Action.Click(Selector.ByText("SIM1")))
         //actions.add(Action.Delay(2000))
 
         /*actions.add(Action.Click(By.res("com.google.android.apps.messaging:id/full_screen_gallery_item_icon")))
@@ -104,14 +91,15 @@ class MmsSendImageTest : TestFlow() {
         return actions
 
     }
-    fun sendLargeTextSmsOnePlusDevice():MutableList<Action>{
+
+    fun sendLargeTextSmsOnePlusDevice(): MutableList<Action> {
         val actions = mutableListOf<Action>()
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps)
+        actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
 
         actions.add(Action.Delay(4))
@@ -124,11 +112,21 @@ class MmsSendImageTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view")))
         actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7011046214"))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
+                "7011046214"
+            )
+        )
         actions.add(Action.Delay(1))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/compose_message_text"),"This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging "))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.apps.messaging:id/compose_message_text"),
+                "This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging,This is demo Messaging "
+            )
+        )
 
 
         actions.add(Action.Delay(5))

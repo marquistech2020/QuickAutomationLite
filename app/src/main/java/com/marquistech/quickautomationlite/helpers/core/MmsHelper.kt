@@ -31,7 +31,7 @@ class MmsHelper : Helper() {
     }
 
 
-    override fun performClick(selector: Selector, position: Int): Boolean {
+    override fun performClick(selector: Selector, position: Int, lgClick: Boolean): Boolean {
         return try {
             var uiSelector: UiSelector? = null
 
@@ -100,7 +100,7 @@ class MmsHelper : Helper() {
         return true
     }
 
-    override fun performGetText(selector: Selector): String {
+    override fun performGetText(selector: Selector,position: Int): String {
         return try {
             var bySelector: BySelector? = null
             var uiSelector: UiSelector? = null

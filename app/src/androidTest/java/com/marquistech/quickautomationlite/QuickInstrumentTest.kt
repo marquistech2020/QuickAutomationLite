@@ -1,15 +1,13 @@
 package com.marquistech.quickautomationlite
 
-import com.marquistech.quickautomationlite.testcases.WifiOnOff
+import com.marquistech.quickautomationlite.testcases.MmsReceivedImageTest
 import org.junit.Test
 
 class QuickInstrumentTest {
 
     @Test
     fun testShow() {
-        // val test = VtCallTestUsingDialer()
-        //val test = WifiEnbDsb()
-        val test = WifiOnOff()
+        val test = MmsReceivedImageTest()
         test.mainTest()
     }
 }
