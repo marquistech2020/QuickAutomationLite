@@ -107,6 +107,7 @@ open class Helper {
             EventType.BACK -> uiDevice.pressBack()
             EventType.RECENT_APP -> uiDevice.pressRecentApps()
             EventType.ENTER -> uiDevice.pressEnter()
+            EventType.RECEIVE_CALL -> uiDevice.pressKeyCode(KeyEvent.KEYCODE_CALL)
             EventType.SPACE -> uiDevice.pressKeyCode(KeyEvent.KEYCODE_SPACE)
         }
     }

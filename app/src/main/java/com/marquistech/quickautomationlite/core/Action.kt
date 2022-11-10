@@ -1,19 +1,19 @@
 package com.marquistech.quickautomationlite.core
 
 sealed class Action {
-    data class SendEvent(val type: EventType) : Action()
+    data class SendEvent(val type: EventType,val stepName:String = "") : Action()
     data class Delay(var second: Int = 0,var milli:Int = 0) : Action()
-    data class Click(val selector: Selector,val position:Int = 0) : Action()
-    data class Swipe(val coordinate: Coordinate, val steps: Int) : Action()
-    data class Drag(val coordinate: Coordinate, val steps: Int) : Action()
-    data class SetText(val selector: Selector,val text: String) : Action()
-    data class GetText(val selector: Selector) : Action()
-    data class LaunchApp(val appSelector: AppSelector) : Action()
-    data class CloseApp(val packageName: String) : Action()
-    data class Switch(val selector: Selector) : Action()
+    data class Click(val selector: Selector,val position:Int = 0,var isLongClick:Boolean = false,var stepName:String = "") : Action()
+    data class Swipe(val coordinate: Coordinate, val steps: Int,var stepName:String = "") : Action()
+    data class Drag(val coordinate: Coordinate, val steps: Int,var stepName:String = "") : Action()
+    data class SetText(val selector: Selector,val text: String,var stepName:String = "") : Action()
+    data class GetText(val selector: Selector,val position: Int = 0,var stepName:String = "") : Action()
+    data class LaunchApp(val appSelector: AppSelector,val stepName:String = "") : Action()
+    data class CloseApp(val packageName: String,var stepName:String = "") : Action()
+    data class Switch(val selector: Selector,var stepName:String = "") : Action()
     data class ClickListItem(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearch:String) : Action()
     data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int) : Action()
-    object ClearRecentApps : Action()
+    data class ClearRecentApps(val stepName:String = "") : Action()
 }
 
 sealed class Selector {
@@ -36,10 +36,8 @@ data class Coordinate(
     val endY: Int
 )
 
-
-
 enum class EventType{
-    HOME,BACK,RECENT_APP,ENTER,SPACE
+    HOME,BACK,RECENT_APP,ENTER,RECEIVE_CALL,SPACE
 }
 
 

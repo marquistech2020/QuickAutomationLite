@@ -11,13 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val button = findViewById<Button>(R.id.button1)
         button.setOnClickListener {
-            val intent = Intent(this, WatcherActivity::class.java)
-            intent.putExtra(
-                "test",
-                "com.marquistech.quickautomationlite.testcases.VtCallTest"
-            )
-            startActivity(intent)
-            finish()
+
         }
     }
 
