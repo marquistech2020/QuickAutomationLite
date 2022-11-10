@@ -1,11 +1,17 @@
 package com.marquistech.quickautomationlite.helpers.core
 
 import android.util.Log
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
+import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.Selector
-import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
+import com.marquistech.quickautomationlite.data.StorageHandler
 
-class CallHelper : Helper() {
+/**
+ * Created by RAJESH on 09,November,2022,
+ */
+class WifiEnbDsbHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
 
@@ -57,8 +63,7 @@ class CallHelper : Helper() {
 
             if (uiObject.exists()) {
                 isClicked = if (uiObject.childCount == 0 || isResId) {
-                    if (
-                        isLongClick) uiObject.longClick() else uiObject.click()
+                    if (isLongClick) uiObject.longClick() else uiObject.click()
                 } else {
                     val btn = uiObject.getChild(UiSelector().clickable(true).index(position))
                     if (btn.exists()) {
@@ -69,7 +74,7 @@ class CallHelper : Helper() {
 
             return isClicked
         } catch (e: Exception) {
-            writeLog("Helper", " exception ${e.cause?.message}")
+            StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
             false
         }
     }
@@ -126,6 +131,19 @@ class CallHelper : Helper() {
         } catch (e: Exception) {
             "$reqStr#"
         }
+    }
+    private fun getItemAddNetwork(): Boolean {
+
+        val settingsItem = UiScrollable(UiSelector().className("android.widget.LinearLayout"))
+        val actions = mutableListOf<Action>()
+        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
+        val about: UiObject = settingsItem.getChildByText(
+            UiSelector().className("android.widget.RelativeLayout"),"Add network")
+        about.click()
+
+
+
+        return true
     }
 
 
