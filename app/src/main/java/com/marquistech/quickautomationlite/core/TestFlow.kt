@@ -1,8 +1,6 @@
 package com.marquistech.quickautomationlite.core
 
 import android.util.Log
-import com.marquistech.quickautomationlite.data.StorageHandler
-import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -10,87 +8,46 @@ import java.util.concurrent.CountDownLatch
 abstract class TestFlow {
 
     // Abstract method
-    protected abstract fun onCreateHelper(): Helper
-    protected abstract fun onCreateScript(): List<Action>
-    protected abstract fun onTestStart(testName: String)
-    protected abstract fun onTestEnd(testName: String)
-    protected abstract fun onStartIteration(testName: String, count: Int)
-    protected abstract fun onEndIteration(testName: String, count: Int)
+    abstract fun onCreateHelper(): Helper
+    abstract fun onCreateScript(): List<Action>
+    abstract fun onStartIteration(testName: String, count: Int)
+    abstract fun onEndIteration(testName: String, count: Int)
 
     // override methods
-    protected open fun onInitTestLoop(): Int {
-        return 1
-    }
-
-    protected open fun actionSendEventResult(
-        count: Int,
-        reqCode: EventType,
-        result: Boolean,
-        stepName: String
-    ) {
-    }
-
-    protected open fun actionClickResult(
-        count: Int,
-        reqSelector: Selector,
-        result: Boolean,
-        stepName: String
-    ) {
-    }
-
-    protected open fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {}
-    protected open fun actionSwipeResult(count: Int, result: Boolean, stepName: String) {}
-    protected open fun actionDragResult(count: Int, result: Boolean, stepName: String) {}
-    protected open fun actionSetTextResult(
-        count: Int,
-        reqSelector: Selector,
-        result: Boolean,
-        stepName: String
-    ) {
-    }
-
-    protected open fun actionGetTextResult(
-        count: Int,
-        result: String,
-        stepName: String
-    ) {
-    }
-
-    protected open fun actionSwitchResult(
-        count: Int,
-        reqSelector: Selector,
-        result: Boolean,
-        stepName: String
-    ) {
-    }
-
-    protected open fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {}
-    protected open fun actionCloseAppResult(count: Int, result: Boolean, stepName: String) {}
-
+    open fun actionSendEventResult(count: Int, reqCode: EventType, result: Boolean) {}
+    open fun actionClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionClearRecentResult(count: Int, result: Boolean) {}
+    open fun actionSwipeResult(count: Int, result: Boolean) {}
+    open fun actionDragResult(count: Int, result: Boolean) {}
+    open fun actionSetTextResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionGetTextResult(count: Int, reqSelector: Selector, result: String) {}
+    open fun actionSwitchResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionLaunchAppResult(count: Int, result: Boolean) {}
+    open fun actionCloseAppResult(count: Int, result: Boolean) {}
+    open fun actionListItemClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean) {}
 
     val tag: String = javaClass.simpleName
     private lateinit var helper: Helper
 
-
     @Test
     fun mainTest() {
-        val testLoop = onInitTestLoop()
         helper = onCreateHelper()
         val actions = onCreateScript()
-        onTestStart(tag)
-        (1..testLoop).forEach { count ->
+
+        (1..1).forEach { count ->
             onStartIteration(tag, count)
-            writeLog(tag, "################ Start Iteration $count  ################ ")
+            Log.e(tag, "################ Start Iteration $count  ################ ")
             actions.forEach {
                 val latch = CountDownLatch(1)
                 executeStepAndLatch(count, it, latch)
                 latch.await()
             }
-            writeLog(tag, "################ End Iteration $count  ################ ")
-            //writeLog(tag, "Report == ${getReport()}")
+            Log.e(tag, "################ End Iteration $count  ################ ")
+            //Log.e(tag, "Report == ${getReport()}")
             onEndIteration(tag, count)
         }
-        onTestEnd(tag)
+
     }
 
     private fun executeStepAndLatch(
@@ -101,69 +58,78 @@ abstract class TestFlow {
 
         when (action) {
             is Action.ClearRecentApps -> {
-                writeLog(tag, "ClearRecentApps")
-                actionClearRecentResult(count, helper.clearRecentApps(), action.stepName)
+                Log.e(tag, "ClearRecentApps")
+                actionClearRecentResult(count, helper.clearRecentApps())
             }
             is Action.Click -> {
-                writeLog(tag, "Click")
-                val isDone =
-                    helper.performClick(action.selector, action.position, action.isLongClick)
-                actionClickResult(count, action.selector, isDone, action.stepName)
+                Log.e(tag, "Click")
+                val isDone = helper.performClick(action.selector, action.position)
+                actionClickResult(count, action.selector, isDone)
             }
             is Action.LaunchApp -> {
-                writeLog(tag, "LaunchApp")
+                Log.e(tag, "LaunchApp")
                 val isDone = helper.launchApp(action.appSelector)
                 helper.waitFor(2)
-                actionLaunchAppResult(count, isDone, action.stepName)
-                writeLog(tag, "LaunchApp end")
+                actionLaunchAppResult(count, isDone)
+                Log.e(tag, "LaunchApp end")
             }
             is Action.CloseApp -> {
-                writeLog(tag, "CloseApp")
+                Log.e(tag, "CloseApp")
                 val isDone = helper.closeApp(action.packageName)
-                actionCloseAppResult(count, isDone, action.stepName)
+                actionCloseAppResult(count, isDone)
             }
             is Action.Delay -> {
 
                 if (action.milli > 0) {
-                    writeLog(tag, "Delay  milli ${action.milli}")
+                    Log.e(tag, "Delay  milli ${action.milli}")
                     helper.waitDeviceForIdle((action.milli / 2).toLong())
                     helper.waitFor(action.milli.toLong())
                 } else if (action.second > 0) {
-                    writeLog(tag, "Delay seconds ${action.second}")
+                    Log.e(tag, "Delay seconds ${action.second}")
                     helper.waitDeviceForIdle(((action.second * 1000) / 2).toLong())
                     helper.waitFor((action.second * 1000).toLong())
                 }
             }
             is Action.Drag -> {
-                writeLog(tag, "Drag")
+                Log.e(tag, "Drag")
                 val isDone = helper.drag(action.coordinate)
-                actionDragResult(count, isDone, action.stepName)
+                actionDragResult(count, isDone)
             }
             is Action.GetText -> {
-                writeLog(tag, "GetText")
-                val output = helper.performGetText(action.selector, action.position)
-                actionGetTextResult(count,output, action.stepName)
+                Log.e(tag, "GetText")
+                val output = helper.performGetText(action.selector)
+                actionGetTextResult(count, action.selector, output)
             }
             is Action.SetText -> {
-                writeLog(tag, "SetText")
+                Log.e(tag, "SetText")
                 val isDone = helper.performSetText(action.selector, action.text)
-                actionSetTextResult(count, action.selector, isDone, action.stepName)
+                actionSetTextResult(count, action.selector, isDone)
             }
             is Action.SendEvent -> {
-                writeLog(tag, "SendEvent")
+                Log.e(tag, "SendEvent")
                 val isDone = helper.performSendEvent(action.type)
-                actionSendEventResult(count, action.type, isDone, action.stepName)
+                actionSendEventResult(count, action.type, isDone)
             }
 
             is Action.Swipe -> {
-                writeLog(tag, "Swipe")
+                Log.e(tag, "Swipe")
                 val isDone = helper.performSwipe(action.coordinate, action.steps)
-                actionSwipeResult(count, isDone, action.stepName)
+                actionSwipeResult(count, isDone)
             }
             is Action.Switch -> {
-                writeLog(tag, "Switch")
+                Log.e(tag, "Switch")
                 val isDone = helper.performSwitch(action.selector)
-                actionSwitchResult(count, action.selector, isDone, action.stepName)
+                actionSwitchResult(count, action.selector, isDone)
+            }
+            is Action.ClickListItem -> {
+                Log.e(tag, "Click")
+                val isDone = helper.performListItemClick(action.selector, action.position,action.itemClassname,action.itemSearch)
+                actionListItemClickResult(count, action.selector, isDone)
+            }
+            is Action.ClickListItemByIndex -> {
+                Log.e(tag, "Click")
+                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex)
+                actionListItemClickByindexResult(count, action.selector, isDone)
             }
         }
 
