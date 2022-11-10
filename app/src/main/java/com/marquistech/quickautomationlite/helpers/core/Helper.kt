@@ -42,7 +42,7 @@ open class Helper {
                 is AppSelector.ByPkg -> {
                     val intent = Intent()
                     intent.apply {
-                        `package` = "com.google.android.contacts"
+                        `package` = appSelector.pkgName
                         action = Intent.ACTION_MAIN
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -75,7 +75,7 @@ open class Helper {
         return false
     }
 
-    open fun performClick(selector: Selector, position: Int): Boolean {
+    open fun performClick(selector: Selector, position: Int, lgClick: Boolean): Boolean {
         return false
     }
 
@@ -87,7 +87,7 @@ open class Helper {
         return false
     }
 
-    open fun performGetText(selector: Selector): String {
+    open fun performGetText(selector: Selector, position: Int): String {
         return ""
     }
 
@@ -97,7 +97,8 @@ open class Helper {
 
     fun performSendEvent(type: EventType): Boolean {
         return when (type) {
-            EventType.HOME -> uiDevice.pressHome()
+            EventType.HOME ->
+                uiDevice.pressHome()
             EventType.BACK -> uiDevice.pressBack()
             EventType.RECENT_APP -> uiDevice.pressRecentApps()
             EventType.ENTER -> uiDevice.pressEnter()
