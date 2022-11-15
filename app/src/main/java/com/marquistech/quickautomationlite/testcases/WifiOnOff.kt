@@ -2,17 +2,22 @@ package com.marquistech.quickautomationlite.testcases
 
 import android.provider.Settings
 import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.data.StorageHandler
+import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
 
 /**
- * Created by RAJESH on 10,November,2022,
+ * Created by Ashutosh on 10,November,2022,
  */
 class WifiOnOff :TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
         return WifiEnbDsbHelper()
+    }
+    override fun onInitTestLoop(): Int {
+        return 3
     }
 
     override fun onCreateScript(): List<Action> {
@@ -30,10 +35,11 @@ class WifiOnOff :TestFlow() {
             )
         )
 
-        actions.add(Action.Click(Selector.ByText("Wi-Fi")))
+        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is Enabled successfully"))
         actions.add(Action.Delay(second = 5))
-        actions.add(Action.Click(Selector.ByText("Wi-Fi")))
+        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is disabled successfully "))
         actions.add(Action.Delay(second = 5))
+        //actions.add(Action.SendEvent(EventType.HOME))
 
 
 
@@ -42,19 +48,80 @@ class WifiOnOff :TestFlow() {
 
     }
 
+
+    private val reportList = mutableListOf<Report>()
+    private var report: Report? = null
+    override fun onStartIteration(testName: String, count: Int) {
+        report = Report(count,4)
+
+
+    }
+
+    override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
+        super.actionClearRecentResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
+    }
+
+    override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
+        super.actionLaunchAppResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
+    }
+
+    override fun actionClickResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        StorageHandler.writeLog(tag, "actionClickResult result $result")
+    }
+/*
+    override fun actionGetTextResult(
+        count: Int,
+        result: String,
+        stepName: String
+    ) {
+        val requestText = result.split("#").first()
+        val resultText = result.split("#").last()
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
+        }
+        writeLog(tag, "actionGetTextResult  result $result")
+
+    }
+
+ */
+
+    override fun onEndIteration(testName: String, count: Int) {
+        val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false
+        report?.status = if (isFailed) "Fail" else "Pass"
+        StorageHandler.writeLog(tag, "onEndIteration  report $report")
+        report?.let {
+            reportList.add(it)
+        }
+
+    }
+
     override fun onTestStart(testName: String) {
+        reportList.clear()
 
     }
 
     override fun onTestEnd(testName: String) {
+        StorageHandler.writeXLSFile(reportList, "Wifi_On_Off")
 
-    }
 
-    override fun onStartIteration(testName: String, count: Int) {
-
-    }
-
-    override fun onEndIteration(testName: String, count: Int) {
 
     }
 }

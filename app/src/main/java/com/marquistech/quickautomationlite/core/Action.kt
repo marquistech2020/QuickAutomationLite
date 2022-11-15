@@ -26,6 +26,7 @@ sealed class Selector {
 sealed class AppSelector {
     data class ByPkg(val pkgName: String) : AppSelector()
     data class ByAction(val actionName: String) : AppSelector()
+    data class ByUri(val uriName: String) : AppSelector()
 }
 
 

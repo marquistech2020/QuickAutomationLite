@@ -1,25 +1,24 @@
+package com.marquistech.quickautomationlite.testcases
 
-import android.provider.Settings.ACTION_WIFI_SETTINGS
-import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
-import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
+import com.marquistech.quickautomationlite.helpers.core.GmailHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
 
 /**
- * Created by Ashutosh on 09,November,2022,
+ * Created by Ashutosh on 14,November,2022,
  */
-class WifiEnbDsb : TestFlow() {
-
-
+class SendEmailAttachment :TestFlow(){
     override fun onCreateHelper(): Helper {
-        return WifiEnbDsbHelper()
+       return GmailHelper()
     }
+    companion object {
+        private const val MAIL_SENT_SUCESSFULLY = "Sent"
+    }
+
     override fun onInitTestLoop(): Int {
-        return 2
+        return 3
     }
 
     override fun onCreateScript(): List<Action> {
@@ -30,66 +29,73 @@ class WifiEnbDsb : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         actions.add(Action.Delay(second = 1))
-        actions.add(
-            Action.LaunchApp(
-                AppSelector.ByAction(ACTION_WIFI_SETTINGS),
-                stepName = "Launch WIfi App"
-            )
-        )
+        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.gm"), stepName = "Launch Gmail APP"))
+        actions.add(Action.Delay(second =5))
+        actions.add(Action.Click(Selector.ByText("Compose"), stepName = "Compose is clicked successFully"))
+        actions.add(Action.Delay(second =2))
 
-
-        // actions.add(getItemAddNetwork())
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,60))
-        actions.add(Action.Click(Selector.ByText("Add network")))
-        actions.add(Action.Delay(second = 2))
         actions.add(
             Action.SetText(
-                Selector.ByText("Hotspot name(required)"),
-                "Android-Wifi"
+                Selector.ByText("to"),
+                "ashrun@gmail.com"
 
             )
 
+        )
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/peoplekit_listview_contact_name")))
+        actions.add(Action.SendEvent(EventType.ENTER))
+
+
+        actions.add(Action.Delay(second =1))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.gm:id/subject_content"),
+                "Hello"
+
+            )
 
         )
         actions.add(Action.SendEvent(EventType.ENTER))
-        actions.add(Action.SendEvent(EventType.ENTER))
+        actions.add(Action.Delay(second =1))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.gm:id/composearea_tap_trap_bottom"),
+                "Hello_Ashutosh_how_are_you"
+            )
+
+        )
+        actions.add(Action.Delay(second = 3))
+
+
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/add_attachment")))
+        actions.add(Action.Click(Selector.ByText("Attach file")))
         actions.add(Action.Delay(second = 2))
-
-
-        actions.add(Action.Click(Selector.ByText("Security")))
-
+        actions.add(Action.Click(Selector.ByText("Images")))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.documentsui:id/icon_thumb")))
+        actions.add(Action.Click(Selector.ByText("SELECT"), stepName = "Image has inserted successFully"))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send")))
         actions.add(Action.Delay(second = 2))
-        actions.add(Action.Click(Selector.ByText("None")))
-
-        actions.add(Action.Click(Selector.ByRes("com.oplus.wirelesssettings:id/menu_save")))
-        actions.add(Action.Delay(second = 10))
 
 
 
 
         actions.add(
-            Action.Click(
-                Selector.ByRes("android:id/summary"),
-                stepName = "WIFI Network has added successfully"
-            )
+            Action.GetText(
+                Selector.ByText(SendEmailAttachment.MAIL_SENT_SUCESSFULLY),
+                stepName = "Mail has been sent sucessfully from the sender"
+            ),
         )
-        Log.e(tag, "Add summary")
-        actions.add((Action.Click(Selector.ByText("Remove this network"))))
-        actions.add(
-            Action.Click(
-                Selector.ByRes("android:id/button1"),
-                stepName = " WIFI network has removed successfully"
-            )
-        )
+
+
+        actions.add(Action.SendEvent(EventType.HOME))
         return actions
+
     }
 
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,4)
-
-
+        report = Report(count,5)
     }
 
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
@@ -98,7 +104,7 @@ class WifiEnbDsb : TestFlow() {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
 
-        writeLog(tag, "actionClearRecentResult  result $result")
+        StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
     }
 
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
@@ -107,7 +113,7 @@ class WifiEnbDsb : TestFlow() {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
 
-        writeLog(tag, "actionLaunchAppResult  result $result")
+        StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
     }
 
     override fun actionClickResult(
@@ -119,9 +125,9 @@ class WifiEnbDsb : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        writeLog(tag, "actionClickResult result $result")
+        StorageHandler.writeLog(tag, "actionClickResult result $result")
     }
-/*
+
     override fun actionGetTextResult(
         count: Int,
         result: String,
@@ -129,19 +135,18 @@ class WifiEnbDsb : TestFlow() {
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty()) {
+        if (stepName.isNotEmpty()&& requestText == SendEmailAttachment.MAIL_SENT_SUCESSFULLY) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
-        writeLog(tag, "actionGetTextResult  result $result")
+        StorageHandler.writeLog(tag, "actionGetTextResult  result $result")
 
     }
 
- */
 
     override fun onEndIteration(testName: String, count: Int) {
         val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false
         report?.status = if (isFailed) "Fail" else "Pass"
-        writeLog(tag, "onEndIteration  report $report")
+        StorageHandler.writeLog(tag, "onEndIteration  report $report")
         report?.let {
             reportList.add(it)
         }
@@ -154,9 +159,6 @@ class WifiEnbDsb : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Wifi_Enb_dsb")
-
-
-
+        StorageHandler.writeXLSFile(reportList, "Send_Email_Attachment")
     }
 }
