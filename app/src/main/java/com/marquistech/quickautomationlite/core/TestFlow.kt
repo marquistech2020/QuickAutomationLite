@@ -1,10 +1,12 @@
 package com.marquistech.quickautomationlite.core
 
 import android.util.Log
+import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 abstract class TestFlow {
 
@@ -37,6 +39,13 @@ abstract class TestFlow {
     ) {
     }
 
+    protected open fun actionClickByCoordinateResult(
+        count: Int,
+        result: Boolean,
+        stepName: String
+    ) {
+    }
+
     protected open fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionSwipeResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionDragResult(count: Int, result: Boolean, stepName: String) {}
@@ -61,22 +70,52 @@ abstract class TestFlow {
         result: Boolean,
         stepName: String
     ) {
+
     }
 
+    protected open fun actionAdbCommandResult(count: Int, stepName: String) {}
+    protected open fun actionEnableResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionCloseAppResult(count: Int, result: Boolean, stepName: String) {}
     open fun actionListItemClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
     open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean) {}
+    protected open fun onPreCondition(): List<Action> {
+        return emptyList()
+    }
+
+    fun getLatLng(callback: ResultCompleteCallback<String>) =
+        helper.getCurrentAddress(true, callback)
+
+    fun getCurrentAddress(callback: ResultCompleteCallback<String>) =
+        helper.getCurrentAddress(false, callback)
 
 
     val tag: String = javaClass.simpleName
-    private lateinit var helper: Helper
+    var stepsCount = 0
+    private val helper: Helper = onCreateHelper()
 
+
+    private fun preconditionTest() {
+
+        val actions = onPreCondition()
+
+        if (actions.isNotEmpty()) {
+            (1..1).forEach { count ->
+                writeLog(tag, "################ PreCondition Start ################ ")
+                actions.forEach {
+                    val latch = CountDownLatch(1)
+                    executeStepAndLatch(count, it, latch)
+                    latch.await()
+                }
+                writeLog(tag, "################ PreCondition End ################ ")
+            }
+        }
+    }
 
     @Test
     fun mainTest() {
+        preconditionTest()
         val testLoop = onInitTestLoop()
-        helper = onCreateHelper()
         val actions = onCreateScript()
         onTestStart(tag)
         (1..testLoop).forEach { count ->
@@ -103,13 +142,19 @@ abstract class TestFlow {
         when (action) {
             is Action.ClearRecentApps -> {
                 writeLog(tag, "ClearRecentApps")
-                actionClearRecentResult(count, helper.clearRecentApps(), action.stepName)
+                val isDone = helper.clearRecentApps()
+                actionClearRecentResult(count, isDone, action.stepName)
             }
             is Action.Click -> {
                 writeLog(tag, "Click")
                 val isDone =
                     helper.performClick(action.selector, action.position, action.isLongClick)
                 actionClickResult(count, action.selector, isDone, action.stepName)
+            }
+            is Action.ClickBYCordinate -> {
+                writeLog(tag, "ClickByAxis")
+                val isDone = helper.performClickByCordinate(action.x, action.y)
+                actionClickByCoordinateResult(count, isDone, action.stepName)
             }
             is Action.LaunchApp -> {
                 writeLog(tag, "LaunchApp")
@@ -143,7 +188,7 @@ abstract class TestFlow {
             is Action.GetText -> {
                 writeLog(tag, "GetText")
                 val output = helper.performGetText(action.selector, action.position)
-                actionGetTextResult(count,output, action.stepName)
+                actionGetTextResult(count, output, action.stepName)
             }
             is Action.SetText -> {
                 writeLog(tag, "SetText")
@@ -168,13 +213,33 @@ abstract class TestFlow {
             }
             is Action.ClickListItem -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClick(action.selector, action.position,action.itemClassname,action.itemSearch)
+                val isDone = helper.performListItemClick(
+                    action.selector,
+                    action.position,
+                    action.itemClassname,
+                    action.itemSearch
+                )
                 actionListItemClickResult(count, action.selector, isDone)
             }
             is Action.ClickListItemByIndex -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex)
+                val isDone = helper.performListItemClickByIndex(
+                    action.selector,
+                    action.position,
+                    action.itemClassname,
+                    action.itemSearchIndex
+                )
                 actionListItemClickByindexResult(count, action.selector, isDone)
+            }
+            is Action.SendAdbCommand -> {
+                Log.e(tag, "SendAdbCommand")
+                val isDone = helper.performActionUsingShell(action.command)
+                actionAdbCommandResult(count, isDone)
+            }
+            is Action.SetEnable -> {
+                Log.e(tag, "SetEnable")
+                val isDone = helper.performEnable(action.type,action.enable)
+                actionEnableResult(count, isDone, action.stepName)
             }
         }
 

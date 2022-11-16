@@ -20,7 +20,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 5
+        return 2
     }
 
     override fun onCreateScript(): List<Action> {
@@ -38,13 +38,13 @@ class VtCallTestUsingDialer : TestFlow() {
             )
         )
         actions.add(Action.Delay(milli = 500))
-        actions.addAll(dialNoActions("+917011998220".toCharArray()))
+        actions.addAll(dialNoActions("+917011998220".toCharArray(), "com.google.android.dialer:id"))
         //actions.addAll(dialNoActions("+919650108704".toCharArray()))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
                 Selector.ByText("Video call"),
-                stepName = "Initiate the call"
+                stepName = "Initiate the video call"
             )
         )
         actions.add(Action.Delay(2))
@@ -142,7 +142,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
 
-    private fun dialNoActions(charArray: CharArray): List<Action> {
+    private fun dialNoActions(charArray: CharArray, resIdPrefix: String): List<Action> {
         val actions = mutableListOf<Action>()
 
         charArray.forEach {
@@ -151,70 +151,73 @@ class VtCallTestUsingDialer : TestFlow() {
                 str = "Dialing the Number ${String(charArray)}"
             }
             when (it) {
-                '+' -> actions.add(
-                    Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/zero"),
-                        isLongClick = true,
-                        stepName = str
+                '+' -> {
+                    actions.add(Action.Delay(second = 1))
+                    actions.add(
+                        Action.Click(
+                            Selector.ByRes("$resIdPrefix/zero"),
+                            isLongClick = true,
+                            stepName = str
+                        )
                     )
-                )
+                }
                 '0' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/zero"),
+                        Selector.ByRes("$resIdPrefix/zero"),
                         stepName = str
                     )
                 )
                 '1' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/one"),
+                        Selector.ByRes("$resIdPrefix/one"),
                         stepName = str
                     )
                 )
                 '2' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/two"),
+                        Selector.ByRes("$resIdPrefix/two"),
                         stepName = str
                     )
                 )
                 '3' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/three"),
+                        Selector.ByRes("$resIdPrefix/three"),
                         stepName = str
                     )
                 )
                 '4' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/four"),
+                        Selector.ByRes("$resIdPrefix/four"),
                         stepName = str
                     )
                 )
                 '5' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/five"),
+                        Selector.ByRes("$resIdPrefix/five"),
                         stepName = str
                     )
                 )
                 '6' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/six"),
+                        Selector.ByRes("$resIdPrefix/six"),
                         stepName = str
                     )
                 )
                 '7' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/seven"),
+                        Selector.ByRes("$resIdPrefix/seven"),
                         stepName = str
                     )
                 )
                 '8' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/eight"),
+                        Selector.ByRes("$resIdPrefix/eight"),
                         stepName = str
                     )
                 )
                 '9' -> actions.add(
                     Action.Click(
-                        Selector.ByRes("com.google.android.dialer:id/nine"),
+                        Selector.ByRes("$resIdPrefix/nine"),
                         stepName = str
                     )
                 )

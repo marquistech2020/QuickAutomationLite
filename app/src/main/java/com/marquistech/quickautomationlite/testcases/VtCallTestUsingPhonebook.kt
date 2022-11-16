@@ -7,7 +7,7 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
-class VtCallTestReceive : TestFlow() {
+class VtCallTestUsingPhonebook : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
@@ -15,49 +15,80 @@ class VtCallTestReceive : TestFlow() {
     }
 
     companion object {
+        private const val CONTACT_SEARCH_BAR_RES =
+            "com.google.android.contacts:id/open_search_bar"
+        private const val CONTACT_SEARCH_EDIT_RES =
+            "com.google.android.contacts:id/open_search_view_edit_text"
+        private const val CONTACT_RESULT_BUTTON_RES = "com.google.android.contacts:id/search_result_list"
+        private const val VIDEO_BUTTON_RES = "com.google.android.contacts:id/verb_video"
         private const val FLIP_CAMERA_TEXT = "Flip camera"
+        private const val PHONE_BOOK_CONTACT_NAME = "contact1"
     }
 
-    override fun onInitTestLoop(): Int {
-        return 3
-    }
+    //com.google.android.contacts:id/cliv_name_textview
 
     override fun onCreateScript(): List<Action> {
         val actions = mutableListOf<Action>()
 
         actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(1))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps("Clear all apps from recent"))
-        actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(1))
+        actions.add(Action.ClearRecentApps())
+        actions.add(
+            Action.LaunchApp(
+                AppSelector.ByPkg("com.google.android.contacts"),
+                stepName = "Launch contact app"
+            )
+        )
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
-        actions.add(Action.Delay(20))
-        actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes(CONTACT_SEARCH_BAR_RES)))
+        actions.add(Action.Delay(2))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes(CONTACT_SEARCH_EDIT_RES),
+                PHONE_BOOK_CONTACT_NAME, stepName = "Fetching contact from phonebook"
+            )
+        )
+        actions.add(Action.Delay(5))
+        actions.add(Action.Click(Selector.ByRes(CONTACT_RESULT_BUTTON_RES)))
+        actions.add(Action.Delay(1))
+        actions.add(
+            Action.Click(
+                Selector.ByRes(VIDEO_BUTTON_RES),
+                stepName = "Initiate the video call"
+            )
+        )
+        actions.add(Action.Delay(2))
         actions.add(
             Action.GetText(
                 Selector.ByText(FLIP_CAMERA_TEXT),
                 stepName = "Video call established"
             )
         )
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(5))
+
         actions.add(
             Action.Click(
                 Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
-                stepName = "Disconnect the video call"
+                stepName = "Disconnect the call"
             )
         )
 
         return actions
     }
 
+
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
 
+    override fun onInitTestLoop(): Int {
+        return 2
+    }
+
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 6)
     }
 
 
@@ -91,15 +122,14 @@ class VtCallTestReceive : TestFlow() {
         writeLog(tag, "actionClickResult  $stepName  result $result")
     }
 
-    override fun actionClickByCoordinateResult(
-        count: Int,
-        result: Boolean,
-        stepName: String
-    ) {
+
+    override fun actionEnableResult(count: Int, result: Boolean, stepName: String) {
+        super.actionEnableResult(count, result, stepName)
+
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        writeLog(tag, "actionClickResult  $stepName  result $result")
+        writeLog(tag, "actionEnableResult  $stepName  result $result")
     }
 
 
@@ -113,7 +143,7 @@ class VtCallTestReceive : TestFlow() {
         if (stepName.isNotEmpty() && requestText == FLIP_CAMERA_TEXT) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
-        writeLog(tag, "actionGetTextResult  result $result")
+        writeLog(tag, "actionGetTextResult  $stepName  result $result")
     }
 
 
@@ -129,12 +159,26 @@ class VtCallTestReceive : TestFlow() {
 
     }
 
+    override fun actionSetTextResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String
+    ) {
+        super.actionSetTextResult(count, reqSelector, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        writeLog(tag, "actionSetTextResult  result $result")
+    }
+
     override fun onTestStart(testName: String) {
         reportList.clear()
     }
 
+
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_receive")
+        StorageHandler.writeXLSFile(reportList, "Video_call_using_phonebook")
     }
 
 

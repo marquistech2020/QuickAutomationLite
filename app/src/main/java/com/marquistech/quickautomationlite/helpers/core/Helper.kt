@@ -1,18 +1,27 @@
 package com.marquistech.quickautomationlite.helpers.core
 
+import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.net.wifi.WifiManager
+import android.os.Build
 import android.view.KeyEvent
+import androidx.core.app.ActivityCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.marquistech.quickautomationlite.core.AppSelector
-import com.marquistech.quickautomationlite.core.Coordinate
-import com.marquistech.quickautomationlite.core.EventType
-import com.marquistech.quickautomationlite.core.Selector
+import com.google.android.gms.location.*
+import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
+import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.data.StorageHandler
+import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
 open class Helper {
@@ -20,12 +29,32 @@ open class Helper {
     private val context: Context
     val uiDevice: UiDevice
     var tag: String
+    private val fusedLocationClient: FusedLocationProviderClient
+
 
     init {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         context = instrumentation.targetContext
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         uiDevice = UiDevice.getInstance(instrumentation)
         tag = javaClass.simpleName
+    }
+
+    private fun changeWifiSetting(enable: Boolean): Boolean {
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
+        return if (enable) {
+            uiDevice.executeShellCommand("svc wifi enable")
+            waitFor(2)
+            writeLog(tag, "changeWifiSetting $enable")
+            wifiManager.isWifiEnabled
+        } else {
+            uiDevice.executeShellCommand("svc wifi disable")
+            waitFor(2)
+            writeLog(tag, "changeWifiSetting $enable")
+            wifiManager.isWifiEnabled.not()
+        }
+
     }
 
 
@@ -125,13 +154,26 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClick(selector: Selector, position: Int,itemClassname:String,itemSearch:String): Boolean {
+
+    open fun performListItemClick(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearch: String
+    ): Boolean {
         return false
     }
-    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int): Boolean {
+
+    open fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int
+    ): Boolean {
         return false
     }
-    open fun dateFormate(dateStr:String): Date? {
+
+    open fun dateFormate(dateStr: String): Date? {
         val knownPatterns: MutableList<SimpleDateFormat> = ArrayList<SimpleDateFormat>()
         knownPatterns.add(SimpleDateFormat("MM/d/yy, HH:mm a"))
         knownPatterns.add(SimpleDateFormat("MM/dd/yy, HH:mm a"))
@@ -160,6 +202,92 @@ open class Helper {
         System.err.println("No known Date format found: $dateStr")
 
         return null
+    }
+
+    fun performClickByCordinate(x: Int, y: Int): Boolean {
+        return uiDevice.click(x, y)
+    }
+
+    fun performActionUsingShell(command: String): String {
+        return uiDevice.executeShellCommand(command)
+    }
+
+    fun performEnable(type: Type, enable: Boolean): Boolean {
+        return when (type) {
+            Type.WIFI -> changeWifiSetting(enable)
+        }
+    }
+
+
+    fun getCurrentAddress(isLatLng: Boolean, callback: ResultCompleteCallback<String>) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        val locationRequest = LocationRequest.create().setInterval((5 * 1000).toLong())
+            .setFastestInterval((5 * 1000).toLong())
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+                p0.locations.map { loc ->
+                    var address = ""
+                    if (isLatLng) {
+                        address = "${loc.latitude}#${loc.longitude}"
+                    } else {
+                        val geocoder = Geocoder(context, Locale.getDefault())
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                            geocoder.getFromLocation(
+                                loc.latitude,
+                                loc.longitude,
+                                1
+                            ) {
+
+                                address = it.toList()[0]?.let { address ->
+                                    address.getAddressLine(0)
+                                } ?: ""
+
+                            }
+                        } else {
+
+                            val addresses: List<Address> = geocoder.getFromLocation(
+                                loc.latitude,
+                                loc.longitude,
+                                1
+                            ) as List<Address> // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+                            address = addresses[0].getAddressLine(0)
+
+
+                        }
+                    }
+
+                    callback.onComplete(address)
+
+                }
+            }
+
+        }
+
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            Executors.newSingleThreadExecutor(),
+            locationCallback
+        )
+
+        //fusedLocationClient.removeLocationUpdates(locationCallback)
+
+
     }
 
 }
