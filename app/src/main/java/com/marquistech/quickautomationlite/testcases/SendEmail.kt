@@ -64,16 +64,16 @@ override fun onCreateScript(): List<Action> {
         )
 
     )
-         actions.add(Action.Delay(second = 3))
-
+    actions.add(Action.Delay(second = 3))
     actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send"),))
-
+    actions.add(Action.Delay(second = 5))
     actions.add(
         Action.GetText(
             Selector.ByText(MAIL_SENT_SUCESSFULLY),
             stepName = "Mail has been sent sucessfully from the sender"
             ),
     )
+    actions.add(Action.Delay(second = 3))
 
 
     actions.add(Action.SendEvent(EventType.HOME))
@@ -149,8 +149,5 @@ override fun onTestStart(testName: String) {
 
 override fun onTestEnd(testName: String) {
     StorageHandler.writeXLSFile(reportList, "Send_Email")
-
-
-
 }
 }

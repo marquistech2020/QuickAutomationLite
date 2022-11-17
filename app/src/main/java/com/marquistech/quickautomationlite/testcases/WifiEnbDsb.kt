@@ -8,6 +8,7 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
+import com.marquistech.quickautomationlite.testcases.SendEmail
 
 /**
  * Created by Ashutosh on 09,November,2022,
@@ -17,6 +18,9 @@ class WifiEnbDsb : TestFlow() {
 
     override fun onCreateHelper(): Helper {
         return WifiEnbDsbHelper()
+    }
+    companion object {
+        private const val WIFI_CONNECTED_SUCESSFULLY = "Android-Wifi"
     }
     override fun onInitTestLoop(): Int {
         return 2
@@ -30,6 +34,7 @@ class WifiEnbDsb : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         actions.add(Action.Delay(second = 1))
+        /*
         actions.add(
             Action.LaunchApp(
                 AppSelector.ByAction(ACTION_WIFI_SETTINGS),
@@ -37,9 +42,15 @@ class WifiEnbDsb : TestFlow() {
             )
         )
 
+         */
+        actions.add(
+            Action.LaunchApp(
+                AppSelector.ByPkg("com.oplus.wirelesssettings"),
+                stepName = "Launch WIfi App"
+            ))
 
         // actions.add(getItemAddNetwork())
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,60))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,110))
         actions.add(Action.Click(Selector.ByText("Add network")))
         actions.add(Action.Delay(second = 2))
         actions.add(
@@ -57,8 +68,6 @@ class WifiEnbDsb : TestFlow() {
 
 
         actions.add(Action.Click(Selector.ByText("Security")))
-
-        actions.add(Action.Delay(second = 2))
         actions.add(Action.Click(Selector.ByText("None")))
 
         actions.add(Action.Click(Selector.ByRes("com.oplus.wirelesssettings:id/menu_save")))
@@ -67,11 +76,18 @@ class WifiEnbDsb : TestFlow() {
 
 
 
+        actions.add(Action.Delay(second = 3))
         actions.add(
             Action.Click(
                 Selector.ByRes("android:id/summary"),
                 stepName = "WIFI Network has added successfully"
             )
+        )
+        actions.add(
+            Action.GetText(
+                Selector.ByText(WifiEnbDsb.WIFI_CONNECTED_SUCESSFULLY),
+                stepName = "Wifi has connected Sucessfully"
+            ),
         )
         Log.e(tag, "Add summary")
         actions.add((Action.Click(Selector.ByText("Remove this network"))))
@@ -121,7 +137,6 @@ class WifiEnbDsb : TestFlow() {
         }
         writeLog(tag, "actionClickResult result $result")
     }
-/*
     override fun actionGetTextResult(
         count: Int,
         result: String,
@@ -129,14 +144,13 @@ class WifiEnbDsb : TestFlow() {
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty()) {
+        if (stepName.isNotEmpty() &&requestText == WifiEnbDsb.WIFI_CONNECTED_SUCESSFULLY) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
         writeLog(tag, "actionGetTextResult  result $result")
 
     }
 
- */
 
     override fun onEndIteration(testName: String, count: Int) {
         val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false

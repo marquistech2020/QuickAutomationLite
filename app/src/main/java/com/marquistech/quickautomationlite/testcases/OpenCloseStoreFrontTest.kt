@@ -1,16 +1,18 @@
 package com.marquistech.quickautomationlite.testcases
 
-import android.net.Uri
-import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.core.Action
+import com.marquistech.quickautomationlite.core.AppSelector
+import com.marquistech.quickautomationlite.core.EventType
+import com.marquistech.quickautomationlite.core.TestFlow
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
 /**
- * Created by Ashutosh on 14,November,2022,
+ * Created by Ashutosh on 16,November,2022,
  */
-class OpenStoreFrontTest :TestFlow() {
+class OpenCloseStoreFrontTest : TestFlow() {
     override fun onCreateHelper(): Helper {
-       return StoreFrontHelper()
+        return StoreFrontHelper()
     }
 
     override fun onCreateScript(): List<Action> {
@@ -21,10 +23,6 @@ class OpenStoreFrontTest :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps")))
-        actions.add(Action.Delay(5))
-        actions.add(Action.SendEvent(EventType.HOME))
-        // actions.add(Action.Click(Selector.ByText("Play Store")))
-        actions.add(Action.Delay(second =5))
         return actions
     }
 
@@ -41,6 +39,6 @@ class OpenStoreFrontTest :TestFlow() {
     }
 
     override fun onEndIteration(testName: String, count: Int) {
-
+     
     }
 }

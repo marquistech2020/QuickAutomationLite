@@ -3,6 +3,9 @@ package com.marquistech.quickautomationlite.helpers.core
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
@@ -127,6 +130,52 @@ class StoreFrontHelper :Helper() {
         } catch (e: Exception) {
             "$reqStr#"
         }
+    }
+    override fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemIndex:Int): Boolean {
+        return try {
+            var uiSelector: UiSelector? = null
+
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector =UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+            }
+            val uiObject = UiScrollable(uiSelector)
+            Log.e("ListItemCount","Count "+uiObject.childCount)
+
+            if (uiObject.exists()){
+                if(uiObject.childCount==0){
+                    uiObject.click()
+                }else{
+                    val item: UiObject = uiObject.getChild(UiSelector()
+                        .className(itemClassname).instance(itemIndex))
+                    if(item.exists()) {
+                       val item =  item.getChild(UiSelector()
+                            .className(itemClassname).instance(itemIndex))
+                           .clickAndWaitForNewWindow(200)
+
+                        //item.dragTo(item,200)
+                    }
+                }
+
+            }
+
+            return true
+        } catch (e: Exception) {
+            Log.e("Helper", " exception ${e.message}")
+            false
+        }
+
+        return true
     }
 
 }
