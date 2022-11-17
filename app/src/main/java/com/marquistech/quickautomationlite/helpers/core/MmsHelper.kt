@@ -2,6 +2,7 @@ package com.marquistech.quickautomationlite.helpers.core
 
 import android.util.Log
 import androidx.test.uiautomator.*
+import com.marquistech.quickautomationlite.core.ListItemEvent
 import com.marquistech.quickautomationlite.core.Selector
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -182,7 +183,7 @@ fun textWatcher(){
         about.click()
     }
 
-    override fun performListItemClick(selector: Selector, position: Int,itemClassname:String,itemSearch:String): Boolean {
+    override fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String,testFlag:String): Boolean {
         return try {
             var uiSelector: UiSelector? = null
 
@@ -225,46 +226,103 @@ fun textWatcher(){
 
         return true
     }
-    override fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemIndex:Int): Boolean {
-        return try {
-            var uiSelector: UiSelector? = null
+    override fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemIndex:Int,testFlag:String): Boolean {
+       if(testFlag.equals("MmsSendImageTest")){
+           return try {
+               var uiSelector: UiSelector? = null
+               var bySelector:BySelector?=null
+               when (selector) {
+                   is Selector.ByCls -> {
+                       uiSelector =UiSelector().className(selector.clsName)
+                       //bySelector=By.clazz(selector.clsName)
+                   }
+                   is Selector.ByPkg -> {
+                       uiSelector = UiSelector().packageName(selector.pkgName)
+                   }
+                   is Selector.ByRes -> {
+                       uiSelector = UiSelector().resourceId(selector.resName)
+                   }
+                   is Selector.ByText -> {
+                       uiSelector = UiSelector().text(selector.text)
+                   }
+               }
+               val uiObject = UiScrollable(uiSelector)
+               Log.e("ListItemCount","Count "+uiObject.childCount)
 
-            when (selector) {
-                is Selector.ByCls -> {
-                    uiSelector =UiSelector().className(selector.clsName)
-                }
-                is Selector.ByPkg -> {
-                    uiSelector = UiSelector().packageName(selector.pkgName)
-                }
-                is Selector.ByRes -> {
-                    uiSelector = UiSelector().resourceId(selector.resName)
-                }
-                is Selector.ByText -> {
-                    uiSelector = UiSelector().text(selector.text)
-                }
-            }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+               if (uiObject.exists()){
+                   if(uiObject.childCount==0){
+                       uiObject.click()
+                   }else{
+                       val childCount=uiObject.childCount-2
+                       Log.e("itemChildCount","Select count "+childCount)
+                       var item: UiObject = uiObject.getChild(UiSelector()
+                           .resourceId(itemClassname).index(childCount))
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    val item: UiObject = uiObject.getChild(UiSelector()
-                        .className(itemClassname).instance(itemIndex))
-                    if(item.exists()) {
-                        //item.clickAndWaitForNewWindow(200)
-                        item.dragTo(item,200)
-                    }
-                }
+                       Log.e("itemChildCount","Item Child count "+item.childCount)
+                       var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata").instance(0))
+                       if(child_item.exists()) {
+                           Log.e("ReadSms",""+item.text)
+                           Log.e("itemChildCount","Recyler Child count "+uiObject.childCount)
+                           Log.e("itemChildCount","Item Child count "+child_item.childCount)
+                           //item.clickAndWaitForNewWindow(200)
 
-            }
+                          // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                       }
+                   }
 
-            return true
-        } catch (e: Exception) {
-            Log.e("Helper", " exception ${e.message}")
-            false
-        }
+
+
+               }
+
+               return true
+           } catch (e: Exception) {
+               Log.e("Helper", " exception ${e.message}")
+               false
+           }
+       }else {
+           return try {
+               var uiSelector: UiSelector? = null
+
+               when (selector) {
+                   is Selector.ByCls -> {
+                       uiSelector = UiSelector().className(selector.clsName)
+                   }
+                   is Selector.ByPkg -> {
+                       uiSelector = UiSelector().packageName(selector.pkgName)
+                   }
+                   is Selector.ByRes -> {
+                       uiSelector = UiSelector().resourceId(selector.resName)
+                   }
+                   is Selector.ByText -> {
+                       uiSelector = UiSelector().text(selector.text)
+                   }
+               }
+               val uiObject = UiScrollable(uiSelector)
+               Log.e("ListItemCount", "Count " + uiObject.childCount)
+
+               if (uiObject.exists()) {
+                   if (uiObject.childCount == 0) {
+                       uiObject.click()
+                   } else {
+                       val item: UiObject = uiObject.getChild(
+                           UiSelector()
+                               .className(itemClassname).instance(itemIndex)
+                       )
+                       if (item.exists()) {
+                           performListItemEvent(ListItemEvent.DRAG, item, 200)
+                           //item.clickAndWaitForNewWindow(200)
+
+                       }
+                   }
+
+               }
+
+               return true
+           } catch (e: Exception) {
+               Log.e("Helper", " exception ${e.message}")
+               false
+           }
+       }
 
         return true
     }
@@ -311,5 +369,70 @@ fun textWatcher(){
         return false
     }
 
+    override fun performListItemGetTextByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFalgName: String
+    ): String {
+        if(testFalgName.equals("MmsSendImageTest")){
+            return try {
+                var uiSelector: UiSelector? = null
+                var bySelector:BySelector?=null
+                when (selector) {
+                    is Selector.ByCls -> {
+                        uiSelector =UiSelector().className(selector.clsName)
+                        //bySelector=By.clazz(selector.clsName)
+                    }
+                    is Selector.ByPkg -> {
+                        uiSelector = UiSelector().packageName(selector.pkgName)
+                    }
+                    is Selector.ByRes -> {
+                        uiSelector = UiSelector().resourceId(selector.resName)
+                    }
+                    is Selector.ByText -> {
+                        uiSelector = UiSelector().text(selector.text)
+                    }
+                }
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount","Count "+uiObject.childCount)
+
+                if (uiObject.exists()){
+                    if(uiObject.childCount==0){
+                        uiObject.click()
+                    }else{
+                        val childCount=uiObject.childCount-2
+                        Log.e("itemChildCount","Select count "+childCount)
+                        var item: UiObject = uiObject.getChild(UiSelector()
+                            .resourceId(itemClassname).index(childCount))
+
+                        Log.e("itemChildCount","Item Child count "+item.childCount)
+                        var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata").instance(0))
+                        if(child_item.exists()) {
+                            Log.e("ReadSms",""+item.text)
+                            Log.e("itemChildCount","Recyler Child count "+uiObject.childCount)
+                            Log.e("itemChildCount","Item Child count "+child_item.childCount)
+                            //item.clickAndWaitForNewWindow(200)
+
+                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                        }
+                    }
+
+
+
+                }
+
+
+                return ""
+            } catch (e: Exception) {
+                Log.e("Helper", " exception ${e.message}")
+                return ""
+
+            }
+        }else {
+            return ""
+        }
+    }
 }
 

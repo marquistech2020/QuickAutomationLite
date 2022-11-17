@@ -11,8 +11,9 @@ sealed class Action {
     data class LaunchApp(val appSelector: AppSelector,val stepName:String = "") : Action()
     data class CloseApp(val packageName: String,var stepName:String = "") : Action()
     data class Switch(val selector: Selector,var stepName:String = "") : Action()
-    data class ClickListItem(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearch:String) : Action()
-    data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int) : Action()
+    data class ClickListItem(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearch:String,var stepName:String = "",val testFalg:String) : Action()
+    data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int,var stepName:String = "",val testFalg:String) : Action()
+    data class GetTextListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int,var stepName:String = "",var testFalg :String) : Action()
     data class ClearRecentApps(val stepName:String = "") : Action()
 }
 
@@ -38,6 +39,9 @@ data class Coordinate(
 
 enum class EventType{
     HOME,BACK,RECENT_APP,ENTER,RECEIVE_CALL,SPACE
+}
+enum class ListItemEvent{
+    Click,DRAG
 }
 
 
