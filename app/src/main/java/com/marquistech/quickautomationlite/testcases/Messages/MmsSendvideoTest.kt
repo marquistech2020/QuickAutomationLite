@@ -1,10 +1,12 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
+import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
+import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 
 class MmsSendvideoTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
@@ -91,18 +93,26 @@ class MmsSendvideoTest : TestFlow() {
         actions.add(Action.Delay(1000))
         actions.add(Action.Click(By.res("com.google.android.apps.messaging:id/container_action_button")))
         actions.add(Action.Delay(1000))*/
-        actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon"),stepName = "Send Audio MMS Successfully "))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon")))
+        actions.add(Action.Delay(40))
+
+        actions.add(
+            Action.GetTextListItemByIndex(
+                Selector.ByRes("android:id/list"),
+                0,
+                "com.google.android.apps.messaging:id/conversation_message_view",
+                1
+                ,stepName = "Send video MMS Successfully ", testFalg = UtilsClass.SEND_Video_MMS)
+        )
 
         return actions
 
     }
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
         super.actionClearRecentResult(count, result, stepName)
-        if (stepName.isNotEmpty()) {
-            report?.insertStep(stepName, if (result) "Pass" else "Fail")
-        }
-
+        /* if (stepName.isNotEmpty()) {
+             report?.insertStep(stepName, if (result) "Pass" else "Fail")
+         }*/
         StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
     }
 
@@ -142,7 +152,27 @@ class MmsSendvideoTest : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "MMS_send_Video")
+        StorageHandler.writeXLSFile(reportList, "MMS_sendAudio_MMs")
+    }
+
+    override fun actionListItemGetTextByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: String,
+        stepName: String,
+        testFalgName: String
+    ) {
+        if(stepName.isNotEmpty()) {
+            Log.e("GetTextListItem", " TagName " + testFalgName + " result " + result)
+            if (testFalgName.contains(UtilsClass.SEND_Video_MMS)) {
+                if (result.contains("Sending")) {
+                    report!!.insertStep(stepName, "Failed")
+                } else {
+                    report!!.insertStep(stepName, "Pass")
+                }
+            }
+        }
+        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFalgName)
     }
 
 }

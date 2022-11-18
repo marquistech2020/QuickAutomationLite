@@ -1,10 +1,12 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
+import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
+import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 
 class MmsSendImageTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
@@ -25,7 +27,7 @@ class MmsSendImageTest : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1
     }
 
     override fun onStartIteration(testName: String, count: Int) {
@@ -61,20 +63,20 @@ class MmsSendImageTest : TestFlow() {
 
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view")))
-        actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7011046214"))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(2))
+        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"07011046214"))
+        actions.add(Action.Delay(2))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/plus_button"),stepName = "Open file browser"))
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByText("Files")))
-        actions.add(Action.Delay(2))
+        actions.add(Action.Delay(3))
         actions.add(Action.Click(Selector.ByText("Images")))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(3))
 /*        var mmsHelper=MmsHelper()
         mmsHelper.clickListViewItem(1)*/
         actions.add(Action.Click(Selector.ByText("1.jpg"),stepName = "Select Image from Image"))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(4))
        // actions.add(Action.Click(Selector.ByText("SIM1")))
         //actions.add(Action.Delay(2000))
 
@@ -84,16 +86,16 @@ class MmsSendImageTest : TestFlow() {
         actions.add(Action.Delay(1000))
         actions.add(Action.Click(By.res("com.google.android.apps.messaging:id/container_action_button")))
         actions.add(Action.Delay(1000))*/
-        actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon"),stepName = "Send Image MMS Successfully "))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon")))
         actions.add(Action.Delay(40))
 
         actions.add(
-            Action.ClickListItemByIndex(
+            Action.GetTextListItemByIndex(
                 Selector.ByRes("android:id/list"),
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
                 1
-                , stepName = "Select Received Image ",javaClass.simpleName)
+                ,stepName = "Send Image MMS Successfully ", testFalg = UtilsClass.SEND_Image_MMS)
         )
         return actions
 
@@ -101,9 +103,9 @@ class MmsSendImageTest : TestFlow() {
 
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
         super.actionClearRecentResult(count, result, stepName)
-        if (stepName.isNotEmpty()) {
+       /* if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
-        }
+        }*/
         StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
     }
 
@@ -138,8 +140,6 @@ class MmsSendImageTest : TestFlow() {
     }
 
 
-
-
     override fun onTestStart(testName: String) {
         reportList.clear()
     }
@@ -148,4 +148,23 @@ class MmsSendImageTest : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "MMS_sendImage_MMs")
     }
 
+    override fun actionListItemGetTextByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: String,
+        stepName: String,
+        testFalgName: String
+    ) {
+        if(stepName.isNotEmpty()) {
+            Log.e("GetTextListItem", " TagName " + testFalgName + " result " + result)
+            if (testFalgName.contains(UtilsClass.SEND_Image_MMS)) {
+                if (result.contains("Sending")) {
+                    report!!.insertStep(stepName, "False")
+                } else {
+                    report!!.insertStep(stepName, "True")
+                }
+            }
+        }
+        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFalgName)
+    }
 }

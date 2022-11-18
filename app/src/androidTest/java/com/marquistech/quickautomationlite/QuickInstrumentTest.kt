@@ -8,7 +8,7 @@ class QuickInstrumentTest {
 
     @Test
     fun testShow() {
-        val test = MmsSendImageTest()
+        val test = DeleteMmSTest()
         test.mainTest()
     }
 }

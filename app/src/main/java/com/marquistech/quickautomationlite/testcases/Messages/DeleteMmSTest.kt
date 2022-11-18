@@ -50,19 +50,19 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(1))
         //com.google.android.apps.messaging:id/start_chat_fab
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214","",""))
+    /*    actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214","",""))
 
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByText("Delete")))
         actions.add(Action.Delay(1))
-        actions.add(Action.Click(Selector.ByRes("android:id/button1")))
+        actions.add(Action.Click(Selector.ByRes("android:id/button1")))*/
 
         actions.add(Action.Delay(20))
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open",""))
         actions.add(Action.Delay(1))
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.ImageView",2, stepName = "Select image for Delete",""))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"android.widget.ImageView",2, stepName = "Select image for Delete",""))
 
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
