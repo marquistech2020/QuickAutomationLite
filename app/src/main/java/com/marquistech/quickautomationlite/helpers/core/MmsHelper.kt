@@ -294,7 +294,34 @@ class MmsHelper : Helper() {
 
 
                 }
-            }else{
+            }
+            else if (testFlag.equals(UtilsClass.Delete_MMS)) {
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        val childCount = uiObject.childCount - 2
+                        Log.e("itemChildCount", "Select count " + childCount)
+                        var item: UiObject = uiObject.getChild(
+                            UiSelector()
+                                .resourceId(itemClassname).index(childCount)
+                        )
+
+
+                        if (item.exists()) {
+                            Log.e("ReadSms", "" + item.text)
+                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                            //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                            //item.clickAndWaitForNewWindow(200)
+                                item.dragTo(item,200)
+                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                        }
+                    }
+
+
+                }
+            }
+                else{
                 val uiObject = UiScrollable(uiSelector)
                 Log.e("ListItemCount", "Count " + uiObject.childCount)
 
@@ -304,7 +331,7 @@ class MmsHelper : Helper() {
                     } else {
                         val item: UiObject = uiObject.getChild(
                             UiSelector()
-                                .className(itemClassname).instance(itemIndex)
+                                .resourceId(itemClassname).instance(itemIndex)
                         )
                         if (item.exists()) {
                             performListItemEvent(ListItemEvent.DRAG, item, 200)

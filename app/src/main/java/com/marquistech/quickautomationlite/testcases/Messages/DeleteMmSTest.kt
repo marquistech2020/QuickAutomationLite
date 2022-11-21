@@ -3,13 +3,20 @@ package com.marquistech.quickautomationlite.testcases.Messages
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
-import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.MmsHelper
+import com.marquistech.quickautomationlite.helpers.core.*
 
 class DeleteMmSTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
+
+    override fun onInitTestLoop(): Int {
+        return 1
+    }
+
+
+
+
+
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
     }
@@ -28,7 +35,7 @@ class DeleteMmSTest : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
-        return MmsHelper()
+        return SmsMmsDeleateHelper()
     }
 
 
@@ -62,12 +69,12 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Delay(20))
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open",""))
         actions.add(Action.Delay(1))
-        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"android.widget.ImageView",2, stepName = "Select image for Delete",""))
-
-        actions.add(Action.Delay(second = 1))
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",2, stepName = "Select image for Delete", testFalg = UtilsClass.Delete_MMS))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
+        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_delete_message")))
         actions.add(Action.Delay(1))

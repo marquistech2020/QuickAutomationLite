@@ -45,7 +45,6 @@ class MmsSendvideoTest : TestFlow() {
 
     fun sendAudioOnePlusDevice(): MutableList<Action> {
         val actions = mutableListOf<Action>()
-
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP))
@@ -152,7 +151,7 @@ class MmsSendvideoTest : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "MMS_sendAudio_MMs")
+        StorageHandler.writeXLSFile(reportList, "MMS_sendVideo_MMs")
     }
 
     override fun actionListItemGetTextByindexResult(

@@ -47,22 +47,22 @@ class DeleteSmsTest : TestFlow() {
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214","",""))
 
-        actions.add(Action.Delay(1))
+        /*actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByText("Delete")))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("android:id/button1")))
-
+*/
         actions.add(Action.Delay(20))
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open",""))
         actions.add(Action.Delay(1))
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.TextView",2, stepName = "Select Text message for Delete",""))
-
-        actions.add(Action.Delay(second = 1))
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",2, stepName = "Select  TExt message for  Delete", testFalg = UtilsClass.Delete_MMS))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
+        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_delete_message")))
         actions.add(Action.Delay(1))
@@ -74,6 +74,7 @@ class DeleteSmsTest : TestFlow() {
           actions.add(Action.Delay(1))*/
         actions.add(Action.GetText(Selector.ByRes("com.google.android.apps.messaging:id/message")))
         actions.add(Action.Delay(1))
+
 
         /*     actions.add(Action.SendEvent(EventType.BACK))
              actions.add(Action.Delay(7))
@@ -129,7 +130,7 @@ class DeleteSmsTest : TestFlow() {
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFalg :String
+        testFlag :String
     ) {
         if(result.contains("MultimediaMessage")){
             report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
