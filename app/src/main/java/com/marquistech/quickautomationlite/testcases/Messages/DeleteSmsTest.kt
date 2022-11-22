@@ -8,6 +8,11 @@ import com.marquistech.quickautomationlite.helpers.core.*
 class DeleteSmsTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
+
+    override fun onInitTestLoop(): Int {
+        return 2
+    }
+
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
     }
@@ -22,9 +27,13 @@ class DeleteSmsTest : TestFlow() {
             reportList.add(it)
         }
     }
+
+
+
     override fun onCreateHelper(): Helper {
         return SmsMmsDeleateHelper()
     }
+
 
 
     override fun onCreateScript(): List<Action> {
@@ -57,7 +66,7 @@ class DeleteSmsTest : TestFlow() {
         actions.add(Action.Delay(20))
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open",""))
         actions.add(Action.Delay(1))
-        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",2, stepName = "Select  TExt message for  Delete", testFalg = UtilsClass.Delete_MMS))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",2, stepName = "Select  Last Text message for  Delete", testFalg = UtilsClass.Delete_MMS))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(second = 1))
@@ -117,12 +126,14 @@ class DeleteSmsTest : TestFlow() {
 
 
 
+
+
     override fun onTestStart(testName: String) {
         reportList.clear()
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "MMS_Delete_Sms")
+        StorageHandler.writeXLSFile(reportList, "SMS_Delete_SMs")
     }
 
     override fun actionListItemGetTextByindexResult(
@@ -130,10 +141,15 @@ class DeleteSmsTest : TestFlow() {
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFlag :String
+        testFalg :String
     ) {
-        if(result.contains("MultimediaMessage")){
-            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+        if(stepName.isNotEmpty()) {
+            if (result.isNotEmpty()) {
+                report?.insertStep(
+                    stepName,
+                    if (result.contains("MultimediaMessage")) "Pass" else "Fail"
+                )
+            }
         }
     }
 
@@ -142,15 +158,13 @@ class DeleteSmsTest : TestFlow() {
         reqSelector: Selector,
         result: Boolean,
         stepName: String,
-        testFalg: String
+        testFlag: String
     ) {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
         StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
-        super.actionListItemClickByTextResult(count, reqSelector, result, stepName,testFalg)
+        super.actionListItemClickByTextResult(count, reqSelector, result, stepName,"")
     }
-
-
 
 }

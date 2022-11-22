@@ -283,7 +283,19 @@ class SmsMmsDeleateHelper : Helper() {
                             Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
                             //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
                             //item.clickAndWaitForNewWindow(200)
-                            item.dragTo(item,200)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+                                    .instance(0)
+                            )
+                            if (child_item.exists()) {
+                               // Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                child_item.dragTo(item,200)
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            }
+
                             // performListItemEvent(ListItemEvent.DRAG,child_item,200)
                         }
                     }
