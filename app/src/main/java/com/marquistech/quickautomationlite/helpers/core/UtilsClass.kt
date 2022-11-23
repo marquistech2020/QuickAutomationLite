@@ -6,6 +6,9 @@ class UtilsClass {
          const val SEND_Audio_MMS = "SendingAudioStatus"
         const val SEND_Video_MMS = "SendingVideoStatus"
         const val Delete_MMS = "DeleteMms"
+        const val ReceivedAudio_MMS = "Received_audioMms"
+        const val ReceivedImage_MMS = "Received_ImageMms"
+        const val ReceivedVidio_MMS = "Received_VideoMms"
 
     }
 }

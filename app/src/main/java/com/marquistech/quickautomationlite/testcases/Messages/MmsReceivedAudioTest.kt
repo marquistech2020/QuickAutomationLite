@@ -6,6 +6,7 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
+import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 
 class MmsReceivedAudioTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
@@ -53,7 +54,7 @@ class MmsReceivedAudioTest : TestFlow() {
 
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout",6,stepName ="Select Last Message",""))
+        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFalg = UtilsClass.ReceivedAudio_MMS))
 
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
@@ -74,7 +75,18 @@ class MmsReceivedAudioTest : TestFlow() {
         return actions
     }
 
-
+    override fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFalgName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFalgName)
+    }
 
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
         super.actionClearRecentResult(count, result, stepName)
@@ -112,6 +124,9 @@ class MmsReceivedAudioTest : TestFlow() {
         result: String,
         stepName: String
     ) {
+        if(stepName.isNotEmpty() && result.isNotEmpty()){
+            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+        }
 
     }
 
@@ -132,9 +147,6 @@ class MmsReceivedAudioTest : TestFlow() {
         stepName: String,
         testFalg :String
     ) {
-        if(result.contains("MultimediaMessage")){
-            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
-        }
     }
 
     override fun actionListItemClickByTextResult(

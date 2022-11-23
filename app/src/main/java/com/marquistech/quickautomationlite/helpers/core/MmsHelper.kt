@@ -138,6 +138,8 @@ class MmsHelper : Helper() {
                         Log.e("GetText", "Condition Matched")
                         Log.e("GetText", "receivedTime " + recivedTime)
                         Log.e("GetText", "status " + status)
+                    }else{
+                        return outputText
                     }
 
                 }
@@ -287,8 +289,69 @@ class MmsHelper : Helper() {
                             Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
                             Log.e("itemChildCount", "Item Child count " + child_item.childCount)
                             //item.clickAndWaitForNewWindow(200)
-
+                            return true
                             // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                        }
+                    }
+
+
+                }
+            }
+            else if (testFlag.equals(UtilsClass.ReceivedAudio_MMS)) {
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        val childCount = uiObject.childCount - 2
+                        Log.e("itemChildCount", "Select count " + childCount)
+                        var item: UiObject = uiObject.getChild(
+                            UiSelector()
+                                .resourceId(itemClassname).index(childCount)
+                        )
+
+                        Log.e("itemChildCount", "Item Child count " + item.childCount)
+                        var child_item = item.getChild(
+                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+                        )
+                        if (child_item.exists()) {
+                            Log.e("ReadSms", "" + item.text)
+                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                            //item.clickAndWaitForNewWindow(200)
+                            child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/timer")).dragTo(child_item,250)
+                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            return true
+                        }
+                    }
+
+
+                }
+            }
+            else if (testFlag.equals(UtilsClass.ReceivedImage_MMS)) {
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        val childCount = uiObject.childCount - 2
+                        Log.e("itemChildCount", "Select count " + childCount)
+                        var item: UiObject = uiObject.getChild(
+                            UiSelector()
+                                .resourceId(itemClassname).index(childCount)
+                        )
+
+                        Log.e("itemChildCount", "Item Child count " + item.childCount)
+                        var child_item = item.getChild(
+                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+
+                        )
+                        if (child_item.exists()) {
+                            Log.e("ReadSms", "" + item.text)
+                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                            //item.clickAndWaitForNewWindow(200)
+                            child_item.dragTo(child_item,250)
+                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            return true
                         }
                     }
 
@@ -314,6 +377,7 @@ class MmsHelper : Helper() {
                             //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
                             //item.clickAndWaitForNewWindow(200)
                                 item.dragTo(item,200)
+                            return true
                             // performListItemEvent(ListItemEvent.DRAG,child_item,200)
                         }
                     }
@@ -336,7 +400,7 @@ class MmsHelper : Helper() {
                         if (item.exists()) {
                             performListItemEvent(ListItemEvent.DRAG, item, 200)
                             //item.clickAndWaitForNewWindow(200)
-
+                            return true
                         }
                     }
 
@@ -344,7 +408,7 @@ class MmsHelper : Helper() {
             }
 
 
-            return true
+            return false
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")
             false

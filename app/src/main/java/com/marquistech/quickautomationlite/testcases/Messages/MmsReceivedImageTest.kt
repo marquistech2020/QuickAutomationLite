@@ -6,6 +6,7 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
+import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 
 class MmsReceivedImageTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
@@ -51,13 +52,14 @@ class MmsReceivedImageTest : TestFlow() {
 
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.FrameLayout",6,stepName ="Select Last Message",""))
-
-        actions.add(Action.Delay(second = 1))
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFalg = UtilsClass.ReceivedImage_MMS))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(1))
+
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+        actions.add(Action.Delay(second = 1))
+
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByText("View details")))
@@ -111,7 +113,9 @@ class MmsReceivedImageTest : TestFlow() {
         result: String,
         stepName: String
     ) {
-
+        if(stepName.isNotEmpty() && result.isNotEmpty()){
+            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+        }
     }
 
 
@@ -149,6 +153,17 @@ class MmsReceivedImageTest : TestFlow() {
         StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
         super.actionListItemClickByTextResult(count, reqSelector, result, stepName,"")
     }
-
+    override fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFalgName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFalgName)
+    }
     
 }
