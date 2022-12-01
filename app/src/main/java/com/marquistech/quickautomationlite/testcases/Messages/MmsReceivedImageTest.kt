@@ -12,9 +12,11 @@ class MmsReceivedImageTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 5)
     }
-
+    override fun onInitTestLoop(): Int {
+        return 2
+    }
 
     override fun onEndIteration(testName: String, count: Int) {
 
@@ -49,10 +51,12 @@ class MmsReceivedImageTest : TestFlow() {
         actions.add(Action.Delay(1))
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214",stepName ="Chat Window open",""))
+        actions.add(Action.Delay(1))
+        actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
 
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFalg = UtilsClass.ReceivedImage_MMS))
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFlag = UtilsClass.ReceivedImage_MMS))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(1))
@@ -133,11 +137,17 @@ class MmsReceivedImageTest : TestFlow() {
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFalg :String
+        testFlag :String
     ) {
-        if(result.contains("MultimediaMessage")){
-            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+        if(stepName.isNotEmpty()){
+            if(testFlag.equals(UtilsClass.Received_MMS_Type)) {
+                report?.insertStep(stepName, result)
+            }
+            else if(result.contains("MultimediaMessage")){
+                report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+            }
         }
+
     }
 
     override fun actionListItemClickByTextResult(
@@ -145,7 +155,7 @@ class MmsReceivedImageTest : TestFlow() {
         reqSelector: Selector,
         result: Boolean,
         stepName: String,
-        testFalg: String
+        testFlag: String
     ) {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
@@ -158,12 +168,12 @@ class MmsReceivedImageTest : TestFlow() {
         reqSelector: Selector,
         result: Boolean,
         stepName: String,
-        testFalgName: String
+        testFlagName: String
     ) {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFalgName)
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
     
 }

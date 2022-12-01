@@ -6,6 +6,7 @@ import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.SmsReadHelper
+import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 
 class OpenReadSentSmsTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
@@ -16,7 +17,7 @@ class OpenReadSentSmsTest : TestFlow() {
         return 2
     }
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 5)
     }
 
 
@@ -65,6 +66,7 @@ class OpenReadSentSmsTest : TestFlow() {
         actions.add(Action.Delay(4))
         actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging"), stepName = "Open Message App"))
 
+
         actions.add(Action.Delay(2))
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(
@@ -75,14 +77,17 @@ class OpenReadSentSmsTest : TestFlow() {
                 "070110 46214"
                 , stepName = "Open Chat Window","")
         )
+        actions.add(Action.Delay(1))
+        actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
+
         actions.add(Action.Delay(3))
         actions.add(
             Action.ClickListItemByIndex(
-                Selector.ByCls("android.support.v7.widget.RecyclerView"),
+                Selector.ByRes("android:id/list"),
                 0,
-                "android.widget.TextView",
-                4
-                , stepName = "Select Received Text message ","")
+                "com.google.android.apps.messaging:id/conversation_message_view",
+                1
+                , stepName = "Select Received Image ","")
         )
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
@@ -94,21 +99,93 @@ class OpenReadSentSmsTest : TestFlow() {
     }
 
 
+
+
+    override fun actionGetTextResult(count: Int, result: String, stepName: String) {
+        super.actionGetTextResult(count, result, stepName)
+        if(result.isNotEmpty()){
+            report?.insertStep(stepName, if (result.contains("Multimedia")) "Pass" else "Fail")
+
+        }
+    }
+    override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
+        super.actionLaunchAppResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
+    }
+
+    override fun actionListItemClickByTextResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlag: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
+        super.actionListItemClickByTextResult(count, reqSelector, result, stepName,"")
+    }
+    override fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlagName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
+    }
+
+
+
+
+    override fun actionClickResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
+    }
+
+
+
     override fun actionListItemGetTextByindexResult(
         count: Int,
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFalg :String
+        testFlag :String
     ) {
-        Log.e("GetTextByIndex", "" + result)
-    }
-
-    override fun actionGetTextResult(count: Int, result: String, stepName: String) {
-        super.actionGetTextResult(count, result, stepName)
-        if(result.isNotEmpty()){
-            report?.insertStep(stepName, if (result.contains("Text message")) "Pass" else "Fail")
-
+        if(stepName.isNotEmpty()){
+            if(testFlag.equals(UtilsClass.Received_MMS_Type)) {
+                report?.insertStep(stepName, result)
+            }
+            else if(result.contains("MultimediaMessage")){
+                report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+            }
         }
+
     }
+
+
+
+
+
+
+
+
+
+
+
 }

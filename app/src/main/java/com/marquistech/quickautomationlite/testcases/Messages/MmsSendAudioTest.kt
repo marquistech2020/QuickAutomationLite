@@ -1,11 +1,9 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
 import android.util.Log
-import androidx.test.uiautomator.By
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 import com.marquistech.quickautomationlite.helpers.core.UtilsClass
@@ -75,6 +73,16 @@ class MmsSendAudioTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByText("Audio")))
         actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.documentsui:id/option_menu_search")))
+        actions.add(Action.Delay(1))
+        actions.add(Action.SetText(Selector.ByRes("com.google.android.documentsui:id/search_src_text"), stepName = "", text = "1.aac"))
+        actions.add(Action.Delay(1))
+        actions.add(Action.SendEvent(EventType.BACK))
+        actions.add(Action.Delay(1))
+/*        var mmsHelper=MmsHelper()
+        mmsHelper.clickListViewItem(1)*/
+        actions.add(Action.ClickListItem(Selector.ByRes("com.google.android.documentsui:id/dir_list"), itemSearch = "1.aac",stepName = "Select Image from Image", testFlag = UtilsClass.SEND_Image_MMS, itemClassname = "com.google.android.documentsui:id/item_root"))
+        actions.add(Action.Delay(4))
 /*        var mmsHelper=MmsHelper()
         mmsHelper.clickListViewItem(1)*/
         //actions.add(Action.Click(Selector.ByText("1.aac")))
@@ -99,7 +107,7 @@ class MmsSendAudioTest : TestFlow() {
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
                 1
-                ,stepName = "Send Audio MMS Successfully ", testFalg = UtilsClass.SEND_Audio_MMS)
+                ,stepName = "Send Audio MMS Successfully ", testFlag = UtilsClass.SEND_Audio_MMS)
         )
 
         return actions
@@ -158,11 +166,11 @@ class MmsSendAudioTest : TestFlow() {
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFalgName: String
+        testFlagName: String
     ) {
         if(stepName.isNotEmpty()) {
-            Log.e("GetTextListItem", " TagName " + testFalgName + " result " + result)
-            if (testFalgName.contains(UtilsClass.SEND_Audio_MMS)) {
+            Log.e("GetTextListItem", " TagName " + testFlagName + " result " + result)
+            if (testFlagName.contains(UtilsClass.SEND_Audio_MMS)) {
                 if (result.contains("Sending")) {
                     report!!.insertStep(stepName, "Failed")
                 } else {
@@ -170,7 +178,7 @@ class MmsSendAudioTest : TestFlow() {
                 }
             }
         }
-        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFalgName)
+        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
 
 }

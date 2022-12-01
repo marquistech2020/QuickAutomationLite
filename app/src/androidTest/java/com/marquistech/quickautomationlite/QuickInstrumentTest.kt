@@ -8,7 +8,7 @@ class QuickInstrumentTest {
 
     @Test
     fun testShow() {
-        val test = MmsReceivedImageTest()
+        val test = OpenReadSentSmsTest()
         test.mainTest()
        /* val test2 = MmsSendvideoTest()
         test2.mainTest()*/

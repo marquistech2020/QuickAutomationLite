@@ -124,7 +124,7 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String,testFalgName:String): Boolean {
+    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String): Boolean {
         return false
     }
     open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String): Boolean {
@@ -168,7 +168,7 @@ open class Helper {
 
         }
     }
-    open fun performListItemGetTextByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFalgName:String): String {
+    open fun performListItemGetTextByIndex(selector: Selector, position: Int, itemClassname:String, itemSearchIndex:Int, testFlagName:String): String {
         return ""
     }
 }

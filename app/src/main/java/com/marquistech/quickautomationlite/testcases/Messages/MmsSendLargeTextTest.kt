@@ -75,7 +75,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
                 "7011046214"
-                ,stepName = "Input Mt Number ")
+                ,stepName = "")
 
         )
         actions.add(Action.Delay(1))
@@ -98,6 +98,18 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         }
 
         StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
+    }
+
+    override fun actionSetTextResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String
+    ) {
+        if(stepName.isNotEmpty()){
+            report?.insertStep(stepName,if(result) "Pass" else "Fail")
+        }
+        super.actionSetTextResult(count, reqSelector, result, stepName)
     }
 
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {

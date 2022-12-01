@@ -65,9 +65,9 @@ abstract class TestFlow {
 
     protected open fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionCloseAppResult(count: Int, result: Boolean, stepName: String) {}
-    open fun actionListItemClickByTextResult(count: Int, reqSelector: Selector, result: Boolean, stepName: String,testFalgName:String) {}
-    open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean ,stepName: String,testFalgName:String) {}
-    open fun actionListItemGetTextByindexResult(count: Int, reqSelector: Selector, result: String ,stepName: String,testFalgName:String) {}
+    open fun actionListItemClickByTextResult(count: Int, reqSelector: Selector, result: Boolean, stepName: String, testFlagName:String) {}
+    open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean, stepName: String, testFlagName:String) {}
+    open fun actionListItemGetTextByindexResult(count: Int, reqSelector: Selector, result: String, stepName: String, testFlagName:String) {}
 
 
     val tag: String = javaClass.simpleName
@@ -169,18 +169,18 @@ abstract class TestFlow {
             }
             is Action.ClickListItem -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClickByText(action.selector, action.position,action.itemClassname,action.itemSearch,action.testFalg)
-                actionListItemClickByTextResult(count, action.selector, isDone,action.stepName,action.testFalg)
+                val isDone = helper.performListItemClickByText(action.selector, action.position,action.itemClassname,action.itemSearch,action.testFlag)
+                actionListItemClickByTextResult(count, action.selector, isDone,action.stepName,action.testFlag)
             }
             is Action.ClickListItemByIndex -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFalg)
-                actionListItemClickByindexResult(count, action.selector, isDone,action.stepName,action.testFalg)
+                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
+                actionListItemClickByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
             }
             is Action.GetTextListItemByIndex -> {
                 Log.e(tag, "GetTextByindex")
-                val isDone = helper.performListItemGetTextByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFalg)
-                actionListItemGetTextByindexResult(count, action.selector, isDone,action.stepName,action.testFalg)
+                val isDone = helper.performListItemGetTextByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
+                actionListItemGetTextByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
             }
         }
 

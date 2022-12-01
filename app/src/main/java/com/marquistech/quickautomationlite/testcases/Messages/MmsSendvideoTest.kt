@@ -77,6 +77,16 @@ class MmsSendvideoTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByText("Videos")))
         actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.documentsui:id/option_menu_search")))
+        actions.add(Action.Delay(1))
+        actions.add(Action.SetText(Selector.ByRes("com.google.android.documentsui:id/search_src_text"), stepName = "", text = "1.mp4"))
+        actions.add(Action.Delay(1))
+        actions.add(Action.SendEvent(EventType.BACK))
+        actions.add(Action.Delay(1))
+/*        var mmsHelper=MmsHelper()
+        mmsHelper.clickListViewItem(1)*/
+        actions.add(Action.ClickListItem(Selector.ByRes("com.google.android.documentsui:id/dir_list"), itemSearch = "1.mp4",stepName = "Select Image from Image", testFlag = UtilsClass.SEND_Image_MMS, itemClassname = "com.google.android.documentsui:id/item_root"))
+        actions.add(Action.Delay(4))
 /*        var mmsHelper=MmsHelper()
         mmsHelper.clickListViewItem(1)*/
         //actions.add(Action.Click(Selector.ByText("1.aac")))
@@ -101,7 +111,7 @@ class MmsSendvideoTest : TestFlow() {
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
                 1
-                ,stepName = "Send video MMS Successfully ", testFalg = UtilsClass.SEND_Video_MMS)
+                ,stepName = "Send video MMS Successfully ", testFlag = UtilsClass.SEND_Video_MMS)
         )
 
         return actions
@@ -159,11 +169,11 @@ class MmsSendvideoTest : TestFlow() {
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFalgName: String
+        testFlagName: String
     ) {
         if(stepName.isNotEmpty()) {
-            Log.e("GetTextListItem", " TagName " + testFalgName + " result " + result)
-            if (testFalgName.contains(UtilsClass.SEND_Video_MMS)) {
+            Log.e("GetTextListItem", " TagName " + testFlagName + " result " + result)
+            if (testFlagName.contains(UtilsClass.SEND_Video_MMS)) {
                 if (result.contains("Sending")) {
                     report!!.insertStep(stepName, "Failed")
                 } else {
@@ -171,7 +181,7 @@ class MmsSendvideoTest : TestFlow() {
                 }
             }
         }
-        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFalgName)
+        super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
 
 }
