@@ -48,19 +48,21 @@ class SmsReadHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
-            val uiObject = uiDevice.findObject(uiSelector)
+            uiSelector?.let {
+                val uiObject = uiDevice.findObject(uiSelector)
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                    }
+
                 }
-
             }
-            
             return true
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")
@@ -86,6 +88,7 @@ class SmsReadHelper : Helper() {
             is Selector.ByText -> {
                 uiSelector = UiSelector().text(selector.text)
             }
+            else -> {}
         }
         uiSelector?.let {
             var uiObj = uiDevice.findObject(it)
@@ -120,6 +123,7 @@ class SmsReadHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
             var outputText = ""
@@ -200,24 +204,27 @@ fun textWatcher(){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount", "Count " + uiObject.childCount)
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
 
-                    val item: UiObject = uiObject.getChildByText(
-                        UiSelector().className(itemClassname),itemSearch)
-                    if(item.exists()) {
-                        item.click()
+                        val item: UiObject = uiObject.getChildByText(
+                            UiSelector().className(itemClassname), itemSearch
+                        )
+                        if (item.exists()) {
+                            item.click()
+                        }
                     }
+
                 }
-
             }
-
             return true
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")
@@ -243,28 +250,33 @@ fun textWatcher(){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
-            }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+                else -> {
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    val item: UiObject = uiObject.getChild(UiSelector()
-                        .className(itemClassname).instance(itemIndex))
-                    if(item.exists()) {
-                        Log.e("ReadSms",""+item.text)
-                        //item.clickAndWaitForNewWindow(200)
-                        item.dragTo(item,200)
-
-                    }
                 }
-
-
-
             }
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount", "Count " + uiObject.childCount)
 
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        val item: UiObject = uiObject.getChild(
+                            UiSelector()
+                                .className(itemClassname).instance(itemIndex)
+                        )
+                        if (item.exists()) {
+                            Log.e("ReadSms", "" + item.text)
+                            //item.clickAndWaitForNewWindow(200)
+                            item.dragTo(item, 200)
+
+                        }
+                    }
+
+
+                }
+            }
             return true
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")

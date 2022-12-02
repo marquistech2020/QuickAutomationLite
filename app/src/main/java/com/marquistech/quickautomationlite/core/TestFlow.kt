@@ -172,12 +172,16 @@ abstract class TestFlow {
 
                 if (action.milli > 0) {
                     writeLog(tag, "Delay  milli ${action.milli}")
-                    helper.waitDeviceForIdle((action.milli / 2).toLong())
-                    helper.waitFor(action.milli.toLong())
+                    /*helper.waitDeviceForIdle((action.milli / 2).toLong())
+                    helper.waitFor(action.milli.toLong())*/
+                    helper.waitDevice(action.milli.toLong())
+                    CountDownLatch(1).await(action.milli.toLong(),TimeUnit.MILLISECONDS)
                 } else if (action.second > 0) {
                     writeLog(tag, "Delay seconds ${action.second}")
-                    helper.waitDeviceForIdle(((action.second * 1000) / 2).toLong())
-                    helper.waitFor((action.second * 1000).toLong())
+                    /*helper.waitDeviceForIdle(((action.second * 1000) / 2).toLong())
+                    helper.waitFor((action.second * 1000).toLong())*/
+                    helper.waitDevice(action.second.toLong())
+                    CountDownLatch(1).await(action.second.toLong(),TimeUnit.SECONDS)
                 }
             }
             is Action.Drag -> {
@@ -238,7 +242,7 @@ abstract class TestFlow {
             }
             is Action.SetEnable -> {
                 Log.e(tag, "SetEnable")
-                val isDone = helper.performEnable(action.type,action.enable)
+                val isDone = helper.performEnable(action.type, action.enable)
                 actionEnableResult(count, isDone, action.stepName)
             }
         }

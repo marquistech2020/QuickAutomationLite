@@ -6,6 +6,7 @@ import androidx.test.uiautomator.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
+import kotlin.concurrent.thread
 
 class CallHelper : Helper() {
 
@@ -50,26 +51,57 @@ class CallHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                is Selector.ByContentDesc -> {
+                    uiSelector = UiSelector().descriptionContains(selector.contentDesc)
+                }
             }
 
 
             var isClicked = false
 
-            val uiObject = uiDevice.findObject(uiSelector)
+            var uiObject = uiDevice.findObject(uiSelector)
+
+            var retryCount = 0
+
+            while (uiObject.exists().not() && retryCount < 3){
+                uiObject = uiDevice.findObject(uiSelector)
+                retryCount += 1
+                writeLog(tag, " retry $retryCount")
+                waitDevice(2000)
+            }
+
+            writeLog(tag, " button clicked1 $isClicked element exist ${uiObject.exists()}")
 
             if (uiObject.exists()) {
 
-                isClicked = if (uiObject.isClickable.not()) false else if (isLongClick) uiObject.longClick() else uiObject.click()
+                writeLog(tag, " button clicked2 $isClicked")
 
-                writeLog(tag," button clicked2 $isClicked")
+                isClicked =
+                    if (uiObject.isClickable.not()) false else if (isLongClick) uiObject.longClick() else uiObject.click()
+
+                writeLog(tag, " button clicked3 $isClicked")
 
                 if (isClicked.not() && uiObject.childCount != 0) {
                     val btn = uiObject.getChild(UiSelector().clickable(true).index(position))
                     if (btn.exists()) {
-                        isClicked = if (btn.isClickable.not()) false else if (isLongClick) btn.longClick() else btn.click()
+                        isClicked =
+                            if (btn.isClickable.not()) false else if (isLongClick) btn.longClick() else btn.click()
 
-                        writeLog(tag," button clicked3 $isClicked")
+                        writeLog(tag, " button clicked4 $isClicked")
                     }
+                }
+
+
+                if (isClicked.not()) {
+
+                    isClicked = uiDevice.performActionAndWait({
+                        val bounds = uiObject.bounds
+                        val x = bounds.left + 50
+                        val y = bounds.top + 50
+                        uiDevice.click(x, y)
+                    }, Until.newWindow(), 5000)
+
+                    writeLog(tag, " button clicked5 $isClicked")
                 }
 
 
@@ -98,6 +130,7 @@ class CallHelper : Helper() {
             }
             return isClicked
         } catch (e: Exception) {
+            writeLog(tag, " Exception in performClick ${e.message}")
             false
         }
     }
@@ -123,6 +156,9 @@ class CallHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                     reqStr = selector.text
+                }
+                else -> {
+
                 }
             }
 
@@ -203,7 +239,7 @@ class CallHelper : Helper() {
     }
 
 
-    fun testWatcher(){
+    fun testWatcher() {
         val okCancelDialogWatcher = UiWatcher {
 
             val okCancelDialog = UiObject(UiSelector().textStartsWith("Now"))
@@ -223,7 +259,6 @@ class CallHelper : Helper() {
 
 
     }
-
 
 
 }

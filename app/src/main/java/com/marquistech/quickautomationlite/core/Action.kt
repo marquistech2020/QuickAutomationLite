@@ -51,6 +51,7 @@ sealed class Selector {
     data class ByPkg(val pkgName: String) : Selector()
     data class ByCls(val clsName: String) : Selector()
     data class ByText(val text: String) : Selector()
+    data class ByContentDesc(val contentDesc: String) : Selector()
 }
 
 sealed class AppSelector {

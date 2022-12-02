@@ -8,7 +8,7 @@ import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import java.util.regex.Pattern
 
-class VtCallTestUsingPhonebook : TestFlow() {
+class VoiceCallTestUsingPhonebook : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
@@ -22,8 +22,7 @@ class VtCallTestUsingPhonebook : TestFlow() {
             "com.google.android.contacts:id/open_search_view_edit_text"
         private const val CONTACT_RESULT_BUTTON_RES =
             "com.google.android.contacts:id/search_result_list"
-        private const val VIDEO_BUTTON_RES = "com.google.android.contacts:id/verb_video"
-        private const val FLIP_CAMERA_TEXT = "Flip camera"
+        private const val VOICE_BUTTON_RES = "com.google.android.contacts:id/verb_call"
         private const val PHONE_BOOK_CONTACT_NAME = "contact1"
     }
 
@@ -43,7 +42,6 @@ class VtCallTestUsingPhonebook : TestFlow() {
                 stepName = "Launch contact app"
             )
         )
-        actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes(CONTACT_SEARCH_BAR_RES)))
         actions.add(Action.Delay(2))
@@ -58,8 +56,8 @@ class VtCallTestUsingPhonebook : TestFlow() {
         actions.add(Action.Delay(1))
         actions.add(
             Action.Click(
-                Selector.ByRes(VIDEO_BUTTON_RES),
-                stepName = "Initiate the video call"
+                Selector.ByRes(VOICE_BUTTON_RES),
+                stepName = "Initiate the voice call"
             )
         )
         actions.add(Action.Delay(5))
@@ -67,13 +65,6 @@ class VtCallTestUsingPhonebook : TestFlow() {
             Action.GetText(
                 Selector.ByRes("com.google.android.dialer:id/contactgrid_bottom_timer"),
                 stepName = "Call received by other side"
-            )
-        )
-        actions.add(Action.Delay(2))
-        actions.add(
-            Action.GetText(
-                Selector.ByText(FLIP_CAMERA_TEXT),
-                stepName = "Video call established"
             )
         )
         actions.add(Action.Delay(5))
@@ -93,11 +84,11 @@ class VtCallTestUsingPhonebook : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1
     }
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 7)
+        report = Report(count, 5)
     }
 
 
@@ -153,9 +144,7 @@ class VtCallTestUsingPhonebook : TestFlow() {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
         if (stepName.isNotEmpty()){
-            if (resultText == FLIP_CAMERA_TEXT){
-                report?.insertStep(stepName, "Pass")
-            }else if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
+           if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
                 report?.insertStep(stepName, "Pass")
             }else{
                 report?.insertStep(stepName, "Fail")
@@ -197,7 +186,7 @@ class VtCallTestUsingPhonebook : TestFlow() {
 
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_using_phonebook")
+        StorageHandler.writeXLSFile(reportList, "Voice_call_using_phonebook")
     }
 
 

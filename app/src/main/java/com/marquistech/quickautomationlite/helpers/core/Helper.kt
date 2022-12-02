@@ -12,7 +12,9 @@ import android.os.Build
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.*
@@ -288,6 +290,10 @@ open class Helper {
         //fusedLocationClient.removeLocationUpdates(locationCallback)
 
 
+    }
+
+    fun waitDevice(time:Long){
+        uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")),time)
     }
 
 }
