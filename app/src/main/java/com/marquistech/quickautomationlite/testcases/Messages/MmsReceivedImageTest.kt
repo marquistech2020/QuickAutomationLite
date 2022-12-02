@@ -56,7 +56,13 @@ class MmsReceivedImageTest : TestFlow() {
 
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByRes("android:id/list"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFlag = UtilsClass.ReceivedImage_MMS))
+        actions.add(Action.ClickListItemByIndex(
+            Selector.ByRes("android:id/list"),
+            0,
+            "com.google.android.apps.messaging:id/conversation_message_view",
+            6,
+            stepName ="Select Last Message"
+        ))
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(1))

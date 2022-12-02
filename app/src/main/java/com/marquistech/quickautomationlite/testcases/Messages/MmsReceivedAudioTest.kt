@@ -58,7 +58,13 @@ class MmsReceivedAudioTest : TestFlow() {
 
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFlag = UtilsClass.ReceivedAudio_MMS))
+        actions.add(Action.ClickListItemByIndex(
+            Selector.ByCls("android.support.v7.widget.RecyclerView"),
+            0,
+            "com.google.android.apps.messaging:id/conversation_message_view",
+            6,
+            stepName ="Select Last Message"
+        ))
 
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))

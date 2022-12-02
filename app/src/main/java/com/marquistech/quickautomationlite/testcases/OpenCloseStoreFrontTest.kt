@@ -24,7 +24,7 @@ class OpenCloseStoreFrontTest : TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
+       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
         actions.add(Action.Delay(milli = 1000))
         actions.add(Action.SendEvent(EventType.HOME))
         return actions

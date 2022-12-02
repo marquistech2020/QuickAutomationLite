@@ -1,6 +1,5 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
-import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
@@ -87,7 +86,8 @@ class OpenReadSentMmsTest : TestFlow() {
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
                 1
-                , stepName = "Select Received Image ","")
+                , stepName = "Select Received Image "
+            )
         )
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))

@@ -1,6 +1,5 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
-import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
@@ -101,7 +100,7 @@ class OpenReadSentSmsTest : TestFlow() {
                 Selector.ByRes("android:id/list"),
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
-                1, stepName = "Select Received Image ", ""
+                1, stepName = "Select Received Image "
             )
         )
         actions.add(Action.Delay(2))

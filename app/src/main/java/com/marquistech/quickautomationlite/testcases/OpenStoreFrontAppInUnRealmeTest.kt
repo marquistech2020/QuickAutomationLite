@@ -30,7 +30,7 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
+       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
         actions.add(Action.Delay(5))
         actions.add(Action.Click(Selector.ByText("Install")))
         actions.add(Action.Delay(10))

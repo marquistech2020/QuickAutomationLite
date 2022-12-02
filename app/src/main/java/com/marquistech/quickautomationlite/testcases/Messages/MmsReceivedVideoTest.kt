@@ -56,7 +56,13 @@ class MmsReceivedVideoTest : TestFlow() {
         actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
         actions.add(Action.Delay(1))
 
-        actions.add(Action.ClickListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6,stepName ="Select Last Message", testFlag = UtilsClass.ReceivedVidio_MMS))
+        actions.add(Action.ClickListItemByIndex(
+            Selector.ByCls("android.support.v7.widget.RecyclerView"),
+            0,
+            "com.google.android.apps.messaging:id/conversation_message_view",
+            6,
+            stepName ="Select Last Message"
+        ))
 
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
