@@ -13,10 +13,11 @@ class QuickInstrumentTest {
       // val test =SendEmailAttachment()
         //val test = SendEmail()
        //val test = WifiOnOff()
-        val test = WifiEnbDsb()
+        //val test = WifiEnbDsb()
 
         //val  test = OpenCloseStoreFrontTest()
-        //val test = OpenStoreFrontAppInUnRealmeTest()
+        val test = OpenStoreFrontAppInUnRealmeTest()
+       // val test = OpenCloseStoreFrontTest()
 
 
         test.mainTest()

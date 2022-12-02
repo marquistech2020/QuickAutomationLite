@@ -9,13 +9,11 @@ import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
 
 /**
- * Created by RAJESH on 09,November,2022,
+ * Created by Ashutosh on 09,November,2022,
  */
 class WifiEnbDsbHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
-
-
         val uiSelector = UiSelector().className("android.widget.ListView")
 
         val lv = uiDevice.findObject(uiSelector)

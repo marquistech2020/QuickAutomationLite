@@ -257,19 +257,15 @@ fun textWatcher(){
                         item.dragTo(item,200)
                     }
                 }
-
             }
-
             return true
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")
             false
         }
-
         return true
     }
      fun performListItemText(): Boolean {
-
          val settingsItem = UiScrollable(UiSelector().className("android.support.v7.widget.RecyclerView"))
             val uiObject=UiScrollable(UiSelector().className("android.view.ViewGroup"))
          Log.e("Watcher", "ChildCount"+settingsItem.childCount)

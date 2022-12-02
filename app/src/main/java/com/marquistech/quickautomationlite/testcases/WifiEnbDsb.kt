@@ -65,11 +65,8 @@ class WifiEnbDsb : TestFlow() {
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Delay(second = 2))
-
-
         actions.add(Action.Click(Selector.ByText("Security")))
         actions.add(Action.Click(Selector.ByText("None")))
-
         actions.add(Action.Click(Selector.ByRes("com.oplus.wirelesssettings:id/menu_save")))
         actions.add(Action.Delay(second = 10))
 
@@ -113,7 +110,6 @@ class WifiEnbDsb : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-
         writeLog(tag, "actionClearRecentResult  result $result")
     }
 
@@ -122,7 +118,6 @@ class WifiEnbDsb : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-
         writeLog(tag, "actionLaunchAppResult  result $result")
     }
 
@@ -164,13 +159,9 @@ class WifiEnbDsb : TestFlow() {
 
     override fun onTestStart(testName: String) {
         reportList.clear()
-
     }
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "Wifi_Enb_dsb")
-
-
-
     }
 }

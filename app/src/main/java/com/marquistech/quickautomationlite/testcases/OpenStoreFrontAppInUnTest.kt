@@ -26,10 +26,8 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
        // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
-        actions.add(Action.Delay(5))
-
-
+        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
+        actions.add(Action.Delay(10))
 /*
 //for opening the App
         actions.add(
@@ -54,7 +52,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
                 0,
                 "android.view.View",
                 7,
-                ))
+                "App is open Successfully "))
 
 
         actions.add(Action.Delay(30))
@@ -130,9 +128,6 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         writeLog(tag, "actionGetTextResult  result $result")
 
     }
-
-
-
     override fun onEndIteration(testName: String, count: Int) {
         val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false
         report?.status = if (isFailed) "Fail" else "Pass"
@@ -149,10 +144,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Open_Store_Front")
-
-
-
+        StorageHandler.writeXLSFile(reportList, "Open_Store_Front_In_Un")
     }
 }
 

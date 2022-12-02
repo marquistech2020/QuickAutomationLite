@@ -12,7 +12,7 @@ sealed class Action {
     data class CloseApp(val packageName: String,var stepName:String = "") : Action()
     data class Switch(val selector: Selector,var stepName:String = "") : Action()
     data class ClickListItem(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearch:String) : Action()
-    data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int) : Action()
+    data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int, var stepName: String="") : Action()
     data class ClearRecentApps(val stepName:String = "") : Action()
 }
 

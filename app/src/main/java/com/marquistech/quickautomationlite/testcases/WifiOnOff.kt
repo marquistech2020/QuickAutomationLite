@@ -17,7 +17,7 @@ class WifiOnOff :TestFlow() {
         return WifiEnbDsbHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 3
+        return 500
     }
 
     override fun onCreateScript(): List<Action> {
@@ -53,10 +53,10 @@ class WifiOnOff :TestFlow() {
                 AppSelector.ByPkg("com.oplus.wirelesssettings"),
                 stepName = "Launch WIfi App"
             ))
-
-        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is Enabled successfully"))
         actions.add(Action.Delay(second = 3))
-        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is disabled successfully "))
+        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is enabled successfully"))
+        actions.add(Action.Delay(second = 3))
+        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is disabled successfully"))
         actions.add(Action.Delay(second = 3))
         actions.add(Action.SendEvent(EventType.HOME))
         return  actions

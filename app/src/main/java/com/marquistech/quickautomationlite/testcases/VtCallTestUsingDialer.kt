@@ -9,8 +9,6 @@ import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
 class VtCallTestUsingDialer : TestFlow() {
-
-
     override fun onCreateHelper(): Helper {
         return CallHelper()
     }

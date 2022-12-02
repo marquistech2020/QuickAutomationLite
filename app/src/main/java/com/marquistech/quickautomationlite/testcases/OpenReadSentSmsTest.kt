@@ -44,10 +44,8 @@ class OpenReadSentSmsTest : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
-
         actions.add(Action.Delay(4))
         actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging")))
-
         actions.add(Action.Delay(2))
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(

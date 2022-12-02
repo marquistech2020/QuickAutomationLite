@@ -15,8 +15,6 @@ import com.marquistech.quickautomationlite.data.StorageHandler
  * Created by Ashutosh on 14,November,2022,
  */
 class StoreFrontHelper :Helper() {
-
-
     override fun clearRecentApps(): Boolean {
         val uiSelector = UiSelector().className("android.widget.ListView")
 
@@ -55,12 +53,8 @@ class StoreFrontHelper :Helper() {
                     uiSelector = UiSelector().text(selector.text)
                 }
             }
-
-
             var isClicked = false
-
             val uiObject = uiDevice.findObject(uiSelector)
-
             if (uiObject.exists()) {
                 isClicked = if (uiObject.childCount == 0 || isResId) {
                     if (isLongClick) uiObject.longClick() else uiObject.click()
@@ -71,7 +65,6 @@ class StoreFrontHelper :Helper() {
                     } else false
                 }
             }
-
             return isClicked
         } catch (e: Exception) {
             StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
@@ -105,7 +98,6 @@ class StoreFrontHelper :Helper() {
                     reqStr = selector.text
                 }
             }
-
             var outputText = ""
 
             val uiObject = uiDevice.findObject(uiSelector)

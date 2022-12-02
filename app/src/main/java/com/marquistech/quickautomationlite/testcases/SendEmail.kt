@@ -19,7 +19,7 @@ class SendEmail : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 500
     }
 override fun onCreateScript(): List<Action> {
     val actions = mutableListOf<Action>()
@@ -66,7 +66,7 @@ override fun onCreateScript(): List<Action> {
     )
     actions.add(Action.Delay(second = 3))
     actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send"),))
-    actions.add(Action.Delay(second = 5))
+    actions.add(Action.Delay(second = 2))
     actions.add(
         Action.GetText(
             Selector.ByText(MAIL_SENT_SUCESSFULLY),

@@ -175,9 +175,6 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "Open_Store_Front")
-
-
-
     }
 }
 
