@@ -1,19 +1,16 @@
 package com.marquistech.quickautomationlite.helpers.core
 
-import android.util.Log
-import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
-import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
 
 /**
- * Created by Ashutosh on 09,November,2022,
+ * Created by Ashutosh on 11,November,2022,
  */
-class WifiEnbDsbHelper : Helper() {
-
+class GmailHelper : Helper() {
     override fun clearRecentApps(): Boolean {
+
+
         val uiSelector = UiSelector().className("android.widget.ListView")
 
         val lv = uiDevice.findObject(uiSelector)
@@ -31,8 +28,6 @@ class WifiEnbDsbHelper : Helper() {
         return lv.exists().not()
 
     }
-
-
     override fun performClick(selector: Selector, position: Int, isLongClick: Boolean): Boolean {
         return try {
             var uiSelector: UiSelector? = null
@@ -76,7 +71,6 @@ class WifiEnbDsbHelper : Helper() {
             false
         }
     }
-
     override fun performSetText(selector: Selector, text: String): Boolean {
         uiDevice.executeShellCommand("input text $text")
         return true
@@ -130,20 +124,4 @@ class WifiEnbDsbHelper : Helper() {
             "$reqStr#"
         }
     }
-    private fun getItemAddNetwork(): Boolean {
-
-        val settingsItem = UiScrollable(UiSelector().className("android.widget.LinearLayout"))
-        val actions = mutableListOf<Action>()
-        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
-        val about: UiObject = settingsItem.getChildByText(
-            UiSelector().className("android.widget.RelativeLayout"),"Add network")
-        about.click()
-
-
-
-        return true
-    }
-
-
 }
-

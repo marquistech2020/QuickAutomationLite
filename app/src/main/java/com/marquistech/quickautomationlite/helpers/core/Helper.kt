@@ -3,6 +3,7 @@ package com.marquistech.quickautomationlite.helpers.core
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.KeyEvent
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -50,6 +51,19 @@ open class Helper {
                         action = Intent.ACTION_MAIN
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                }
+                is AppSelector.ByUri->
+                {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.apply {
+                       // `package` = appSelector.pkgName
+                        // Comment
+
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        data = Uri.parse(appSelector.uriName)
                     }
                     context.startActivity(intent)
                 }

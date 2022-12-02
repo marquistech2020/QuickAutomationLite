@@ -36,12 +36,25 @@
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
+                  <entry key="0G31A30S02100099" value="120" />
+                  <entry key="623215b3" value="120" />
+                  <entry key="6662815b" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="OPPO" value="120" />
                   <entry key="OPPO&#10; CPH2219" value="120" />
                   <entry key="OPPO&#10; CPH2455" value="120" />
+                  <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="TOY5GATK6TX87X9L" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="ZPRGRKHIS8IZRSA6" value="120" />
                   <entry key="a7f6689c" value="120" />
                   <entry key="e13fa80" value="120" />
+                  <entry key="realme" value="120" />
+                  <entry key="realme&#10; RMX3151" value="120" />
+                  <entry key="realme&#10; RMX3312" value="120" />
+                  <entry key="realme&#10; RMX3511" value="120" />
+                  <entry key="realme&#10; RMX3561" value="120" />
+                  <entry key="realme&#10; RMX3660" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

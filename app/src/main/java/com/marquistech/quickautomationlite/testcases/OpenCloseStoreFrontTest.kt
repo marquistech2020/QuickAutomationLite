@@ -1,23 +1,20 @@
 package com.marquistech.quickautomationlite.testcases
 
-import android.provider.Settings
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
+import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
 /**
- * Created by Ashutosh on 10,November,2022,
+ * Created by Ashutosh on 16,November,2022,
  */
-class WifiOnOff :TestFlow() {
-
-
+class OpenCloseStoreFrontTest : TestFlow() {
     override fun onCreateHelper(): Helper {
-        return WifiEnbDsbHelper()
+        return StoreFrontHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 500
+        return 3
     }
 
     override fun onCreateScript(): List<Action> {
@@ -27,47 +24,15 @@ class WifiOnOff :TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-        actions.add(Action.Delay(second = 1))
-/*
-        actions.add(
-            Action.LaunchApp(
-                AppSelector.ByAction(Settings.ACTION_WIFI_SETTINGS),
-                stepName = "Launch WIfi App"
-            )
-        )
-
- */
-
-/*
-//for realme C35 this package is required
-//It is Android 11 device
-        actions.add(
-            Action.LaunchApp(
-                AppSelector.ByPkg("com.android.settings"),
-                stepName = "Launch WIfi App"
-            ))
-
- */
-        actions.add(
-            Action.LaunchApp(
-                AppSelector.ByPkg("com.oplus.wirelesssettings"),
-                stepName = "Launch WIfi App"
-            ))
-        actions.add(Action.Delay(second = 3))
-        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is enabled successfully"))
-        actions.add(Action.Delay(second = 3))
-        actions.add(Action.Click(Selector.ByText("Wi-Fi"), stepName = "Wifi is disabled successfully"))
-        actions.add(Action.Delay(second = 3))
+        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
+        actions.add(Action.Delay(milli = 1000))
         actions.add(Action.SendEvent(EventType.HOME))
-        return  actions
-
+        return actions
     }
-
-
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,4)
+        report = Report(count,2)
 
 
     }
@@ -86,7 +51,6 @@ class WifiOnOff :TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-
         StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
     }
 
@@ -134,9 +98,11 @@ class WifiOnOff :TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Wifi_On_Off")
+        StorageHandler.writeXLSFile(reportList, "Open_store_front")
 
 
 
     }
+
+
 }

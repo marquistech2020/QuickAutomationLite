@@ -1,18 +1,20 @@
 package com.marquistech.quickautomationlite.helpers.core
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
-import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
 
-/**
- * Created by Ashutosh on 09,November,2022,
- */
-class WifiEnbDsbHelper : Helper() {
 
+/**
+ * Created by Ashutosh on 14,November,2022,
+ */
+class StoreFrontHelper :Helper() {
     override fun clearRecentApps(): Boolean {
         val uiSelector = UiSelector().className("android.widget.ListView")
 
@@ -31,8 +33,6 @@ class WifiEnbDsbHelper : Helper() {
         return lv.exists().not()
 
     }
-
-
     override fun performClick(selector: Selector, position: Int, isLongClick: Boolean): Boolean {
         return try {
             var uiSelector: UiSelector? = null
@@ -53,12 +53,8 @@ class WifiEnbDsbHelper : Helper() {
                     uiSelector = UiSelector().text(selector.text)
                 }
             }
-
-
             var isClicked = false
-
             val uiObject = uiDevice.findObject(uiSelector)
-
             if (uiObject.exists()) {
                 isClicked = if (uiObject.childCount == 0 || isResId) {
                     if (isLongClick) uiObject.longClick() else uiObject.click()
@@ -69,14 +65,12 @@ class WifiEnbDsbHelper : Helper() {
                     } else false
                 }
             }
-
             return isClicked
         } catch (e: Exception) {
             StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
             false
         }
     }
-
     override fun performSetText(selector: Selector, text: String): Boolean {
         uiDevice.executeShellCommand("input text $text")
         return true
@@ -104,7 +98,6 @@ class WifiEnbDsbHelper : Helper() {
                     reqStr = selector.text
                 }
             }
-
             var outputText = ""
 
             val uiObject = uiDevice.findObject(uiSelector)
@@ -130,20 +123,52 @@ class WifiEnbDsbHelper : Helper() {
             "$reqStr#"
         }
     }
-    private fun getItemAddNetwork(): Boolean {
+    override fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemIndex:Int): Boolean {
+        return try {
+            var uiSelector: UiSelector? = null
 
-        val settingsItem = UiScrollable(UiSelector().className("android.widget.LinearLayout"))
-        val actions = mutableListOf<Action>()
-        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
-        val about: UiObject = settingsItem.getChildByText(
-            UiSelector().className("android.widget.RelativeLayout"),"Add network")
-        about.click()
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector =UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+            }
+            val uiObject = UiScrollable(uiSelector)
+            Log.e("ListItemCount","Count "+uiObject.childCount)
 
+            if (uiObject.exists()){
+                if(uiObject.childCount==0){
+                    uiObject.click()
+                }else{
+                    val item: UiObject = uiObject.getChild(UiSelector()
+                        .className(itemClassname).instance(itemIndex))
+                    if(item.exists()) {
+                       val item =  item.getChild(UiSelector()
+                            .className(itemClassname).instance(itemIndex))
+                           .clickAndWaitForNewWindow(200)
 
+                        //item.dragTo(item,200)
+                    }
+                }
+
+            }
+
+            return true
+        } catch (e: Exception) {
+            Log.e("Helper", " exception ${e.message}")
+            false
+        }
 
         return true
     }
-
 
 }
 
