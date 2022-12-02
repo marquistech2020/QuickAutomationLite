@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class SmsReadHelper : Helper() {
+class MmsReadHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
 
@@ -130,12 +130,13 @@ class SmsReadHelper : Helper() {
                 waitFor(1)
                 if(uiObj.exists()) {
                     outputText = uiObj.text
-                    Log.e("GetText","Child cound "+uiObj.childCount)
+                    Log.e("GetText","Text "+uiObj.text)
                     val str:String=uiObj.text
                     if(str.contains("Received")){
                         val pos_1: Int = str.indexOf("Received:")
                         var recivedTime=str.substring(pos_1+10,pos_1+27)
                         var status=dateDifference(recivedTime)
+
                         Log.e("GetText","Condition Matched")
                         Log.e("GetText","receivedTime "+recivedTime)
                         Log.e("GetText","status "+status)
@@ -175,14 +176,7 @@ fun textWatcher(){
 
 
 }
-    fun ClickonListItem(){
-        val settingsItem = UiScrollable(UiSelector().className("android.support.v7.widget.RecyclerView"))
 
-        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
-        val about: UiObject = settingsItem.getChildByText(
-            UiSelector().className("android.widget.RelativeLayout"),"070110 46214")
-        about.click()
-    }
     override fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String,testFlag: String): Boolean {
         return try {
             var uiSelector: UiSelector? = null
@@ -258,7 +252,7 @@ fun textWatcher(){
                         .resourceId(itemClassname).index(childCount))
 
                     Log.e("itemChildCount","Item Child count "+item.childCount)
-                    var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_content").instance(0))
+                 var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_content").instance(0))
                     if(child_item.exists()) {
                         Log.e("ReadSms",""+item.text)
                         Log.e("itemChildCount","Recyler Child count "+uiObject.childCount)
@@ -281,17 +275,7 @@ fun textWatcher(){
 
         return true
     }
- fun performListItemText(): Boolean {
 
-         val settingsItem = UiScrollable(UiSelector().className("android.support.v7.widget.RecyclerView"))
-            val uiObject=UiScrollable(UiSelector().className("android.view.ViewGroup"))
-         Log.e("Watcher", "ChildCount"+settingsItem.childCount)
-         val about: UiObject = uiObject.getChildByText(
-             UiSelector().className("android.widget.FrameLayout"),"Now")
-         about.text
-         Log.e("GetText", "text "+about.text)
-        return true
-    }
     fun dateDifference( receivedTime:String):Boolean{
 
         try {
@@ -346,7 +330,7 @@ fun textWatcher(){
             }
             val uiObject = UiScrollable(uiSelector)
             Log.e("ListItemCount","Count "+uiObject.childCount)
-            if(testFlag.equals(UtilsClass.Received_MMS_Type))
+             if(testFlag.equals(UtilsClass.Received_MMS_Type))
             {
                 val uiObject = UiScrollable(uiSelector)
                 Log.e("ListItemCount", "Count " + uiObject.childCount)
@@ -405,23 +389,23 @@ fun textWatcher(){
                 return outText
             }
             else {
-                if (uiObject.exists()){
-                    if(uiObject.childCount==0){
-                        uiObject.click()
-                    }else{
-                        val item: UiObject = uiObject.getChild(UiSelector()
-                            .className(itemClassname).instance(itemIndex))
-                        if(item.exists()) {
-                            Log.e("ReadSms",""+item.text)
-                            //item.clickAndWaitForNewWindow(200)
-                            outText=item.text
+                 if (uiObject.exists()){
+                     if(uiObject.childCount==0){
+                         uiObject.click()
+                     }else{
+                         val item: UiObject = uiObject.getChild(UiSelector()
+                             .className(itemClassname).instance(itemIndex))
+                         if(item.exists()) {
+                             Log.e("ReadSms",""+item.text)
+                             //item.clickAndWaitForNewWindow(200)
+                             outText=item.text
 
-                        }
-                    }
+                         }
+                     }
 
 
 
-                }
+                 }
             }
 
 

@@ -7,10 +7,9 @@ import android.net.Uri
 import android.view.KeyEvent
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.marquistech.quickautomationlite.core.AppSelector
-import com.marquistech.quickautomationlite.core.Coordinate
-import com.marquistech.quickautomationlite.core.EventType
-import com.marquistech.quickautomationlite.core.Selector
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiSelector
+import com.marquistech.quickautomationlite.core.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -138,10 +137,10 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClick(selector: Selector, position: Int,itemClassname:String,itemSearch:String): Boolean {
+    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String): Boolean {
         return false
     }
-    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int): Boolean {
+    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String): Boolean {
         return false
     }
     open fun dateFormate(dateStr:String): Date? {
@@ -174,6 +173,16 @@ open class Helper {
 
         return null
     }
+    fun performListItemEvent(listItemEvent: ListItemEvent ,uiObject: UiObject,steps: Int): Boolean {
+        return when (listItemEvent) {
+            ListItemEvent.Click ->
+                uiObject.click()
+            ListItemEvent.DRAG -> uiObject.dragTo(uiObject,steps)
 
+        }
+    }
+    open fun performListItemGetTextByIndex(selector: Selector, position: Int, itemClassname:String, itemSearchIndex:Int, testFlagName:String): String {
+        return ""
+    }
 }
 

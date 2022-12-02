@@ -1,6 +1,6 @@
 package com.marquistech.quickautomationlite.helpers.core
 
-import android.util.Log
+
 import androidx.test.uiautomator.UiSelector
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog

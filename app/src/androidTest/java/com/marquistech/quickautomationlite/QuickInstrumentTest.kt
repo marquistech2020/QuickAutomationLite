@@ -1,25 +1,18 @@
 package com.marquistech.quickautomationlite
 
-import WifiEnbDsb
-import com.marquistech.quickautomationlite.testcases.*
+
+import com.marquistech.quickautomationlite.testcases.Messages.*
 import org.junit.Test
 
 class QuickInstrumentTest {
 
     @Test
     fun testShow() {
-
-      //val test = OpenStoreFrontAppInUnTest()
-      // val test =SendEmailAttachment()
-        //val test = SendEmail()
-       //val test = WifiOnOff()
-        //val test = WifiEnbDsb()
-
-        //val  test = OpenCloseStoreFrontTest()
-        val test = OpenStoreFrontAppInUnRealmeTest()
-       // val test = OpenCloseStoreFrontTest()
-
-
+        val test = OpenSmsTest()
         test.mainTest()
+       /* val test2 = MmsSendvideoTest()
+        test2.mainTest()
+        val test3 = MmsSendLargeTextTest()
+        test3.mainTest()*/
     }
 }
