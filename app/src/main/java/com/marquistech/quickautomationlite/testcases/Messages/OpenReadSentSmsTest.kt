@@ -16,6 +16,7 @@ class OpenReadSentSmsTest : TestFlow() {
     override fun onInitTestLoop(): Int {
         return 2
     }
+
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 5)
     }
@@ -30,6 +31,7 @@ class OpenReadSentSmsTest : TestFlow() {
             reportList.add(it)
         }
     }
+
     override fun onCreateHelper(): Helper {
         return SmsReadHelper()
     }
@@ -41,7 +43,6 @@ class OpenReadSentSmsTest : TestFlow() {
         actions = openSms()
         return actions
     }
-
 
 
     override fun onTestStart(testName: String) {
@@ -64,7 +65,12 @@ class OpenReadSentSmsTest : TestFlow() {
         actions.add(Action.Delay(second = 1))
 
         actions.add(Action.Delay(4))
-        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging"), stepName = "Open Message App"))
+        actions.add(
+            Action.LaunchApp(
+                AppSelector.ByPkg("com.google.android.apps.messaging"),
+                stepName = "Open Message App"
+            )
+        )
 
 
         actions.add(Action.Delay(2))
@@ -74,11 +80,20 @@ class OpenReadSentSmsTest : TestFlow() {
                 Selector.ByCls("android.support.v7.widget.RecyclerView"),
                 0,
                 "android.widget.RelativeLayout",
-                "070110 46214"
-                , stepName = "Open Chat Window","")
+                "070110 46214", stepName = "Open Chat Window", ""
+            )
         )
         actions.add(Action.Delay(1))
-        actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
+        actions.add(
+            Action.GetTextListItemByIndex(
+                Selector.ByCls("android.support.v7.widget.RecyclerView"),
+                0,
+                "com.google.android.apps.messaging:id/conversation_message_view",
+                6,
+                stepName = "Received Message Type",
+                testFlag = UtilsClass.Received_MMS_Type
+            )
+        )
 
         actions.add(Action.Delay(3))
         actions.add(
@@ -86,28 +101,32 @@ class OpenReadSentSmsTest : TestFlow() {
                 Selector.ByRes("android:id/list"),
                 0,
                 "com.google.android.apps.messaging:id/conversation_message_view",
-                1
-                , stepName = "Select Received Image ","")
+                1, stepName = "Select Received Image ", ""
+            )
         )
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByText("View details")))
         actions.add(Action.Delay(2))
-        actions.add(Action.GetText(Selector.ByRes("com.google.android.apps.messaging:id/message"), stepName = "View received Sms Details"))
+        actions.add(
+            Action.GetText(
+                Selector.ByRes("com.google.android.apps.messaging:id/message"),
+                stepName = "View received Sms Details"
+            )
+        )
         return actions
     }
 
 
-
-
     override fun actionGetTextResult(count: Int, result: String, stepName: String) {
         super.actionGetTextResult(count, result, stepName)
-        if(result.isNotEmpty()){
+        if (result.isNotEmpty()) {
             report?.insertStep(stepName, if (result.contains("Multimedia")) "Pass" else "Fail")
 
         }
     }
+
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
         super.actionLaunchAppResult(count, result, stepName)
         if (stepName.isNotEmpty()) {
@@ -128,8 +147,9 @@ class OpenReadSentSmsTest : TestFlow() {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
         StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
-        super.actionListItemClickByTextResult(count, reqSelector, result, stepName,"")
+        super.actionListItemClickByTextResult(count, reqSelector, result, stepName, "")
     }
+
     override fun actionListItemClickByindexResult(
         count: Int,
         reqSelector: Selector,
@@ -142,8 +162,6 @@ class OpenReadSentSmsTest : TestFlow() {
         }
         super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
-
-
 
 
     override fun actionClickResult(
@@ -159,33 +177,23 @@ class OpenReadSentSmsTest : TestFlow() {
     }
 
 
-
     override fun actionListItemGetTextByindexResult(
         count: Int,
         reqSelector: Selector,
         result: String,
         stepName: String,
-        testFlag :String
+        testFlag: String
     ) {
-        if(stepName.isNotEmpty()){
-            if(testFlag.equals(UtilsClass.Received_MMS_Type)) {
+        if (stepName.isNotEmpty()) {
+            if (testFlag.equals(UtilsClass.Received_MMS_Type)) {
                 report?.insertStep(stepName, result)
-            }
-            else if(result.contains("MultimediaMessage")){
-                report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+            } else if (result.contains("MultimediaMessage")) {
+                report?.insertStep(
+                    stepName,
+                    if (result.contains("MultimediaMessage")) "Pass" else "Fail"
+                )
             }
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
 }

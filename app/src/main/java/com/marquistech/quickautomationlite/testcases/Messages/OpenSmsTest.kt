@@ -19,8 +19,9 @@ class OpenSmsTest : TestFlow() {
     }
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 3)
+        report = Report(count, 2)
     }
+
 
 
     override fun onEndIteration(testName: String, count: Int) {
@@ -58,7 +59,7 @@ class OpenSmsTest : TestFlow() {
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SendEvent(EventType.RECENT_APP, stepName = "Clear recent app"))
+        actions.add(Action.SendEvent(EventType.RECENT_APP, ))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
@@ -73,5 +74,35 @@ class OpenSmsTest : TestFlow() {
 
     }
 
+    override fun actionSendEventResult(
+        count: Int,
+        reqCode: EventType,
+        result: Boolean,
+        stepName: String
+    ) {
+        if(stepName.isNotEmpty()){
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        super.actionSendEventResult(count, reqCode, result, stepName)
+    }
 
+    override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
+
+
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
+        super.actionClearRecentResult(count, result, stepName)
+    }
+    override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
+
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
+        super.actionLaunchAppResult(count, result, stepName)
+    }
 }
