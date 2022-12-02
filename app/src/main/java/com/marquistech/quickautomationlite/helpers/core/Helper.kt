@@ -60,6 +60,7 @@ open class Helper {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.apply {
                        // `package` = appSelector.pkgName
+                        // Comment
 
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
