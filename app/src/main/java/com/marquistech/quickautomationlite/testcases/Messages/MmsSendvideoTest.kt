@@ -16,7 +16,7 @@ class MmsSendvideoTest : TestFlow() {
         return MmsHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1
     }override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
     }
@@ -66,7 +66,7 @@ class MmsSendvideoTest : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
-                "7011046214"
+                "9289229037"
             )
         )
         actions.add(Action.Delay(1))
