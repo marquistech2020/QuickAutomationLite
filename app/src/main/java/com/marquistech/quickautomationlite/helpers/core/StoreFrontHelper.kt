@@ -123,7 +123,14 @@ class StoreFrontHelper :Helper() {
             "$reqStr#"
         }
     }
-    override fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemIndex:Int): Boolean {
+
+    override fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlag: String
+    ): Boolean {
         return try {
             var uiSelector: UiSelector? = null
 
@@ -149,11 +156,11 @@ class StoreFrontHelper :Helper() {
                     uiObject.click()
                 }else{
                     val item: UiObject = uiObject.getChild(UiSelector()
-                        .className(itemClassname).instance(itemIndex))
+                        .className(itemClassname).instance(itemSearchIndex))
                     if(item.exists()) {
-                       val item =  item.getChild(UiSelector()
-                            .className(itemClassname).instance(itemIndex))
-                           .clickAndWaitForNewWindow(200)
+                        item.getChild(UiSelector()
+                            .className(itemClassname).instance(itemSearchIndex))
+                            .clickAndWaitForNewWindow(200)
 
                         //item.dragTo(item,200)
                     }
@@ -166,8 +173,6 @@ class StoreFrontHelper :Helper() {
             Log.e("Helper", " exception ${e.message}")
             false
         }
-
-        return true
     }
 
 }

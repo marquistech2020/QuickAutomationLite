@@ -52,7 +52,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
                 0,
                 "android.view.View",
                 7,
-                "App is open Successfully "))
+                "App is open Successfully ", testFlag = ""))
 
 
         actions.add(Action.Delay(30))
