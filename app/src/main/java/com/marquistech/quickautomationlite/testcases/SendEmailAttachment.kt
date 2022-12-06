@@ -18,7 +18,7 @@ class SendEmailAttachment :TestFlow(){
     }
 
     override fun onInitTestLoop(): Int {
-        return 3
+        return 50
     }
 
     override fun onCreateScript(): List<Action> {
