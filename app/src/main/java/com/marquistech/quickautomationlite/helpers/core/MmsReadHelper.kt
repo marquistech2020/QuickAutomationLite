@@ -49,18 +49,21 @@ class MmsReadHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
+uiSelector?.let {
+    val uiObject = uiDevice.findObject(uiSelector)
 
-            val uiObject = uiDevice.findObject(uiSelector)
+    if (uiObject.exists()){
+        if(uiObject.childCount==0){
+            uiObject.click()
+        }else{
+            uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+        }
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    uiObject.getChild(UiSelector().clickable(true).index(position)).click()
-                }
+    }
+}
 
-            }
             
             return true
         } catch (e: Exception) {
@@ -87,6 +90,7 @@ class MmsReadHelper : Helper() {
             is Selector.ByText -> {
                 uiSelector = UiSelector().text(selector.text)
             }
+            else -> {}
         }
         uiSelector?.let {
             var uiObj = uiDevice.findObject(it)
@@ -121,6 +125,7 @@ class MmsReadHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
             var outputText = ""
@@ -194,23 +199,27 @@ fun textWatcher(){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount","Count "+uiObject.childCount)
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
+                if (uiObject.exists()){
+                    if(uiObject.childCount==0){
+                        uiObject.click()
+                    }else{
 
-                    val item: UiObject = uiObject.getChildByText(
-                        UiSelector().className(itemClassname),itemSearch)
-                    if(item.exists()) {
-                        item.click()
+                        val item: UiObject = uiObject.getChildByText(
+                            UiSelector().className(itemClassname),itemSearch)
+                        if(item.exists()) {
+                            item.click()
+                        }
                     }
-                }
 
+                }
             }
+
 
             return true
         } catch (e: Exception) {
@@ -238,34 +247,38 @@ fun textWatcher(){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount","Count "+uiObject.childCount)
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    val childCount=uiObject.childCount-2
-                    Log.e("itemChildCount","Select count "+childCount)
-                    var item: UiObject = uiObject.getChild(UiSelector()
-                        .resourceId(itemClassname).index(childCount))
+                if (uiObject.exists()){
+                    if(uiObject.childCount==0){
+                        uiObject.click()
+                    }else{
+                        val childCount=uiObject.childCount-2
+                        Log.e("itemChildCount","Select count "+childCount)
+                        var item: UiObject = uiObject.getChild(UiSelector()
+                            .resourceId(itemClassname).index(childCount))
 
-                    Log.e("itemChildCount","Item Child count "+item.childCount)
-                 var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_content").instance(0))
-                    if(child_item.exists()) {
-                        Log.e("ReadSms",""+item.text)
-                        Log.e("itemChildCount","Recyler Child count "+uiObject.childCount)
-                        Log.e("itemChildCount","Item Child count "+child_item.childCount)
-                        //item.clickAndWaitForNewWindow(200)
+                        Log.e("itemChildCount","Item Child count "+item.childCount)
+                        var  child_item=  item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_content").instance(0))
+                        if(child_item.exists()) {
+                            Log.e("ReadSms",""+item.text)
+                            Log.e("itemChildCount","Recyler Child count "+uiObject.childCount)
+                            Log.e("itemChildCount","Item Child count "+child_item.childCount)
+                            //item.clickAndWaitForNewWindow(200)
 
-                        performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                        }
                     }
+
+
+
                 }
-
-
-
             }
+
 
             return true
         } catch (e: Exception) {
@@ -327,86 +340,90 @@ fun textWatcher(){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
-             if(testFlag.equals(UtilsClass.Received_MMS_Type))
-            {
+            uiSelector?.let {
                 val uiObject = UiScrollable(uiSelector)
-                Log.e("ListItemCount", "Count " + uiObject.childCount)
-                var outText = ""
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        outText = uiObject.text
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-                        var childItem: UiObject = item.getChild(
-                            UiSelector()
-                                .resourceId("com.google.android.apps.messaging:id/message_content")
-                        )
+                Log.e("ListItemCount","Count "+uiObject.childCount)
+                if(testFlag.equals(UtilsClass.Received_MMS_Type))
+                {
+                    val uiObject = UiScrollable(uiSelector)
+                    Log.e("ListItemCount", "Count " + uiObject.childCount)
+                    var outText = ""
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            outText = uiObject.text
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+                            var childItem: UiObject = item.getChild(
+                                UiSelector()
+                                    .resourceId("com.google.android.apps.messaging:id/message_content")
+                            )
 
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var isImageType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/image_attachment_view")
-                                .instance(0)
-                        )
-                        var isVideoType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/video_attachment_view")
-                                .instance(0)
-                        )
-                        var isAudioType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/audio_attachment_view")
-                                .instance(0)
-                        )
-                        var isNormalMessage = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_text_and_info")
-                                .instance(0)
-                        )
-                        if (isImageType.exists()) {
-                            outText = UtilsClass.IMAGE
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var isImageType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/image_attachment_view")
+                                    .instance(0)
+                            )
+                            var isVideoType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/video_attachment_view")
+                                    .instance(0)
+                            )
+                            var isAudioType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/audio_attachment_view")
+                                    .instance(0)
+                            )
+                            var isNormalMessage = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_text_and_info")
+                                    .instance(0)
+                            )
+                            if (isImageType.exists()) {
+                                outText = UtilsClass.IMAGE
 
+                            }
+                            if (isVideoType.exists()) {
+                                outText = UtilsClass.VIDEO
+
+                            }
+                            if (isAudioType.exists()) {
+                                outText = UtilsClass.AUDIO
+
+                            }
+                            if (isNormalMessage.exists()) {
+                                outText = UtilsClass.TEXT
+
+                            }
                         }
-                        if (isVideoType.exists()) {
-                            outText = UtilsClass.VIDEO
 
-                        }
-                        if (isAudioType.exists()) {
-                            outText = UtilsClass.AUDIO
-
-                        }
-                        if (isNormalMessage.exists()) {
-                            outText = UtilsClass.TEXT
-
-                        }
                     }
-
+                    return outText
                 }
-                return outText
+                else {
+                    if (uiObject.exists()){
+                        if(uiObject.childCount==0){
+                            uiObject.click()
+                        }else{
+                            val item: UiObject = uiObject.getChild(UiSelector()
+                                .className(itemClassname).instance(itemIndex))
+                            if(item.exists()) {
+                                Log.e("ReadSms",""+item.text)
+                                //item.clickAndWaitForNewWindow(200)
+                                outText=item.text
+
+                            }
+                        }
+
+
+
+                    }
+                }
             }
-            else {
-                 if (uiObject.exists()){
-                     if(uiObject.childCount==0){
-                         uiObject.click()
-                     }else{
-                         val item: UiObject = uiObject.getChild(UiSelector()
-                             .className(itemClassname).instance(itemIndex))
-                         if(item.exists()) {
-                             Log.e("ReadSms",""+item.text)
-                             //item.clickAndWaitForNewWindow(200)
-                             outText=item.text
 
-                         }
-                     }
-
-
-
-                 }
-            }
 
 
             return outText

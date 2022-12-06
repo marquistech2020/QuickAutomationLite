@@ -15,6 +15,9 @@ sealed class Action {
     data class ClickListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int,var stepName:String = "",val testFlag:String = "") : Action()
     data class GetTextListItemByIndex(val selector: Selector,val position:Int = 0,val itemClassname:String,val itemSearchIndex:Int,var stepName:String = "",var testFlag :String = "") : Action()
     data class ClearRecentApps(val stepName:String = "") : Action()
+    data class ClickBYCordinate(val x: Int, val y: Int, var stepName: String = "") : Action()
+    data class SendAdbCommand(val command: String, var stepName: String = "") : Action()
+    data class SetEnable(val type: Type,val enable:Boolean,var stepName: String = "") : Action()
 }
 
 sealed class Selector {

@@ -49,18 +49,22 @@ class SmsMmsDeleateHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
+            uiSelector?.let {
+                val uiObject = uiDevice.findObject(uiSelector)
 
-            val uiObject = uiDevice.findObject(uiSelector)
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                    }
 
-            if (uiObject.exists()) {
-                if (uiObject.childCount == 0) {
-                    uiObject.click()
-                } else {
-                    uiObject.getChild(UiSelector().clickable(true).index(position)).click()
                 }
-
             }
+
+
 
             return true
         } catch (e: Exception) {
@@ -87,6 +91,7 @@ class SmsMmsDeleateHelper : Helper() {
             is Selector.ByText -> {
                 uiSelector = UiSelector().text(selector.text)
             }
+            else -> {}
         }
         uiSelector?.let {
             var uiObj = uiDevice.findObject(it)
@@ -120,6 +125,7 @@ class SmsMmsDeleateHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
             var outputText = ""
@@ -210,24 +216,28 @@ class SmsMmsDeleateHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount", "Count " + uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount", "Count " + uiObject.childCount)
 
-            if (uiObject.exists()) {
-                if (uiObject.childCount == 0) {
-                    uiObject.click()
-                } else {
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
 
-                    val item: UiObject = uiObject.getChildByText(
-                        UiSelector().className(itemClassname), itemSearch
-                    )
-                    if (item.exists()) {
-                        item.click()
+                        val item: UiObject = uiObject.getChildByText(
+                            UiSelector().className(itemClassname), itemSearch
+                        )
+                        if (item.exists()) {
+                            item.click()
+                        }
                     }
-                }
 
+                }
             }
+
 
             return true
         } catch (e: Exception) {
@@ -261,48 +271,52 @@ class SmsMmsDeleateHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount", "Count " + uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount", "Count " + uiObject.childCount)
 
-             if (testFlag.equals(UtilsClass.Delete_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-
-
-                        if (item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                            var child_item = item.getChild(
-                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
-                                    .instance(0)
+                if (testFlag.equals(UtilsClass.Delete_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
                             )
-                            if (child_item.exists()) {
-                               // Log.e("ReadSms", "" + item.text)
+
+
+                            if (item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
                                 Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
                                 //item.clickAndWaitForNewWindow(200)
-                                child_item.dragTo(item,200)
+                                var child_item = item.getChild(
+                                    UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+                                        .instance(0)
+                                )
+                                if (child_item.exists()) {
+                                    // Log.e("ReadSms", "" + item.text)
+                                    Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                    Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                    //item.clickAndWaitForNewWindow(200)
+                                    child_item.dragTo(item,200)
+                                    // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                                }
+
                                 // performListItemEvent(ListItemEvent.DRAG,child_item,200)
                             }
-
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
                         }
+
+
                     }
-
-
                 }
             }
+
 
             return true
         } catch (e: Exception) {

@@ -52,19 +52,23 @@ class StoreFrontHelper :Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
             var isClicked = false
-            val uiObject = uiDevice.findObject(uiSelector)
-            if (uiObject.exists()) {
-                isClicked = if (uiObject.childCount == 0 || isResId) {
-                    if (isLongClick) uiObject.longClick() else uiObject.click()
-                } else {
-                    val btn = uiObject.getChild(UiSelector().clickable(true).index(position))
-                    if (btn.exists()) {
-                        if (isLongClick) btn.longClick() else btn.click()
-                    } else false
+            uiSelector?.let {
+                val uiObject = uiDevice.findObject(uiSelector)
+                if (uiObject.exists()) {
+                    isClicked = if (uiObject.childCount == 0 || isResId) {
+                        if (isLongClick) uiObject.longClick() else uiObject.click()
+                    } else {
+                        val btn = uiObject.getChild(UiSelector().clickable(true).index(position))
+                        if (btn.exists()) {
+                            if (isLongClick) btn.longClick() else btn.click()
+                        } else false
+                    }
                 }
             }
+
             return isClicked
         } catch (e: Exception) {
             StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
@@ -97,27 +101,31 @@ class StoreFrontHelper :Helper() {
                     uiSelector = UiSelector().text(selector.text)
                     reqStr = selector.text
                 }
+                else -> {}
             }
             var outputText = ""
 
-            val uiObject = uiDevice.findObject(uiSelector)
+            uiSelector?.let {
+                val uiObject = uiDevice.findObject(uiSelector)
 
-            if (uiObject.exists()) {
-                outputText = if (uiObject.childCount == 0) {
-                    uiObject.text
-                } else {
-                    val ib = uiObject.getChild(
-                        UiSelector().className("android.widget.ImageButton").index(position)
-                    )
-                    val tv = uiObject.getChild(
-                        UiSelector().className("android.widget.TextView").index(position)
-                    )
-                    val iv = uiObject.getChild(
-                        UiSelector().className("android.widget.ImageView").index(position)
-                    )
-                    if (ib.exists()) ib.text else if (tv.exists()) tv.text else if (iv.exists()) iv.text else ""
+                if (uiObject.exists()) {
+                    outputText = if (uiObject.childCount == 0) {
+                        uiObject.text
+                    } else {
+                        val ib = uiObject.getChild(
+                            UiSelector().className("android.widget.ImageButton").index(position)
+                        )
+                        val tv = uiObject.getChild(
+                            UiSelector().className("android.widget.TextView").index(position)
+                        )
+                        val iv = uiObject.getChild(
+                            UiSelector().className("android.widget.ImageView").index(position)
+                        )
+                        if (ib.exists()) ib.text else if (tv.exists()) tv.text else if (iv.exists()) iv.text else ""
+                    }
                 }
             }
+
             "$reqStr#$outputText"
         } catch (e: Exception) {
             "$reqStr#"
@@ -147,26 +155,30 @@ class StoreFrontHelper :Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount","Count "+uiObject.childCount)
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount","Count "+uiObject.childCount)
 
-            if (uiObject.exists()){
-                if(uiObject.childCount==0){
-                    uiObject.click()
-                }else{
-                    val item: UiObject = uiObject.getChild(UiSelector()
-                        .className(itemClassname).instance(itemSearchIndex))
-                    if(item.exists()) {
-                        item.getChild(UiSelector()
+                if (uiObject.exists()){
+                    if(uiObject.childCount==0){
+                        uiObject.click()
+                    }else{
+                        val item: UiObject = uiObject.getChild(UiSelector()
                             .className(itemClassname).instance(itemSearchIndex))
-                            .clickAndWaitForNewWindow(200)
+                        if(item.exists()) {
+                            item.getChild(UiSelector()
+                                .className(itemClassname).instance(itemSearchIndex))
+                                .clickAndWaitForNewWindow(200)
 
-                        //item.dragTo(item,200)
+                            //item.dragTo(item,200)
+                        }
                     }
-                }
 
+                }
             }
+
 
             return true
         } catch (e: Exception) {

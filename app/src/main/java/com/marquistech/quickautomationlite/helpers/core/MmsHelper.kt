@@ -48,15 +48,18 @@ class MmsHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
-            val uiObject = uiDevice.findObject(uiSelector)
+            uiSelector?.let {
+                val uiObject = uiDevice.findObject(it)
+                if (uiObject.exists()) {
+                    if (uiObject.childCount == 0) {
+                        uiObject.click()
+                    } else {
+                        uiObject.getChild(UiSelector().clickable(true).index(position)).click()
+                    }
 
-            if (uiObject.exists()) {
-                if (uiObject.childCount == 0) {
-                    uiObject.click()
-                } else {
-                    uiObject.getChild(UiSelector().clickable(true).index(position)).click()
                 }
 
             }
@@ -86,7 +89,9 @@ class MmsHelper : Helper() {
             is Selector.ByText -> {
                 uiSelector = UiSelector().text(selector.text)
             }
+            else -> {}
         }
+
         uiSelector?.let {
             var uiObj = uiDevice.findObject(it)
             if (uiObj.exists()) {
@@ -119,6 +124,7 @@ class MmsHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
 
             var outputText = ""
@@ -137,7 +143,7 @@ class MmsHelper : Helper() {
                         Log.e("GetText", "Condition Matched")
                         Log.e("GetText", "receivedTime " + recivedTime)
                         Log.e("GetText", "status " + status)
-                    }else{
+                    } else {
                         return outputText
                     }
 
@@ -211,41 +217,46 @@ class MmsHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount", "Count " + uiObject.childCount)
-if(testFlag.equals(UtilsClass.SEND_Image_MMS)){
-    if (uiObject.exists()) {
-        if (uiObject.childCount == 0) {
-            uiObject.click()
-        } else {
+            uiSelector?.let {
 
-            val item: UiObject = uiObject.getChildByText(
-                UiSelector().resourceId(itemClassname), itemSearch
-            )
-            if (item.exists()) {
-                item.click()
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount", "Count " + uiObject.childCount)
+                if (testFlag.equals(UtilsClass.SEND_Image_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+
+                            val item: UiObject = uiObject.getChildByText(
+                                UiSelector().resourceId(itemClassname), itemSearch
+                            )
+                            if (item.exists()) {
+                                item.click()
+                            }
+                        }
+
+                    }
+                } else {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+
+                            val item: UiObject = uiObject.getChildByText(
+                                UiSelector().className(itemClassname), itemSearch
+                            )
+                            if (item.exists()) {
+                                item.click()
+                            }
+                        }
+
+                    }
+                }
+
+
             }
-        }
-
-    }
-}else{
-    if (uiObject.exists()) {
-        if (uiObject.childCount == 0) {
-            uiObject.click()
-        } else {
-
-            val item: UiObject = uiObject.getChildByText(
-                UiSelector().className(itemClassname), itemSearch
-            )
-            if (item.exists()) {
-                item.click()
-            }
-        }
-
-    }
-}
-
 
             return true
         } catch (e: Exception) {
@@ -280,179 +291,185 @@ if(testFlag.equals(UtilsClass.SEND_Image_MMS)){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            val uiObject = UiScrollable(uiSelector)
-            Log.e("ListItemCount", "Count " + uiObject.childCount)
-            if (testFlag.equals(UtilsClass.SEND_Image_MMS)|| testFlag.equals(UtilsClass.SEND_Audio_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
 
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var child_item = item.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata")
-                                .instance(0)
-                        )
-                        if (child_item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                            return true
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
-                        }
-                    }
-
-
-                }
-            }
-            else if (testFlag.equals(UtilsClass.ReceivedAudio_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var child_item = item.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
-                        )
-                        if (child_item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                            child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/timer")).dragTo(child_item,250)
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
-                            return true
-                        }
-                    }
-
-
-                }
-            }
-            else if (testFlag.equals(UtilsClass.ReceivedImage_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var child_item = item.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
-
-                        )
-                        if (child_item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                            child_item.dragTo(child_item,250)
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
-                            return true
-                        }
-                    }
-
-
-                }
-            }
-            else if (testFlag.equals(UtilsClass.ReceivedVidio_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var child_item = item.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
-
-                        )
-                        if (child_item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                            child_item.dragTo(child_item,250)
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
-                            return true
-                        }
-                    }
-
-
-                }
-            }
-            else if (testFlag.equals(UtilsClass.Delete_MMS)) {
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-
-
-                        if (item.exists()) {
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
-                                item.dragTo(item,200)
-                            return true
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
-                        }
-                    }
-
-
-                }
-            }
-                else{
+            uiSelector?.let {
                 val uiObject = UiScrollable(uiSelector)
                 Log.e("ListItemCount", "Count " + uiObject.childCount)
+                if (testFlag.equals(UtilsClass.SEND_Image_MMS) || testFlag.equals(UtilsClass.SEND_Audio_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
 
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        uiObject.click()
-                    } else {
-                        val item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).instance(itemIndex)
-                        )
-                        if (item.exists()) {
-                            performListItemEvent(ListItemEvent.DRAG, item, 200)
-                            //item.clickAndWaitForNewWindow(200)
-                            return true
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata")
+                                    .instance(0)
+                            )
+                            if (child_item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                return true
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            }
                         }
-                    }
 
+
+                    }
+                }
+                else if (testFlag.equals(UtilsClass.ReceivedAudio_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+                            )
+                            if (child_item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/timer"))
+                                    .dragTo(child_item, 250)
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                                return true
+                            }
+                        }
+
+
+                    }
+                }
+                else if (testFlag.equals(UtilsClass.ReceivedImage_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+
+                            )
+                            if (child_item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                child_item.dragTo(child_item, 250)
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                                return true
+                            }
+                        }
+
+
+                    }
+                }
+                else if (testFlag.equals(UtilsClass.ReceivedVidio_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
+
+                            )
+                            if (child_item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                child_item.dragTo(child_item, 250)
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                                return true
+                            }
+                        }
+
+
+                    }
+                }
+                else if (testFlag.equals(UtilsClass.Delete_MMS)) {
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+
+
+                            if (item.exists()) {
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                //Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+                                item.dragTo(item, 200)
+                                return true
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            }
+                        }
+
+
+                    }
+                }
+                else {
+                    val uiObject = UiScrollable(uiSelector)
+                    Log.e("ListItemCount", "Count " + uiObject.childCount)
+
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            uiObject.click()
+                        } else {
+                            val item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).instance(itemIndex)
+                            )
+                            if (item.exists()) {
+                                performListItemEvent(ListItemEvent.DRAG, item, 200)
+                                //item.clickAndWaitForNewWindow(200)
+                                return true
+                            }
+                        }
+
+                    }
                 }
             }
+
 
 
             return false
@@ -537,107 +554,114 @@ if(testFlag.equals(UtilsClass.SEND_Image_MMS)){
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                else -> {}
             }
-            if (testFlagName.equals(UtilsClass.SEND_Image_MMS)||
-                testFlagName.equals(UtilsClass.SEND_Audio_MMS)||
+            if (testFlagName.equals(UtilsClass.SEND_Image_MMS) ||
+                testFlagName.equals(UtilsClass.SEND_Audio_MMS) ||
                 testFlagName.equals(UtilsClass.SEND_Video_MMS)
             ) {
-
-                val uiObject = UiScrollable(uiSelector)
-                Log.e("ListItemCount", "Count " + uiObject.childCount)
                 var outText = ""
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        outText = uiObject.text
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
+                uiSelector?.let {
+                    val uiObject = UiScrollable(uiSelector)
+                    Log.e("ListItemCount", "Count " + uiObject.childCount)
 
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var child_item = item.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata")
-                                .instance(0)
-                        )
-                        if (child_item.exists()) {
-                            outText = child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_status")).text
-                            Log.e("ReadSms", "" + item.text)
-                            Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
-                            Log.e("itemChildCount", "Item Child count " + child_item.childCount)
-                            //item.clickAndWaitForNewWindow(200)
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            outText = uiObject.text
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
 
-                            // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var child_item = item.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_metadata")
+                                    .instance(0)
+                            )
+                            if (child_item.exists()) {
+                                outText =
+                                    child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/message_status")).text
+                                Log.e("ReadSms", "" + item.text)
+                                Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
+                                Log.e("itemChildCount", "Item Child count " + child_item.childCount)
+                                //item.clickAndWaitForNewWindow(200)
+
+                                // performListItemEvent(ListItemEvent.DRAG,child_item,200)
+                            }
                         }
+
                     }
 
+
+                }
+                return outText
+
+            } else if (
+                testFlagName.equals(UtilsClass.Received_MMS_Type)
+            ) {
+                var outText = ""
+                uiSelector?.let {
+                    val uiObject = UiScrollable(uiSelector)
+                    Log.e("ListItemCount", "Count " + uiObject.childCount)
+
+                    if (uiObject.exists()) {
+                        if (uiObject.childCount == 0) {
+                            outText = uiObject.text
+                        } else {
+                            val childCount = uiObject.childCount - 2
+                            Log.e("itemChildCount", "Select count " + childCount)
+                            var item: UiObject = uiObject.getChild(
+                                UiSelector()
+                                    .resourceId(itemClassname).index(childCount)
+                            )
+                            var childItem: UiObject = item.getChild(
+                                UiSelector()
+                                    .resourceId("com.google.android.apps.messaging:id/message_content")
+                            )
+
+                            Log.e("itemChildCount", "Item Child count " + item.childCount)
+                            var isimageType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/image_attachment_view")
+                                    .instance(0)
+                            )
+                            var isVideoType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/video_attachment_view")
+                                    .instance(0)
+                            )
+                            var isAudioType = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/audio_attachment_view")
+                                    .instance(0)
+                            )
+                            var isNormalMessage = childItem.getChild(
+                                UiSelector().resourceId("com.google.android.apps.messaging:id/message_text_and_info")
+                                    .instance(0)
+                            )
+                            if (isimageType.exists()) {
+                                outText = UtilsClass.IMAGE
+
+                            }
+                            if (isVideoType.exists()) {
+                                outText = UtilsClass.VIDEO
+
+                            }
+                            if (isAudioType.exists()) {
+                                outText = UtilsClass.AUDIO
+
+                            }
+                            if (isNormalMessage.exists()) {
+                                outText = UtilsClass.TEXT
+
+                            }
+                        }
+
+                    }
                 }
 
                 return outText
-            }
-            else if(
-                testFlagName.equals(UtilsClass.Received_MMS_Type)
-            )
-            {
-                val uiObject = UiScrollable(uiSelector)
-                Log.e("ListItemCount", "Count " + uiObject.childCount)
-                var outText = ""
-                if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
-                        outText = uiObject.text
-                    } else {
-                        val childCount = uiObject.childCount - 2
-                        Log.e("itemChildCount", "Select count " + childCount)
-                        var item: UiObject = uiObject.getChild(
-                            UiSelector()
-                                .resourceId(itemClassname).index(childCount)
-                        )
-                        var childItem: UiObject = item.getChild(
-                            UiSelector()
-                                .resourceId("com.google.android.apps.messaging:id/message_content")
-                        )
-
-                        Log.e("itemChildCount", "Item Child count " + item.childCount)
-                        var isimageType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/image_attachment_view")
-                                .instance(0)
-                        )
-                        var isVideoType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/video_attachment_view")
-                                .instance(0)
-                        )
-                        var isAudioType = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/audio_attachment_view")
-                                .instance(0)
-                        )
-                        var isNormalMessage = childItem.getChild(
-                            UiSelector().resourceId("com.google.android.apps.messaging:id/message_text_and_info")
-                                .instance(0)
-                        )
-                        if (isimageType.exists()) {
-                            outText = UtilsClass.IMAGE
-
-                        }
-                        if (isVideoType.exists()) {
-                            outText = UtilsClass.VIDEO
-
-                        }
-                        if (isAudioType.exists()) {
-                            outText = UtilsClass.AUDIO
-
-                        }
-                        if (isNormalMessage.exists()) {
-                            outText = UtilsClass.TEXT
-
-                        }
-                    }
-
-                }
-               return outText
-            }
-            else {
+            } else {
                 return ""
             }
         } catch (e: Exception) {
