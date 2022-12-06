@@ -11,7 +11,7 @@ import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 class MmsSendvideoTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
-
+private var count:Int=0
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }
@@ -36,7 +36,7 @@ class MmsSendvideoTest : TestFlow() {
 
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
-
+        Log.e("WatchLoop","Loop Count "+ count++)
         actions = sendAudioOnePlusDevice()
         return actions
     }
@@ -66,7 +66,7 @@ class MmsSendvideoTest : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
-                "7011046214"
+                "9289229037"
             )
         )
         actions.add(Action.Delay(1))

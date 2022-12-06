@@ -1,5 +1,6 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
+import android.util.Log
 import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.AppSelector
 import com.marquistech.quickautomationlite.core.EventType
@@ -12,10 +13,10 @@ import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 class OpenSmsTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
-
+    private var count:Int=0;
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 4
     }
 
     override fun onStartIteration(testName: String, count: Int) {
@@ -40,7 +41,7 @@ class OpenSmsTest : TestFlow() {
 
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
-
+            Log.e("TestCaseCount","Iteration "+count+1)
         actions = openSms()
         return actions
     }
