@@ -2,21 +2,20 @@ package com.marquistech.quickautomationlite.testcases
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
-import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
-
 /**
- * Created by Ashutosh on 14,November,2022,
+ * Created by Ashutosh on 06,December,2022,
  */
-class OpenStoreFrontAppInUnTest :TestFlow() {
+class OpenStoreAppDownload :TestFlow() {
     override fun onCreateHelper(): Helper {
-       return StoreFrontHelper()
+        return StoreFrontHelper()
     }
+
     override fun onInitTestLoop(): Int {
-        return 5
+        return 2
     }
 
     override fun onCreateScript(): List<Action> {
@@ -26,57 +25,38 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
         actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
-        actions.add(Action.Delay(10))
-/*
-//for opening the App
-        actions.add(
-            Action.ClickListItemByIndex(
-                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-                0,
-                "android.view.View",
-                8,
-
-
-            ))
-        actions.add(Action.Delay(5))
-
-
- */
-
-
-        //For installing the App
+       // for installing the app oppo F19 :
         actions.add(
             Action.ClickListItemByIndex(
                 Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
                 0,
                 "android.view.View",
                 7,
-                stepName = "App is installed sucessfully"
+                stepName = "App is open sucessfully"
                 , testFlag = ""))
-            actions.add(Action.Delay(30))
+        actions.add(Action.Delay(15))
 
-        //For Uninstalling the app
+        //For opening the app oppo F19:
+        /*
         actions.add(Action.ClickListItemByIndex(
             Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
             0,
             "android.view.View",
-            5))
-        actions.add(Action.Delay(5))
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByCls("android.view.View"),
-            0,
-            "android.view.View",
-            2,
-            stepName = "App is un-installed sucessfully"))
-        actions.add(Action.Delay(5))
+            6))
+        actions.add(Action.Delay(8))
+        actions.add(Action.SendEvent(EventType.HOME))
+
+         */
+        actions.add(Action.Delay(10))
+        actions.add(Action.SendEvent(EventType.HOME))
         return actions
     }
+
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,4)
+        report = Report(count,3)
     }
 
     override fun actionListItemClickByindexResult(
@@ -133,7 +113,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
-        writeLog(tag, "actionGetTextResult  result $result")
+        StorageHandler.writeLog(tag, "actionGetTextResult  result $result")
 
     }
     override fun onEndIteration(testName: String, count: Int) {
@@ -152,8 +132,8 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Open_Store_Front_In_Un")
+        StorageHandler.writeXLSFile(reportList, "Open_Store_Front_App_download")
     }
+
+
 }
-
-
