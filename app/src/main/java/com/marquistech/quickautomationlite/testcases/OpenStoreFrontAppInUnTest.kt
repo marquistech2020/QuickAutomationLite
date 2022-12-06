@@ -6,7 +6,7 @@ import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
-/*
+
 /**
  * Created by Ashutosh on 14,November,2022,
  */
@@ -26,7 +26,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
        // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-      //  actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
+        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
         actions.add(Action.Delay(10))
 /*
 //for opening the App
@@ -51,7 +51,8 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
                 Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
                 0,
                 "android.view.View",
-                7))
+                7,
+                "App is open Successfully ", testFlag = ""))
 
 
         actions.add(Action.Delay(30))
@@ -146,7 +147,5 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         StorageHandler.writeXLSFile(reportList, "Open_Store_Front_In_Un")
     }
 }
-
- */
 
 

@@ -59,6 +59,7 @@ open class Helper {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.apply {
                        // `package` = appSelector.pkgName
+                        // Comment
 
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -137,10 +138,10 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String): Boolean {
+    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String = ""): Boolean {
         return false
     }
-    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String): Boolean {
+    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String = ""): Boolean {
         return false
     }
     open fun dateFormate(dateStr:String): Date? {
