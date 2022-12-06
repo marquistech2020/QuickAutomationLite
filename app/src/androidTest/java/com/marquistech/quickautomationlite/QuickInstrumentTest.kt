@@ -10,7 +10,7 @@ class QuickInstrumentTest {
     @Test
     fun testShow() {
        // val test = OpenSmsTest()
-        val test = MmsSendvideoTest()
+        val test = OpenSmsTest()
         test.mainTest()
        /* val test2 = MmsSendvideoTest()
         test2.mainTest()
