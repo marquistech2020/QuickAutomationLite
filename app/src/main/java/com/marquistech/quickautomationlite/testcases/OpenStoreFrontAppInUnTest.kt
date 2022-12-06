@@ -7,12 +7,13 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
+
 /**
  * Created by Ashutosh on 14,November,2022,
  */
 class OpenStoreFrontAppInUnTest :TestFlow() {
     override fun onCreateHelper(): Helper {
-       return StoreFrontHelper()
+        return StoreFrontHelper()
     }
     override fun onInitTestLoop(): Int {
         return 5
@@ -25,7 +26,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
+        // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
         actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
         actions.add(Action.Delay(10))
 /*
@@ -52,9 +53,8 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
                 0,
                 "android.view.View",
                 7,
-                "App is open Successfully ", testFlag = ""))
-
-
+                stepName = "App is installed sucessfully"
+                , testFlag = ""))
         actions.add(Action.Delay(30))
 
         //For Uninstalling the app
@@ -62,26 +62,34 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
             Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
             0,
             "android.view.View",
-            5
-        ))
-
-
+            5))
         actions.add(Action.Delay(5))
         actions.add(Action.ClickListItemByIndex(
             Selector.ByCls("android.view.View"),
             0,
             "android.view.View",
-            2
-        ))
+            2,
+            stepName = "App is un-installed sucessfully"))
         actions.add(Action.Delay(5))
         return actions
     }
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,2)
+        report = Report(count,4)
+    }
 
-
+    override fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlagName: String
+    ) {
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
 
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
