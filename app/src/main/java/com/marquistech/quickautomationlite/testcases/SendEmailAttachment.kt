@@ -18,7 +18,7 @@ class SendEmailAttachment :TestFlow(){
     }
 
     override fun onInitTestLoop(): Int {
-        return 3
+        return 500
     }
 
     override fun onCreateScript(): List<Action> {
@@ -75,14 +75,14 @@ class SendEmailAttachment :TestFlow(){
         actions.add(Action.Click(Selector.ByText("SELECT"), stepName = "Image has inserted successFully"))
         actions.add(Action.Delay(second = 2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send")))
-        actions.add(Action.Delay(second = 4))
+        actions.add(Action.Delay(second = 6))
         actions.add(
             Action.GetText(
                 Selector.ByText(SendEmailAttachment.MAIL_SENT_SUCESSFULLY),
                 stepName = "Mail has been sent sucessfully from the sender"
             ),
         )
-        actions.add(Action.Delay(second = 3))
+        actions.add(Action.Delay(second = 5))
 
         actions.add(Action.SendEvent(EventType.HOME))
         return actions

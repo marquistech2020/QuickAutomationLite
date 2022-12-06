@@ -59,10 +59,6 @@ class VtCallTestUsingDialer : TestFlow() {
                 stepName = "Disconnect the call"
             )
         )
-
-
-
-
         return actions
     }
 
