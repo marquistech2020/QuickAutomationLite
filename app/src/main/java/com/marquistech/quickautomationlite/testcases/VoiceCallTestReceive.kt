@@ -6,20 +6,18 @@ import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
+import java.util.regex.Pattern
 
-class VtCallTestReceive : TestFlow() {
+class VoiceCallTestReceive : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
         return CallHelper()
     }
 
-    companion object {
-        private const val FLIP_CAMERA_TEXT = "Flip camera"
-    }
 
     override fun onInitTestLoop(): Int {
-        return 3
+        return 1
     }
 
     override fun onCreateScript(): List<Action> {
@@ -34,19 +32,19 @@ class VtCallTestReceive : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(20))
-        actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.ClickBYCordinate(780, 416))
+        actions.add(Action.Delay(5))
         actions.add(
             Action.GetText(
-                Selector.ByText(FLIP_CAMERA_TEXT),
-                stepName = "Video call established"
+                Selector.ByRes("com.google.android.dialer:id/contactgrid_bottom_timer"),
+                stepName = "Received voice call"
             )
         )
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
-                stepName = "Disconnect the video call"
+                Selector.ByContentDesc("End call"),
+                stepName = "Disconnect the call"
             )
         )
 
@@ -61,14 +59,6 @@ class VtCallTestReceive : TestFlow() {
     }
 
 
-    override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
-        super.actionClearRecentResult(count, result, stepName)
-        if (stepName.isNotEmpty()) {
-            report?.insertStep(stepName, if (result) "Pass" else "Fail")
-        }
-
-        writeLog(tag, "actionClearRecentResult  result $result")
-    }
 
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
         super.actionLaunchAppResult(count, result, stepName)
@@ -99,7 +89,7 @@ class VtCallTestReceive : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        writeLog(tag, "actionClickResult  $stepName  result $result")
+        writeLog(tag, "actionClickByCoordinateResult  $stepName  result $result")
     }
 
 
@@ -110,8 +100,12 @@ class VtCallTestReceive : TestFlow() {
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty() && requestText == FLIP_CAMERA_TEXT) {
-            report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
+        if (stepName.isNotEmpty()){
+            if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
+                report?.insertStep(stepName, "Pass")
+            }else{
+                report?.insertStep(stepName, "Fail")
+            }
         }
         writeLog(tag, "actionGetTextResult  result $result")
     }
@@ -134,7 +128,7 @@ class VtCallTestReceive : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_receive")
+        StorageHandler.writeXLSFile(reportList, "Voice_call_receive")
     }
 
 

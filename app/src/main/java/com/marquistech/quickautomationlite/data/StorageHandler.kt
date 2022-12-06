@@ -43,7 +43,7 @@ object StorageHandler {
             sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
 
             val desc =
-                " Place : Noida \n Brand : ${Build.BRAND} \n Date : ${Date(System.currentTimeMillis())}"
+                " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${Date(System.currentTimeMillis())}"
 
             val descRow: HSSFRow = sheet.createRow(1)
             val descCell = descRow.createCell(3)
@@ -51,7 +51,7 @@ object StorageHandler {
             descCell.setCellStyle(getHeaderDescStyle(wb))
 
             // increase row height to accommodate three lines of text
-            descRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
+            descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
             sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
 
 
@@ -114,7 +114,7 @@ object StorageHandler {
                     rowNo += 1
                 }
 
-                rowNo += 3
+                rowNo += 3 + reportList.size
 
                 val totalPassRow: HSSFRow = sheet.createRow(rowNo)
                 val totalPassCell: HSSFCell = totalPassRow.createCell(0)
@@ -199,5 +199,7 @@ object StorageHandler {
             null
         }
     }
+
+
 
 }

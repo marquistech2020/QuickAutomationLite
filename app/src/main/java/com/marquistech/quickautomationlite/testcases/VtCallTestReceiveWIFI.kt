@@ -1,5 +1,6 @@
 package com.marquistech.quickautomationlite.testcases
 
+
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
@@ -7,7 +8,7 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
-class VtCallTestReceive : TestFlow() {
+class VtCallTestReceiveWIFI : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
@@ -19,11 +20,14 @@ class VtCallTestReceive : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 3
+        return 4
     }
 
+
     override fun onCreateScript(): List<Action> {
+
         val actions = mutableListOf<Action>()
+
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
@@ -32,8 +36,9 @@ class VtCallTestReceive : TestFlow() {
         actions.add(Action.ClearRecentApps("Clear all apps from recent"))
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
-        actions.add(Action.Delay(20))
+        actions.add(Action.SetEnable(Type.WIFI, enable = true, stepName = "Enable wifi"))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(10))
         actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
         actions.add(Action.Delay(milli = 500))
         actions.add(
@@ -42,13 +47,15 @@ class VtCallTestReceive : TestFlow() {
                 stepName = "Video call established"
             )
         )
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(5))
         actions.add(
             Action.Click(
                 Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
                 stepName = "Disconnect the video call"
             )
         )
+
+
 
         return actions
     }
@@ -57,7 +64,7 @@ class VtCallTestReceive : TestFlow() {
     private var report: Report? = null
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 5)
     }
 
 
@@ -134,8 +141,19 @@ class VtCallTestReceive : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_receive")
+
+        StorageHandler.writeXLSFile(reportList, "Video_call_receive_wifi")
     }
+
+    override fun actionEnableResult(count: Int, result: Boolean, stepName: String) {
+        super.actionEnableResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        writeLog(tag, "actionEnableResult  $stepName  result $result")
+
+    }
+
 
 
 }
