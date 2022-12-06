@@ -66,20 +66,25 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("android:id/button1")))*/
 
-        actions.add(Action.Delay(20))
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open",""))
+        actions.add(Action.Delay(2))
+        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open"))
         actions.add(Action.Delay(1))
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByRes("android:id/list"),
-            0,
-            "com.google.android.apps.messaging:id/conversation_message_view",
-            2,
-            stepName = "Select image for Delete"
-        ))
-        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Delay(1))
+        actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
+        actions.add(
+            Action.ClickListItemByIndex(
+                Selector.ByRes("android:id/list"),
+                0,
+                "com.google.android.apps.messaging:id/conversation_message_view",
+                1
+                , stepName = "Select Received Image "
+                        ,testFlag = UtilsClass.Delete_MMS
+            )
+        )
+/*        actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
         actions.add(Action.Delay(second = 1))
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))*/
 
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_delete_message")))
@@ -154,17 +159,7 @@ class DeleteMmSTest : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "MMS_Delete_MMs")
     }
 
-    override fun actionListItemGetTextByindexResult(
-        count: Int,
-        reqSelector: Selector,
-        result: String,
-        stepName: String,
-        testFlag :String
-    ) {
-        if(result.contains("MultimediaMessage")){
-            report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
-        }
-    }
+
 
     override fun actionListItemClickByTextResult(
         count: Int,
@@ -180,4 +175,34 @@ class DeleteMmSTest : TestFlow() {
         super.actionListItemClickByTextResult(count, reqSelector, result, stepName,"")
     }
 
+    override fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlagName: String
+    ) {
+        if(stepName.isNotEmpty()){
+            report?.insertStep(stepName,if(result)"Pass" else "Fail")
+        }
+
+        super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
+    }
+    override fun actionListItemGetTextByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: String,
+        stepName: String,
+        testFlag :String
+    ) {
+        if(stepName.isNotEmpty()){
+            if(testFlag.equals(UtilsClass.Received_MMS_Type)) {
+                report?.insertStep(stepName, result)
+            }
+            else if(result.contains("MultimediaMessage")){
+                report?.insertStep(stepName, if (result.contains("MultimediaMessage")) "Pass" else "Fail")
+            }
+        }
+
+    }
 }

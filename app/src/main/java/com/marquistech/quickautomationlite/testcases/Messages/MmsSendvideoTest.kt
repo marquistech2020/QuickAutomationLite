@@ -11,13 +11,14 @@ import com.marquistech.quickautomationlite.helpers.core.UtilsClass
 class MmsSendvideoTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
-private var count:Int=0
+    private var count:Int=0
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }
     override fun onInitTestLoop(): Int {
         return 2
-    }override fun onStartIteration(testName: String, count: Int) {
+    }
+    override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
     }
 
