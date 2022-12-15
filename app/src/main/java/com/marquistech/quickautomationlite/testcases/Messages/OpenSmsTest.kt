@@ -1,10 +1,7 @@
 package com.marquistech.quickautomationlite.testcases.Messages
 
 import android.util.Log
-import com.marquistech.quickautomationlite.core.Action
-import com.marquistech.quickautomationlite.core.AppSelector
-import com.marquistech.quickautomationlite.core.EventType
-import com.marquistech.quickautomationlite.core.TestFlow
+import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
@@ -40,8 +37,9 @@ class OpenSmsTest : TestFlow() {
 
 
     override fun onCreateScript(): List<Action> {
+        Log.e("TestCaseCount","Iteration "+count+1)
         var actions = mutableListOf<Action>()
-            Log.e("TestCaseCount","Iteration "+count+1)
+
         actions = openSms()
         return actions
     }
@@ -56,8 +54,12 @@ class OpenSmsTest : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "Open Message App")
     }
     fun openSms(): MutableList<Action> {
-        val actions = mutableListOf<Action>()
 
+
+
+        Log.e("TestCaseCount","Method Call "+count+1)
+        val actions = mutableListOf<Action>()
+        try{
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SendEvent(EventType.RECENT_APP, ))
@@ -69,8 +71,12 @@ class OpenSmsTest : TestFlow() {
         actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging"), stepName = "Open Message App"))
 
         actions.add(Action.Delay(2))
+
         //com.google.android.apps.messaging:id/start_chat_fab
         actions.add(Action.SendEvent(EventType.HOME, stepName = "Close Message App"))
+        }catch (e:Exception){
+            Log.e("TestCaseCount","Error Catch ")
+        }
         return actions
 
     }

@@ -135,10 +135,6 @@ class DeleteSmsTest : TestFlow() {
 
     }
 
-
-
-
-
     override fun onTestStart(testName: String) {
         reportList.clear()
     }
@@ -192,6 +188,7 @@ class DeleteSmsTest : TestFlow() {
 
         super.actionListItemClickByindexResult(count, reqSelector, result, stepName, testFlagName)
     }
+
 
 
 }

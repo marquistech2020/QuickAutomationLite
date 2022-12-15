@@ -21,8 +21,7 @@ import com.marquistech.quickautomationlite.core.*
 import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
-import com.marquistech.quickautomationlite.core.*
-import com.marquistech.quickautomationlite.data.StorageHandler
+
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import java.text.ParseException
 import java.text.SimpleDateFormat

@@ -6,37 +6,35 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 
-class MmsSendLargeTextTest ( ) : TestFlow() {
+class SendSegmentSmsTest ( ) : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
-
+    private var fileName:String=""
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }
 
-
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
-
-
-        actions = sendLargeTextSmsOnePlusDevice()
-
+        actions = sendSegmentSms()
         return actions
     }
 
     override fun onTestStart(testName: String) {
         reportList.clear()
+        fileName=testName + "_Logs_" + System.currentTimeMillis()
+        StorageHandler.writeXLSFileIterator( testName =tag,fileName )
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "MMS_sendLargeText")
+        StorageHandler.writeXLSFile(reportList, "Sms_send_segment_Text")
     }
     override fun onInitTestLoop(): Int {
         return 2
     }
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 5)
     }
 
 
@@ -51,7 +49,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
     }
 
 
-    fun sendLargeTextSmsOnePlusDevice(): MutableList<Action> {
+    fun sendSegmentSms(): MutableList<Action> {
         val actions = mutableListOf<Action>()
 
         actions.add(Action.SendEvent(EventType.HOME))
@@ -61,7 +59,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         actions.add(Action.ClearRecentApps())
         actions.add(Action.Delay(second = 1))
 
-        actions.add(Action.Delay(4))
+        actions.add(Action.Delay(6))
         actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging"),stepName = "Launch Message app"))
 
         actions.add(Action.Delay(2))
@@ -89,6 +87,12 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         )
         actions.add(Action.Delay(5))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/send_message_button_icon"),stepName = "Send Message Successfully "))
+        actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
+        actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByText("Delete")))
+        actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByRes("android:id/button1"), stepName = "Delete Previous sent message "))
         return actions
     }
     override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
@@ -108,6 +112,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
     ) {
         if(stepName.isNotEmpty()){
             report?.insertStep(stepName,if(result) "Pass" else "Fail")
+            StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result) "Pass" else "Fail",fileName)
         }
         super.actionSetTextResult(count, reqSelector, result, stepName)
     }
@@ -116,6 +121,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         super.actionLaunchAppResult(count, result, stepName)
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
+            StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result) "Pass" else "Fail",fileName)
         }
 
         StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
@@ -129,6 +135,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
     ) {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
+                 StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result) "Pass" else "Fail",fileName)
         }
         StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
     }
@@ -142,36 +149,15 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
 
     }
     fun getLargeText():String{
-        return "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging,This is demo Messaging,This is demo Messaging," +
-                "This is demo Messaging "
+        return "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging,"
+               /* "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Messaging "*/
     }
 
 }

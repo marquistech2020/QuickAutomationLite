@@ -117,6 +117,9 @@ abstract class TestFlow {
 
     @Test
     fun mainTest() {
+        try{
+
+
         preconditionTest()
         val testLoop = onInitTestLoop()
         val actions = onCreateScript()
@@ -134,7 +137,11 @@ abstract class TestFlow {
             onEndIteration(tag, count)
         }
         onTestEnd(tag)
-    }
+        }catch (e:Exception){
+            Log.e("MainTest","Exception "+ e.message)
+        }
+        }
+
 
     private fun executeStepAndLatch(
         count: Int,

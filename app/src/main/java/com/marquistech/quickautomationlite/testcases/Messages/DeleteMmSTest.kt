@@ -10,13 +10,8 @@ class DeleteMmSTest : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 1
+        return 2
     }
-
-
-
-
-
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
     }
@@ -46,16 +41,16 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps())
-        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Delay(second = 10))
 
         // actions=sendAudioOnePlusDevice()
         actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.apps.messaging"), stepName = "Message App Launch"))
 
-        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Delay(second = 4))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))
-        actions.add(Action.Delay(second = 1))
+        actions.add(Action.Delay(second = 2))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,40))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(3))
         //com.google.android.apps.messaging:id/start_chat_fab
     /*    actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214","",""))
 
@@ -66,10 +61,10 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("android:id/button1")))*/
 
-        actions.add(Action.Delay(2))
+        actions.add(Action.Delay(6))
         actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open"))
-        actions.add(Action.Delay(1))
-        actions.add(Action.Delay(1))
+
+        actions.add(Action.Delay(5))
         actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))
         actions.add(
             Action.ClickListItemByIndex(
@@ -86,9 +81,9 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Delay(second = 1))
         actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,40))*/
 
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(3))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_delete_message")))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("android:id/button1"), stepName = "Delete Message"))
         actions.add(Action.Delay(1))
         /*  actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/action_bar_overflow")))
@@ -96,7 +91,7 @@ class DeleteMmSTest : TestFlow() {
           actions.add(Action.Click(Selector.ByText("View details")))
           actions.add(Action.Delay(1))*/
         actions.add(Action.GetText(Selector.ByRes("com.google.android.apps.messaging:id/message")))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(2))
 
         /*     actions.add(Action.SendEvent(EventType.BACK))
              actions.add(Action.Delay(7))
@@ -205,4 +200,5 @@ class DeleteMmSTest : TestFlow() {
         }
 
     }
+
 }

@@ -288,6 +288,11 @@ class SmsMmsDeleateHelper : Helper() {
                                 UiSelector()
                                     .resourceId(itemClassname).index(childCount)
                             )
+                            if(!item.exists()){
+                              item=  uiObject.getChild(
+                                  UiSelector()
+                                      .resourceId(itemClassname).index(childCount-1))
+                            }
 
 
                             if (item.exists()) {
@@ -299,12 +304,35 @@ class SmsMmsDeleateHelper : Helper() {
                                     UiSelector().resourceId("com.google.android.apps.messaging:id/message_content")
                                         .instance(0)
                                 )
+                                var isimageType = child_item.getChild(
+                                    UiSelector().resourceId("com.google.android.apps.messaging:id/image_attachment_view")
+                                        .instance(0)
+                                )
+                                var isVideoType = child_item.getChild(
+                                    UiSelector().resourceId("com.google.android.apps.messaging:id/video_attachment_view")
+                                        .instance(0)
+                                )
+                                var isAudioType = child_item.getChild(
+                                    UiSelector().resourceId("com.google.android.apps.messaging:id/audio_attachment_view")
+                                        .instance(0)
+                                )
+                                var isNormalMessage = child_item.getChild(
+                                    UiSelector().resourceId("com.google.android.apps.messaging:id/message_text_and_info")
+                                        .instance(0)
+                                )
+
                                 if (child_item.exists()) {
                                     // Log.e("ReadSms", "" + item.text)
                                     Log.e("itemChildCount", "Recyler Child count " + uiObject.childCount)
                                     Log.e("itemChildCount", "Item Child count " + child_item.childCount)
                                     //item.clickAndWaitForNewWindow(200)
-                                    child_item.dragTo(item,200)
+                                    if(isAudioType.exists()){
+                                        child_item.getChild(UiSelector().resourceId("com.google.android.apps.messaging:id/timer"))
+                                            .dragTo(child_item, 250)
+                                    }else{
+                                        child_item.dragTo(item,200)
+                                    }
+
                                     // performListItemEvent(ListItemEvent.DRAG,child_item,200)
                                 }
 

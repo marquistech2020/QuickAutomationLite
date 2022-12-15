@@ -97,10 +97,7 @@ class MmsHelper : Helper() {
             if (uiObj.exists()) {
                 uiObj.setText(text)
             }
-
-
             waitFor(1)
-
         }
         return true
     }
