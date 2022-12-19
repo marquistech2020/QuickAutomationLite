@@ -2,9 +2,7 @@ package com.marquistech.quickautomationlite
 
 
 import android.util.Log
-import com.marquistech.quickautomationlite.testcases.Messages.DeleteMmSTest
-import com.marquistech.quickautomationlite.testcases.Messages.MmsSendLargeTextTest
-import com.marquistech.quickautomationlite.testcases.Messages.SendSegmentSmsTest
+import com.marquistech.quickautomationlite.testcases.Messages.*
 import org.junit.Test
 
 
@@ -16,7 +14,7 @@ class QuickInstrumentTest {
     fun testShow() {
 
         try{
-            val test = SendSegmentSmsTest()
+            val test = OpenSmsTest()
             test.mainTest()
 
             Log.e("TestCaseCount","Error Catch ")

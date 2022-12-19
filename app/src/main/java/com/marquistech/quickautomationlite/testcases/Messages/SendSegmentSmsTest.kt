@@ -30,7 +30,7 @@ class SendSegmentSmsTest ( ) : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "Sms_send_segment_Text")
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 200
     }
 
     override fun onStartIteration(testName: String, count: Int) {
@@ -72,7 +72,7 @@ class SendSegmentSmsTest ( ) : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
-                "7011046214"
+                "7428091293"
                 ,stepName = "")
 
         )
@@ -82,7 +82,6 @@ class SendSegmentSmsTest ( ) : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/compose_message_text"),
-
                 getLargeText(),stepName = "Input Message large Text ")
         )
         actions.add(Action.Delay(5))
@@ -151,13 +150,17 @@ class SendSegmentSmsTest ( ) : TestFlow() {
     fun getLargeText():String{
         return "This is demo Segment Messaging," +
                 "This is demo Segment Messaging," +
-                "This is demo Segment Messaging,"
-               /* "This is demo Segment Messaging," +
                 "This is demo Segment Messaging," +
                 "This is demo Segment Messaging," +
                 "This is demo Segment Messaging," +
                 "This is demo Segment Messaging," +
-                "This is demo Messaging "*/
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Segment Messaging," +
+                "This is demo Messaging "
     }
 
 }

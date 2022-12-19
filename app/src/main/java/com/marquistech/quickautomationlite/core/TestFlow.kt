@@ -2,6 +2,7 @@ package com.marquistech.quickautomationlite.core
 
 import android.util.Log
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
+import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import org.junit.Test
@@ -17,7 +18,7 @@ abstract class TestFlow {
     protected abstract fun onTestEnd(testName: String)
     protected abstract fun onStartIteration(testName: String, count: Int)
     protected abstract fun onEndIteration(testName: String, count: Int)
-
+    private var fileName:String=""
     // override methods
     protected open fun onInitTestLoop(): Int {
         return 1
@@ -124,6 +125,7 @@ abstract class TestFlow {
         val testLoop = onInitTestLoop()
         val actions = onCreateScript()
         onTestStart(tag)
+            fileName=tag + "_Logs_" + System.currentTimeMillis()
         (1..testLoop).forEach { count ->
             onStartIteration(tag, count)
             writeLog(tag, "################ Start Iteration $count  ################ ")
@@ -148,23 +150,26 @@ abstract class TestFlow {
         action: Action,
         latch: CountDownLatch
     ) {
-
+    Log.e("CheckLog","LogFileName_"+tag)
         when (action) {
             is Action.ClearRecentApps -> {
                 writeLog(tag, "ClearRecentApps")
                 val isDone = helper.clearRecentApps()
                 actionClearRecentResult(count, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.Click -> {
                 writeLog(tag, "Click")
                 val isDone =
                     helper.performClick(action.selector, action.position, action.isLongClick)
                 actionClickResult(count, action.selector, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.ClickBYCordinate -> {
                 writeLog(tag, "ClickByAxis")
                 val isDone = helper.performClickByCordinate(action.x, action.y)
                 actionClickByCoordinateResult(count, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.LaunchApp -> {
                 writeLog(tag, "LaunchApp")
@@ -172,11 +177,13 @@ abstract class TestFlow {
                 helper.waitFor(2)
                 actionLaunchAppResult(count, isDone, action.stepName)
                 writeLog(tag, "LaunchApp end")
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.CloseApp -> {
                 writeLog(tag, "CloseApp")
                 val isDone = helper.closeApp(action.packageName)
                 actionCloseAppResult(count, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.Delay -> {
 
@@ -203,16 +210,19 @@ abstract class TestFlow {
                 writeLog(tag, "GetText")
                 val output = helper.performGetText(action.selector, action.position)
                 actionGetTextResult(count, output, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,output ,fileName)
             }
             is Action.SetText -> {
                 writeLog(tag, "SetText")
                 val isDone = helper.performSetText(action.selector, action.text)
                 actionSetTextResult(count, action.selector, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.SendEvent -> {
                 writeLog(tag, "SendEvent")
                 val isDone = helper.performSendEvent(action.type)
                 actionSendEventResult(count, action.type, isDone, action.stepName)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
 
             is Action.Swipe -> {
@@ -229,16 +239,19 @@ abstract class TestFlow {
                 Log.e(tag, "Click")
                 val isDone = helper.performListItemClickByText(action.selector, action.position,action.itemClassname,action.itemSearch,action.testFlag)
                 actionListItemClickByTextResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.ClickListItemByIndex -> {
                 Log.e(tag, "Click")
                 val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
                 actionListItemClickByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,if(isDone) "Pass" else "failed" ,fileName)
             }
             is Action.GetTextListItemByIndex -> {
                 Log.e(tag, "GetTextByindex")
                 val isDone = helper.performListItemGetTextByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
                 actionListItemGetTextByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                StorageHandler.createTestCaseLogFile(count,fileName,action.stepName,isDone ,fileName)
             }
             is Action.SendAdbCommand -> {
                 Log.e(tag, "SendAdbCommand")

@@ -12,6 +12,7 @@ class MmsSendvideoTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     private var count:Int=0
+    private var fileName:String=""
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }
@@ -67,7 +68,7 @@ class MmsSendvideoTest : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
-                "9289229037"
+                "9667954900"
             )
         )
         actions.add(Action.Delay(1))
@@ -130,6 +131,7 @@ class MmsSendvideoTest : TestFlow() {
         super.actionLaunchAppResult(count, result, stepName)
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
+            //StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result) "Pass" else "Fail",fileName)
         }
 
         StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
@@ -143,6 +145,7 @@ class MmsSendvideoTest : TestFlow() {
     ) {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
+           // StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result) "Pass" else "Fail",fileName)
         }
         StorageHandler.writeLog(tag, "actionClickResult  $stepName  result $result")
     }
@@ -158,6 +161,8 @@ class MmsSendvideoTest : TestFlow() {
 
 
     override fun onTestStart(testName: String) {
+       // fileName=testName + "_Logs_" + System.currentTimeMillis()
+        //StorageHandler.writeXLSFileIterator( testName =tag,fileName )
         reportList.clear()
     }
 
@@ -181,6 +186,7 @@ class MmsSendvideoTest : TestFlow() {
                     report!!.insertStep(stepName, "Pass")
                 }
             }
+            //StorageHandler.addRowXLSFileIterator(count, testName = tag,stepName,if (result.contains("Sending")) "Pass" else "Fail",fileName)
         }
         super.actionListItemGetTextByindexResult(count, reqSelector, result, stepName, testFlagName)
     }

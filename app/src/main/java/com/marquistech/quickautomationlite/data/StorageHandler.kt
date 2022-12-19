@@ -151,36 +151,98 @@ object StorageHandler {
         getLogsDirectory()?.let { dir ->
             val excelFileName =
                 dir.absolutePath + "/"+ fileName + ".xls" //name of excel file
-            var wb  =  HSSFWorkbook(FileInputStream(excelFileName))
-            val sheet: HSSFSheet = wb.getSheet("Sheet1")
-            var lastRowNo:Int=sheet.lastRowNum
-            Log.e("LastRow","LastRow No"+lastRowNo)
+            var file = File(excelFileName)
+            if(file.exists()){
+                var wb  =  HSSFWorkbook(FileInputStream(excelFileName))
+                val sheet: HSSFSheet = wb.getSheet("Sheet1")
+                var lastRowNo:Int=sheet.lastRowNum
+                Log.e("LastRow","LastRow No"+lastRowNo)
 
 
-            var cellNo = 0
-            val row: HSSFRow = sheet.createRow(lastRowNo+1)  // Header Row
+                var cellNo = 0
+                val row: HSSFRow = sheet.createRow(lastRowNo+1)  // Header Row
 
-            val cellFirst: HSSFCell = row.createCell(cellNo)
-            cellFirst.setCellValue("" + iteration)
-            //cellFirst.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
-            cellNo += 1
-            val cellSecond: HSSFCell = row.createCell(cellNo)
-            cellSecond.setCellValue(stepName )
-            //cellSecond.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
-            cellNo += 1
-            val cellThird: HSSFCell = row.createCell(cellNo)
-            cellThird.setCellValue( status)
-            //cellSecond.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
-            cellNo += 1
+                val cellFirst: HSSFCell = row.createCell(cellNo)
+                cellFirst.setCellValue("" + iteration)
+                //cellFirst.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellSecond: HSSFCell = row.createCell(cellNo)
+                cellSecond.setCellValue(stepName )
+                //cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellThird: HSSFCell = row.createCell(cellNo)
+                cellThird.setCellValue( status)
+                //cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
 
-            val fileOut = FileOutputStream(excelFileName)
+                val fileOut = FileOutputStream(excelFileName)
 
-            wb.write(fileOut)
-            fileOut.flush()
-            fileOut.close()
+                wb.write(fileOut)
+                fileOut.flush()
+                fileOut.close()
+            }else{
+                val sheetName = "Sheet1" //name of sheet
+                val wb = HSSFWorkbook()
+                val sheet: HSSFSheet = wb.createSheet(sheetName)
+
+                val cs = wb.createCellStyle()
+                cs.alignment = HorizontalAlignment.CENTER
+                val titleRow: HSSFRow = sheet.createRow(0)
+                val titleCell = titleRow.createCell(3)
+                titleCell.setCellValue("${testName.replace("_", " ").uppercase()} TEST REPORT")
+                titleCell.setCellStyle(getHeaderStyle(wb))
+                titleRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
+                sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
+
+                val desc =
+                    " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${
+                        Date(
+                            System.currentTimeMillis()
+                        )
+                    }"
+
+                val descRow: HSSFRow = sheet.createRow(1)
+                val descCell = descRow.createCell(3)
+                descCell.setCellValue(desc)
+                //descCell.setCellStyle(getHeaderDescStyle(wb))
+
+                // increase row height to accommodate three lines of text
+                descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
+                sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
+
+                var cellNo = 0
+                val row: HSSFRow = sheet.createRow(3)  // Header Row
+
+                val cellFirst: HSSFCell = row.createCell(cellNo)
+                cellFirst.setCellValue("ITERATION")
+                cellFirst.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellSecond: HSSFCell = row.createCell(cellNo)
+                cellSecond.setCellValue("Step Name")
+                cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+
+                cellNo += 1
+                val cellThird: HSSFCell = row.createCell(cellNo)
+                cellThird.setCellValue("Status")
+                cellThird.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                //cellNo += stepColNo
+
+
+                val fileOut = FileOutputStream(excelFileName)
+
+                wb.write(fileOut)
+                fileOut.flush()
+                fileOut.close()
+            }
+//Do something
+
+
         }
     }
     fun writeXLSFileIterator( testName: String,fileName: String) {
@@ -189,65 +251,168 @@ object StorageHandler {
         getLogsDirectory()?.let { dir ->
             val excelFileName =
                 dir.absolutePath + "/" + fileName + ".xls" //name of excel file
-            val sheetName = "Sheet1" //name of sheet
-            val wb = HSSFWorkbook()
-            val sheet: HSSFSheet = wb.createSheet(sheetName)
+           if(File(excelFileName).exists()) {
+               val sheetName = "Sheet1" //name of sheet
+               val wb = HSSFWorkbook()
+               val sheet: HSSFSheet = wb.createSheet(sheetName)
 
-            val cs = wb.createCellStyle()
-            cs.alignment = HorizontalAlignment.CENTER
-            val titleRow: HSSFRow = sheet.createRow(0)
-            val titleCell = titleRow.createCell(3)
-            titleCell.setCellValue("${testName.replace("_", " ").uppercase()} TEST REPORT")
-            titleCell.setCellStyle(getHeaderStyle(wb))
-            titleRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
-            sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
+               val cs = wb.createCellStyle()
+               cs.alignment = HorizontalAlignment.CENTER
+               val titleRow: HSSFRow = sheet.createRow(0)
+               val titleCell = titleRow.createCell(3)
+               titleCell.setCellValue("${testName.replace("_", " ").uppercase()} TEST REPORT")
+               titleCell.setCellStyle(getHeaderStyle(wb))
+               titleRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
+               sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
 
-            val desc =
-                " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${
-                    Date(
-                        System.currentTimeMillis()
-                    )
-                }"
+               val desc =
+                   " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${
+                       Date(
+                           System.currentTimeMillis()
+                       )
+                   }"
 
-            val descRow: HSSFRow = sheet.createRow(1)
-            val descCell = descRow.createCell(3)
-            descCell.setCellValue(desc)
-            //descCell.setCellStyle(getHeaderDescStyle(wb))
+               val descRow: HSSFRow = sheet.createRow(1)
+               val descCell = descRow.createCell(3)
+               descCell.setCellValue(desc)
+               //descCell.setCellStyle(getHeaderDescStyle(wb))
 
-            // increase row height to accommodate three lines of text
-            descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
-            sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
+               // increase row height to accommodate three lines of text
+               descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
+               sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
 
-            var cellNo = 0
-            val row: HSSFRow = sheet.createRow(3)  // Header Row
+               var cellNo = 0
+               val row: HSSFRow = sheet.createRow(3)  // Header Row
 
-            val cellFirst: HSSFCell = row.createCell(cellNo)
-            cellFirst.setCellValue("ITERATION")
-            cellFirst.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
-            cellNo += 1
-            val cellSecond: HSSFCell = row.createCell(cellNo)
-            cellSecond.setCellValue("Step Name")
-            cellSecond.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
+               val cellFirst: HSSFCell = row.createCell(cellNo)
+               cellFirst.setCellValue("ITERATION")
+               cellFirst.setCellStyle(getHeaderCellStyle(wb))
+               sheet.setColumnWidth(cellNo, 25 * 256)
+               cellNo += 1
+               val cellSecond: HSSFCell = row.createCell(cellNo)
+               cellSecond.setCellValue("Step Name")
+               cellSecond.setCellStyle(getHeaderCellStyle(wb))
+               sheet.setColumnWidth(cellNo, 25 * 256)
 
-            cellNo += 1
-            val cellThird:  HSSFCell = row.createCell(cellNo)
-            cellThird.setCellValue("Status")
-            cellThird.setCellStyle(getHeaderCellStyle(wb))
-            sheet.setColumnWidth(cellNo, 25 * 256)
-            //cellNo += stepColNo
+               cellNo += 1
+               val cellThird: HSSFCell = row.createCell(cellNo)
+               cellThird.setCellValue("Status")
+               cellThird.setCellStyle(getHeaderCellStyle(wb))
+               sheet.setColumnWidth(cellNo, 25 * 256)
+               //cellNo += stepColNo
 
 
-            val fileOut = FileOutputStream(excelFileName)
+               val fileOut = FileOutputStream(excelFileName)
 
-            wb.write(fileOut)
-            fileOut.flush()
-            fileOut.close()
+               wb.write(fileOut)
+               fileOut.flush()
+               fileOut.close()
+           }else{
 
+           }
         }
 
 
+    }
+
+    fun createTestCaseLogFile(iteration:Int, testName: String,stepName:String,status :String,fileName:String) {
+        getLogsDirectory()?.let { dir ->
+            val excelFileName =
+                dir.absolutePath + "/"+ fileName + ".xls" //name of excel file
+            var file = File(excelFileName)
+            if(file.exists() ){
+                var wb  =  HSSFWorkbook(FileInputStream(excelFileName))
+                val sheet: HSSFSheet = wb.getSheet("Sheet1")
+                var lastRowNo:Int=sheet.lastRowNum
+                Log.e("LastRow","LastRow No"+lastRowNo)
+
+            if(stepName.isNotBlank()) {
+                var cellNo = 0
+                val row: HSSFRow = sheet.createRow(lastRowNo + 1)  // Header Row
+
+                val cellFirst: HSSFCell = row.createCell(cellNo)
+                cellFirst.setCellValue("" + iteration)
+                //cellFirst.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellSecond: HSSFCell = row.createCell(cellNo)
+                cellSecond.setCellValue(stepName)
+                //cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellThird: HSSFCell = row.createCell(cellNo)
+                cellThird.setCellValue(status)
+                //cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+
+                val fileOut = FileOutputStream(excelFileName)
+
+                wb.write(fileOut)
+                fileOut.flush()
+                fileOut.close()
+            }
+            }else{
+                val sheetName = "Sheet1" //name of sheet
+                val wb = HSSFWorkbook()
+                val sheet: HSSFSheet = wb.createSheet(sheetName)
+
+                val cs = wb.createCellStyle()
+                cs.alignment = HorizontalAlignment.CENTER
+                val titleRow: HSSFRow = sheet.createRow(0)
+                val titleCell = titleRow.createCell(3)
+                titleCell.setCellValue("${testName.replace("_", " ").uppercase()} TEST REPORT")
+                titleCell.setCellStyle(getHeaderStyle(wb))
+                titleRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
+                sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
+
+                val desc =
+                    " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${
+                        Date(
+                            System.currentTimeMillis()
+                        )
+                    }"
+
+                val descRow: HSSFRow = sheet.createRow(1)
+                val descCell = descRow.createCell(3)
+                descCell.setCellValue(desc)
+                //descCell.setCellStyle(getHeaderDescStyle(wb))
+
+                // increase row height to accommodate three lines of text
+                descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
+                sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
+
+                var cellNo = 0
+                val row: HSSFRow = sheet.createRow(3)  // Header Row
+
+                val cellFirst: HSSFCell = row.createCell(cellNo)
+                cellFirst.setCellValue("ITERATION")
+                cellFirst.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                cellNo += 1
+                val cellSecond: HSSFCell = row.createCell(cellNo)
+                cellSecond.setCellValue("Step Name")
+                cellSecond.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+
+                cellNo += 1
+                val cellThird: HSSFCell = row.createCell(cellNo)
+                cellThird.setCellValue("Status")
+                cellThird.setCellStyle(getHeaderCellStyle(wb))
+                sheet.setColumnWidth(cellNo, 25 * 256)
+                //cellNo += stepColNo
+
+
+                val fileOut = FileOutputStream(excelFileName)
+
+                wb.write(fileOut)
+                fileOut.flush()
+                fileOut.close()
+            }
+//Do something
+
+
+        }
     }
     private fun getHeaderStyle(wb: HSSFWorkbook): HSSFCellStyle {
         val style: HSSFCellStyle = wb.createCellStyle()
