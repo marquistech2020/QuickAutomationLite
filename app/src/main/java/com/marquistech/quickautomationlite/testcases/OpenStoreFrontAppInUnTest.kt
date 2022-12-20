@@ -16,7 +16,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
        return StoreFrontHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 5
+        return 100
     }
 
     override fun onCreateScript(): List<Action> {

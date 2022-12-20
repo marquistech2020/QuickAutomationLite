@@ -20,6 +20,7 @@ import androidx.test.uiautomator.UiSelector
 import com.marquistech.quickautomationlite.core.*
 import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler

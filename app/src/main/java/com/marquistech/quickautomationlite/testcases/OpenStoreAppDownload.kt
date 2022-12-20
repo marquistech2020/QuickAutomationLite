@@ -78,6 +78,7 @@ class OpenStoreAppDownload :TestFlow() {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
 
+
         StorageHandler.writeLog(tag, "actionClearRecentResult  result $result")
     }
 

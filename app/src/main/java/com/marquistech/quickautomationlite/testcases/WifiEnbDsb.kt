@@ -23,7 +23,7 @@ class WifiEnbDsb : TestFlow() {
         private const val WIFI_CONNECTED_SUCESSFULLY = "Android-Wifi"
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 10
     }
 
     override fun onCreateScript(): List<Action> {
@@ -50,7 +50,7 @@ class WifiEnbDsb : TestFlow() {
             ))
 
         // actions.add(getItemAddNetwork())
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,110))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_DW,5))
         actions.add(Action.Click(Selector.ByText("Add network")))
         actions.add(Action.Delay(second = 2))
         actions.add(
@@ -63,21 +63,16 @@ class WifiEnbDsb : TestFlow() {
 
         )
         actions.add(Action.SendEvent(EventType.ENTER))
-        actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Delay(second = 2))
         actions.add(Action.Click(Selector.ByText("Security")))
         actions.add(Action.Click(Selector.ByText("None")))
         actions.add(Action.Click(Selector.ByRes("com.oplus.wirelesssettings:id/menu_save")))
         actions.add(Action.Delay(second = 10))
 
-
-
-
-        actions.add(Action.Delay(second = 3))
         actions.add(
             Action.Click(
                 Selector.ByRes("android:id/summary"),
-                stepName = "WIFI Network has added successfully"
+
             )
         )
         actions.add(
@@ -87,6 +82,10 @@ class WifiEnbDsb : TestFlow() {
             ),
         )
         Log.e(tag, "Add summary")
+        actions.add(Action.Delay(second = 2))
+        actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,4))
+        actions.add((Action.Click(Selector.ByText("Android-Wifi"))))
+
         actions.add((Action.Click(Selector.ByText("Remove this network"))))
         actions.add(
             Action.Click(

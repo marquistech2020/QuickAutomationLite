@@ -17,7 +17,7 @@ class WifiOnOff :TestFlow() {
         return WifiEnbDsbHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 500
+        return 12000
     }
 
     override fun onCreateScript(): List<Action> {
@@ -135,8 +135,5 @@ class WifiOnOff :TestFlow() {
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "Wifi_On_Off")
-
-
-
     }
 }
