@@ -158,8 +158,5 @@ class OpenEmail : TestFlow() {
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "Open_Email")
-
-
-
     }
 }

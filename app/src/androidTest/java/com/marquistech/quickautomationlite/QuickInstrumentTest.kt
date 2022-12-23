@@ -14,7 +14,7 @@ class QuickInstrumentTest {
     fun testShow() {
 
         try{
-            val test = OpenSmsTest()
+            val test = MmsSendAudioTest()
             test.mainTest()
 
             Log.e("TestCaseCount","Error Catch ")

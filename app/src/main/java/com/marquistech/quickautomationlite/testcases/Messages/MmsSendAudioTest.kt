@@ -15,7 +15,7 @@ class MmsSendAudioTest : TestFlow() {
         return MmsHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 10000
     }
 
     override fun onStartIteration(testName: String, count: Int) {
@@ -64,7 +64,7 @@ class MmsSendAudioTest : TestFlow() {
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view")))
         actions.add(Action.Delay(1))
-        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7011046214"))
+        actions.add(Action.SetText(Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),"7065003901"))
         actions.add(Action.Delay(1))
         actions.add(Action.SendEvent(EventType.ENTER))
         actions.add(Action.Click(Selector.ByRes("com.google.android.apps.messaging:id/plus_button")))
