@@ -73,13 +73,37 @@ abstract class TestFlow {
 
     }
 
-    protected open fun actionAdbCommandResult(count: Int, stepName: String) {}
+    protected open fun actionAdbCommandResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionEnableResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {}
     protected open fun actionCloseAppResult(count: Int, result: Boolean, stepName: String) {}
-    open fun actionListItemClickByTextResult(count: Int, reqSelector: Selector, result: Boolean, stepName: String, testFlagName:String) {}
-    open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean, stepName: String, testFlagName:String) {}
-    open fun actionListItemGetTextByindexResult(count: Int, reqSelector: Selector, result: String, stepName: String, testFlagName:String) {}
+    open fun actionListItemClickByTextResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlagName: String
+    ) {
+    }
+
+    open fun actionListItemClickByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: Boolean,
+        stepName: String,
+        testFlagName: String
+    ) {
+    }
+
+    open fun actionListItemGetTextByindexResult(
+        count: Int,
+        reqSelector: Selector,
+        result: String,
+        stepName: String,
+        testFlagName: String
+    ) {
+    }
+
     open fun actionListItemClickResult(count: Int, reqSelector: Selector, result: Boolean) {}
     open fun actionListItemClickByindexResult(count: Int, reqSelector: Selector, result: Boolean) {}
     protected open fun onPreCondition(): List<Action> {
@@ -91,6 +115,11 @@ abstract class TestFlow {
 
     fun getCurrentAddress(callback: ResultCompleteCallback<String>) =
         helper.getCurrentAddress(false, callback)
+
+    protected open fun actionSwitchToEachAppResult(count: Int, result: Boolean, stepName: String) {}
+    protected open fun actionScrollResult(count: Int, result: Boolean, stepName: String) {}
+
+
 
 
     val tag: String = javaClass.simpleName
@@ -178,13 +207,13 @@ abstract class TestFlow {
                     /*helper.waitDeviceForIdle((action.milli / 2).toLong())
                     helper.waitFor(action.milli.toLong())*/
                     helper.waitDevice(action.milli.toLong())
-                    CountDownLatch(1).await(action.milli.toLong(),TimeUnit.MILLISECONDS)
+                    CountDownLatch(1).await(action.milli.toLong(), TimeUnit.MILLISECONDS)
                 } else if (action.second > 0) {
                     writeLog(tag, "Delay seconds ${action.second}")
                     /*helper.waitDeviceForIdle(((action.second * 1000) / 2).toLong())
                     helper.waitFor((action.second * 1000).toLong())*/
                     helper.waitDevice(action.second.toLong())
-                    CountDownLatch(1).await(action.second.toLong(),TimeUnit.SECONDS)
+                    CountDownLatch(1).await(action.second.toLong(), TimeUnit.SECONDS)
                 }
             }
             is Action.Drag -> {
@@ -220,33 +249,78 @@ abstract class TestFlow {
             }
             is Action.ClickListItem -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClickByText(action.selector, action.position,action.itemClassname,action.itemSearch,action.testFlag)
-                actionListItemClickByTextResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                val isDone = helper.performListItemClickByText(
+                    action.selector,
+                    action.position,
+                    action.itemClassname,
+                    action.itemSearch,
+                    action.testFlag
+                )
+                actionListItemClickByTextResult(
+                    count,
+                    action.selector,
+                    isDone,
+                    action.stepName,
+                    action.testFlag
+                )
             }
             is Action.ClickListItemByIndex -> {
                 Log.e(tag, "Click")
-                val isDone = helper.performListItemClickByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
-                actionListItemClickByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                val isDone = helper.performListItemClickByIndex(
+                    action.selector,
+                    action.position,
+                    action.itemClassname,
+                    action.itemSearchIndex,
+                    action.testFlag
+                )
+                actionListItemClickByindexResult(
+                    count,
+                    action.selector,
+                    isDone,
+                    action.stepName,
+                    action.testFlag
+                )
             }
             is Action.GetTextListItemByIndex -> {
                 Log.e(tag, "GetTextByindex")
-                val isDone = helper.performListItemGetTextByIndex(action.selector, action.position,action.itemClassname,action.itemSearchIndex,action.testFlag)
-                actionListItemGetTextByindexResult(count, action.selector, isDone,action.stepName,action.testFlag)
+                val isDone = helper.performListItemGetTextByIndex(
+                    action.selector,
+                    action.position,
+                    action.itemClassname,
+                    action.itemSearchIndex,
+                    action.testFlag
+                )
+                actionListItemGetTextByindexResult(
+                    count,
+                    action.selector,
+                    isDone,
+                    action.stepName,
+                    action.testFlag
+                )
             }
             is Action.SendAdbCommand -> {
                 Log.e(tag, "SendAdbCommand")
                 val isDone = helper.performActionUsingShell(action.command)
-                actionAdbCommandResult(count, isDone)
+                actionAdbCommandResult(count, isDone,action.stepName)
             }
             is Action.SetEnable -> {
                 Log.e(tag, "SetEnable")
                 val isDone = helper.performEnable(action.type, action.enable)
                 actionEnableResult(count, isDone, action.stepName)
             }
+            is Action.SwitchToEachApp -> {
+                Log.e(tag, "SwitchToEachApp")
+                actionSwitchToEachAppResult(count, helper.performSwitchApp(action.loop,action.endToPackage), action.stepName)
+            }
+            is Action.Scroll -> {
+                Log.e(tag, "Scroll")
+                actionScrollResult(count, helper.performScroll(action.scrollDirection), action.stepName)
+            }
         }
 
         latch.countDown()
     }
+
 
 
 }

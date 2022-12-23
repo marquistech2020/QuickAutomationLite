@@ -4,35 +4,32 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.telecom.TelecomManager
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiSelector
-import com.marquistech.quickautomationlite.core.*
 import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.*
-import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 open class Helper {
 
-    private val context: Context
+    val context: Context
     val uiDevice: UiDevice
     var tag: String
     private val fusedLocationClient: FusedLocationProviderClient
@@ -89,11 +86,10 @@ open class Helper {
                     }
                     context.startActivity(intent)
                 }
-                is AppSelector.ByUri->
-                {
+                is AppSelector.ByUri -> {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.apply {
-                       // `package` = appSelector.pkgName
+                        // `package` = appSelector.pkgName
                         // Comment
 
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -122,6 +118,13 @@ open class Helper {
 
     open fun waitDeviceForIdle(milli: Long) {
         uiDevice.waitForIdle(milli)
+    }
+
+    open fun clear(count: Int, step: String, func: (Int, Boolean, String) -> Unit): Boolean {
+
+        func.invoke(count, true, step)
+
+        return false
     }
 
     open fun clearRecentApps(): Boolean {
@@ -173,13 +176,28 @@ open class Helper {
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String = ""): Boolean {
+
+    open fun performListItemClickByText(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearch: String,
+        testFlagName: String = ""
+    ): Boolean {
         return false
     }
-    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String = ""): Boolean {
+
+    open fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlag: String = ""
+    ): Boolean {
         return false
     }
-    open fun dateFormate(dateStr:String): Date? {
+
+    open fun dateFormate(dateStr: String): Date? {
         val knownPatterns: MutableList<SimpleDateFormat> = ArrayList<SimpleDateFormat>()
         knownPatterns.add(SimpleDateFormat("MM/d/yy, HH:mm a"))
         knownPatterns.add(SimpleDateFormat("MM/dd/yy, HH:mm a"))
@@ -209,23 +227,36 @@ open class Helper {
 
         return null
     }
-    fun performListItemEvent(listItemEvent: ListItemEvent ,uiObject: UiObject,steps: Int): Boolean {
+
+    fun performListItemEvent(
+        listItemEvent: ListItemEvent,
+        uiObject: UiObject,
+        steps: Int
+    ): Boolean {
         return when (listItemEvent) {
             ListItemEvent.Click ->
                 uiObject.click()
-            ListItemEvent.DRAG -> uiObject.dragTo(uiObject,steps)
+            ListItemEvent.DRAG -> uiObject.dragTo(uiObject, steps)
 
         }
     }
-    open fun performListItemGetTextByIndex(selector: Selector, position: Int, itemClassname:String, itemSearchIndex:Int, testFlagName:String): String {
+
+    open fun performListItemGetTextByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlagName: String
+    ): String {
         return ""
     }
+
     fun performClickByCordinate(x: Int, y: Int): Boolean {
         return uiDevice.click(x, y)
     }
 
-    fun performActionUsingShell(command: String): String {
-        return uiDevice.executeShellCommand(command)
+    open fun performActionUsingShell(command: String): Boolean {
+        return false
     }
 
     fun performEnable(type: Type, enable: Boolean): Boolean {
@@ -306,9 +337,19 @@ open class Helper {
 
     }
 
-    fun waitDevice(time:Long){
-        uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")),time)
+    fun waitDevice(time: Long) {
+        uiDevice.wakeUp()
+        uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")), time)
     }
+
+    open fun performSwitchApp(loop: Int, endToPackage: String): Boolean {
+        return false
+    }
+
+    open fun performScroll(direction: ScrollDirection): Boolean {
+        return false
+    }
+
 
 }
 

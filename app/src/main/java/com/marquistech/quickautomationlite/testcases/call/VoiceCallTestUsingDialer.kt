@@ -1,16 +1,15 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.call
 
 import android.content.Intent
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
-import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
+import com.marquistech.quickautomationlite.helpers.call.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import java.util.regex.Pattern
 
-class VtCallTestUsingDialer : TestFlow() {
+class VoiceCallTestUsingDialer : TestFlow() {
 
 
 
@@ -23,7 +22,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 10
+        return 3
     }
 
     override fun onCreateScript(): List<Action> {
@@ -43,14 +42,12 @@ class VtCallTestUsingDialer : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+918929022597".toCharArray(), "com.google.android.dialer:id"))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.Swipe(CordinateHelper.SWIPE_UP,30))
+        actions.addAll(dialNoActions("+917011998220".toCharArray(), "com.google.android.dialer:id"))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
-                Selector.ByText("Video call"),
-                stepName = "Initiate the video call"
+                Selector.ByContentDesc("dial"),
+                stepName = "Initiate the voice call"
             )
         )
         actions.add(Action.Delay(5))
@@ -62,15 +59,8 @@ class VtCallTestUsingDialer : TestFlow() {
         )
         actions.add(Action.Delay(2))
         actions.add(
-            Action.GetText(
-                Selector.ByText(FLIP_CAMERA_TEXT),
-                stepName = "Video call established"
-            )
-        )
-        actions.add(Action.Delay(milli = 500))
-        actions.add(
             Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
+                Selector.ByContentDesc("End call"),
                 stepName = "Disconnect the call"
             )
         )
@@ -85,18 +75,9 @@ class VtCallTestUsingDialer : TestFlow() {
     private var report: Report? = null
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 8)
+        report = Report(count, 6)
     }
 
-
-    override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
-        super.actionClearRecentResult(count, result, stepName)
-        if (stepName.isNotEmpty()) {
-            report?.insertStep(stepName, if (result) "Pass" else "Fail")
-        }
-
-        writeLog(tag, "actionClearRecentResult  result $result")
-    }
 
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
         super.actionLaunchAppResult(count, result, stepName)
@@ -128,9 +109,7 @@ class VtCallTestUsingDialer : TestFlow() {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
         if (stepName.isNotEmpty()){
-            if (resultText == FLIP_CAMERA_TEXT){
-                report?.insertStep(stepName, "Pass")
-            }else if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
+            if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
                 report?.insertStep(stepName, "Pass")
             }else{
                 report?.insertStep(stepName, "Fail")
@@ -167,7 +146,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_using_dialer")
+        StorageHandler.writeXLSFile(reportList, "Voice_call_using_dialer")
     }
 
 

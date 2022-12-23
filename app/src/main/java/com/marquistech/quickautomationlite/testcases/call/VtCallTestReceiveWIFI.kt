@@ -1,27 +1,33 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.call
+
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
+import com.marquistech.quickautomationlite.helpers.call.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import java.util.regex.Pattern
 
-class VoiceCallTestReceive : TestFlow() {
+class VtCallTestReceiveWIFI : TestFlow() {
 
 
     override fun onCreateHelper(): Helper {
         return CallHelper()
     }
 
-
-    override fun onInitTestLoop(): Int {
-        return 1
+    companion object {
+        private const val FLIP_CAMERA_TEXT = "Flip camera"
     }
 
+    override fun onInitTestLoop(): Int {
+        return 4
+    }
+
+
     override fun onCreateScript(): List<Action> {
+
         val actions = mutableListOf<Action>()
+
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
@@ -30,23 +36,26 @@ class VoiceCallTestReceive : TestFlow() {
         actions.add(Action.ClearRecentApps("Clear all apps from recent"))
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
-        actions.add(Action.Delay(20))
-        actions.add(Action.ClickBYCordinate(780, 416))
-        actions.add(Action.Delay(5))
-        actions.add(
-            Action.GetText(
-                Selector.ByRes("com.google.android.dialer:id/contactgrid_bottom_timer"),
-                stepName = "Received voice call"
-            )
-        )
+        actions.add(Action.SetEnable(Type.WIFI, enable = true, stepName = "Enable wifi"))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(10))
+        actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
         actions.add(Action.Delay(milli = 500))
         actions.add(
-            Action.Click(
-                Selector.ByContentDesc("End call"),
-                stepName = "Disconnect the call"
+            Action.GetText(
+                Selector.ByText(FLIP_CAMERA_TEXT),
+                stepName = "Video call established"
             )
         )
+        actions.add(Action.Delay(5))
+        actions.add(
+            Action.Click(
+                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
+                stepName = "Disconnect the video call"
+            )
+        )
+
+
 
         return actions
     }
@@ -55,10 +64,18 @@ class VoiceCallTestReceive : TestFlow() {
     private var report: Report? = null
 
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count, 4)
+        report = Report(count, 5)
     }
 
 
+    override fun actionClearRecentResult(count: Int, result: Boolean, stepName: String) {
+        super.actionClearRecentResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+
+        writeLog(tag, "actionClearRecentResult  result $result")
+    }
 
     override fun actionLaunchAppResult(count: Int, result: Boolean, stepName: String) {
         super.actionLaunchAppResult(count, result, stepName)
@@ -89,7 +106,7 @@ class VoiceCallTestReceive : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-        writeLog(tag, "actionClickByCoordinateResult  $stepName  result $result")
+        writeLog(tag, "actionClickResult  $stepName  result $result")
     }
 
 
@@ -100,12 +117,8 @@ class VoiceCallTestReceive : TestFlow() {
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty()){
-            if (Pattern.matches(("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\$"),resultText)){
-                report?.insertStep(stepName, "Pass")
-            }else{
-                report?.insertStep(stepName, "Fail")
-            }
+        if (stepName.isNotEmpty() && requestText == FLIP_CAMERA_TEXT) {
+            report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
         writeLog(tag, "actionGetTextResult  result $result")
     }
@@ -128,8 +141,19 @@ class VoiceCallTestReceive : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Voice_call_receive")
+
+        StorageHandler.writeXLSFile(reportList, "Video_call_receive_wifi")
     }
+
+    override fun actionEnableResult(count: Int, result: Boolean, stepName: String) {
+        super.actionEnableResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        writeLog(tag, "actionEnableResult  $stepName  result $result")
+
+    }
+
 
 
 }
