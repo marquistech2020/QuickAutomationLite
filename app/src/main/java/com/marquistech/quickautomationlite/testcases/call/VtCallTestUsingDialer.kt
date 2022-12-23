@@ -1,15 +1,17 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.call
 
 import android.content.Intent
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
+import com.marquistech.quickautomationlite.helpers.call.CallHelper
+import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import java.util.regex.Pattern
 
-class VtCallTestUsingDialerWIFI : TestFlow() {
+class VtCallTestUsingDialer : TestFlow() {
+
 
 
     override fun onCreateHelper(): Helper {
@@ -21,7 +23,7 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 10
     }
 
     override fun onCreateScript(): List<Action> {
@@ -39,10 +41,11 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
             )
         )
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SetEnable(Type.WIFI, enable = true, stepName = "Enable wifi"))
+        actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+917011998220".toCharArray(), "com.google.android.dialer:id"))
-        //actions.addAll(dialNoActions("+919650108704".toCharArray()))
+        actions.addAll(dialNoActions("+917209732588".toCharArray(), "com.google.android.dialer:id"))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Scroll(ScrollDirection.UP))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
@@ -71,6 +74,7 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
                 stepName = "Disconnect the call"
             )
         )
+
 
 
 
@@ -136,14 +140,6 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
         writeLog(tag, "actionGetTextResult  $stepName  result $result")
     }
 
-    override fun actionEnableResult(count: Int, result: Boolean, stepName: String) {
-        super.actionEnableResult(count, result, stepName)
-        if (stepName.isNotEmpty()) {
-            report?.insertStep(stepName, if (result) "Pass" else "Fail")
-        }
-        writeLog(tag, "actionEnableResult  $stepName  result $result")
-
-    }
 
     override fun onEndIteration(testName: String, count: Int) {
 
@@ -157,12 +153,21 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
 
     }
 
+    override fun actionEnableResult(count: Int, result: Boolean, stepName: String) {
+        super.actionEnableResult(count, result, stepName)
+        if (stepName.isNotEmpty()) {
+            report?.insertStep(stepName, if (result) "Pass" else "Fail")
+        }
+        writeLog(tag, "actionEnableResult  $stepName  result $result")
+
+    }
+
     override fun onTestStart(testName: String) {
         reportList.clear()
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Video_call_using_dialer_wifi")
+        StorageHandler.writeXLSFile(reportList, "Video_call_using_dialer")
     }
 
 

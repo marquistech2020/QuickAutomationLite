@@ -4,34 +4,33 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.telecom.TelecomManager
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiSelector
-import com.marquistech.quickautomationlite.core.*
 import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
+import com.marquistech.quickautomationlite.core.*
 
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 open class Helper {
 
-    private val context: Context
+    val context: Context
     val uiDevice: UiDevice
     var tag: String
     private val fusedLocationClient: FusedLocationProviderClient
@@ -88,11 +87,10 @@ open class Helper {
                     }
                     context.startActivity(intent)
                 }
-                is AppSelector.ByUri->
-                {
+                is AppSelector.ByUri -> {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.apply {
-                       // `package` = appSelector.pkgName
+                        // `package` = appSelector.pkgName
                         // Comment
 
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -308,6 +306,15 @@ open class Helper {
     fun waitDevice(time:Long){
         uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")),time)
     }
+
+    open fun performSwitchApp(loop: Int, endToPackage: String): Boolean {
+        return false
+    }
+
+    open fun performScroll(direction: ScrollDirection): Boolean {
+        return false
+    }
+
 
 }
 

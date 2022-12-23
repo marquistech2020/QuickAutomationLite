@@ -1,14 +1,12 @@
-package com.marquistech.quickautomationlite.helpers.core
+package com.marquistech.quickautomationlite.helpers.call
 
-import android.graphics.Rect
-import android.graphics.RectF
 import androidx.test.uiautomator.*
-import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
+import com.marquistech.quickautomationlite.core.ScrollDirection
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
-import kotlin.concurrent.thread
+import com.marquistech.quickautomationlite.helpers.core.Helper
 
-class CallHelper : Helper() {
+open class CallHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
 
@@ -63,7 +61,7 @@ class CallHelper : Helper() {
 
             var retryCount = 0
 
-            while (uiObject.exists().not() && retryCount < 3){
+            while (uiObject.exists().not() && retryCount < 3) {
                 uiObject = uiDevice.findObject(uiSelector)
                 retryCount += 1
                 writeLog(tag, " retry $retryCount")
@@ -76,8 +74,14 @@ class CallHelper : Helper() {
 
                 writeLog(tag, " button clicked2 $isClicked")
 
+                if (isLongClick) {
+                    waitDevice(1000)
+                    waitFor(1)
+                }
+
                 isClicked =
                     if (uiObject.isClickable.not()) false else if (isLongClick) uiObject.longClick() else uiObject.click()
+
 
                 writeLog(tag, " button clicked3 $isClicked")
 
@@ -238,8 +242,23 @@ class CallHelper : Helper() {
         }
     }
 
+    override fun performScroll(direction: ScrollDirection): Boolean {
+
+        var result = false
+
+        val scrollable = UiScrollable(UiSelector().scrollable(true))
+
+        if (scrollable.exists()) {
+            scrollable.setAsVerticalList()
+            result = scrollable.scrollBackward()
+        }
+
+        return result
+    }
+
 
     fun testWatcher() {
+
         val okCancelDialogWatcher = UiWatcher {
 
             val okCancelDialog = UiObject(UiSelector().textStartsWith("Now"))
@@ -257,9 +276,7 @@ class CallHelper : Helper() {
 // Run watcher
         uiDevice.runWatchers()
 
-
     }
 
 
 }
-

@@ -1,10 +1,10 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.call
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.CallHelper
+import com.marquistech.quickautomationlite.helpers.call.CallHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
 class VtCallTestReceive : TestFlow() {

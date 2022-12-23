@@ -38,13 +38,17 @@ object StorageHandler {
 
             val titleRow: HSSFRow = sheet.createRow(0)
             val titleCell = titleRow.createCell(3)
-            titleCell.setCellValue("${testName.replace("_"," ").uppercase()} TEST REPORT")
+            titleCell.setCellValue("${testName.replace("_", " ").uppercase()} TEST REPORT")
             titleCell.setCellStyle(getHeaderStyle(wb))
             titleRow.heightInPoints = 3 * sheet.defaultRowHeightInPoints
             sheet.addMergedRegion(CellRangeAddress(0, 0, 3, 7))
 
             val desc =
-                " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${Date(System.currentTimeMillis())}"
+                " Place : Noida \n Brand : ${Build.BRAND} \n Model : ${Build.MODEL} \n Date : ${
+                    Date(
+                        System.currentTimeMillis()
+                    )
+                }"
 
             val descRow: HSSFRow = sheet.createRow(1)
             val descCell = descRow.createCell(3)

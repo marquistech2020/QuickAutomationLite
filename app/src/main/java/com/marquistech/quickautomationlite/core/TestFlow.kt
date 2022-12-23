@@ -93,6 +93,11 @@ abstract class TestFlow {
     fun getCurrentAddress(callback: ResultCompleteCallback<String>) =
         helper.getCurrentAddress(false, callback)
 
+    protected open fun actionSwitchToEachAppResult(count: Int, result: Boolean, stepName: String) {}
+    protected open fun actionScrollResult(count: Int, result: Boolean, stepName: String) {}
+
+
+
 
     val tag: String = javaClass.simpleName
     var stepsCount = 0
@@ -263,10 +268,19 @@ abstract class TestFlow {
                 val isDone = helper.performEnable(action.type, action.enable)
                 actionEnableResult(count, isDone, action.stepName)
             }
+            is Action.SwitchToEachApp -> {
+                Log.e(tag, "SwitchToEachApp")
+                actionSwitchToEachAppResult(count, helper.performSwitchApp(action.loop,action.endToPackage), action.stepName)
+            }
+            is Action.Scroll -> {
+                Log.e(tag, "Scroll")
+                actionScrollResult(count, helper.performScroll(action.scrollDirection), action.stepName)
+            }
         }
 
         latch.countDown()
     }
+
 
 
 }
