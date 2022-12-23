@@ -125,7 +125,7 @@ override fun actionClickResult(
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
         if (stepName.isNotEmpty()&& requestText == SendEmail.MAIL_SENT_SUCESSFULLY) {
-            report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
+            report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Sending")
         }
         writeLog(tag, "actionGetTextResult  result $result")
 
