@@ -17,7 +17,7 @@ class WifiOnOff :TestFlow() {
         return WifiEnbDsbHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 500
+        return 8000
     }
 
     override fun onCreateScript(): List<Action> {

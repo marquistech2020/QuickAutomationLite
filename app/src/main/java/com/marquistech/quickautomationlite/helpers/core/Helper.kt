@@ -221,8 +221,8 @@ open class Helper {
         return uiDevice.click(x, y)
     }
 
-    fun performActionUsingShell(command: String): String {
-        return uiDevice.executeShellCommand(command)
+    open fun performActionUsingShell(command: String): Boolean {
+        return false
     }
 
     fun performEnable(type: Type, enable: Boolean): Boolean {

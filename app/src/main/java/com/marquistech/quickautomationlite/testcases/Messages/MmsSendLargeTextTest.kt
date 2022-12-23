@@ -32,7 +32,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "MMS_sendLargeText")
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 20
     }
 
     override fun onStartIteration(testName: String, count: Int) {

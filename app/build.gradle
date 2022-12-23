@@ -42,7 +42,7 @@ android {
          }
     }
 
-    //testBuildType "release"
+    testBuildType "release"
     //testBuildType "debug"
 
     compileOptions {
