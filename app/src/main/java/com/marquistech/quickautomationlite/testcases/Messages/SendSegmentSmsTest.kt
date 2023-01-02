@@ -9,7 +9,7 @@ import com.marquistech.quickautomationlite.helpers.core.MmsHelper
 class SendSegmentSmsTest ( ) : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
-    private var fileName:String=""
+
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }

@@ -18,8 +18,8 @@ abstract class TestFlow {
     protected abstract fun onTestEnd(testName: String)
     protected abstract fun onStartIteration(testName: String, count: Int)
     protected abstract fun onEndIteration(testName: String, count: Int)
-    private var fileName: String = ""
-
+    var fileName:String=""
+    var fileName2:String=""
     // override methods
     protected open fun onInitTestLoop(): Int {
         return 1
