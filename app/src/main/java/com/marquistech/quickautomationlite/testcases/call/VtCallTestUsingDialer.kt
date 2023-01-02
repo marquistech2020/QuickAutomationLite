@@ -2,6 +2,7 @@ package com.marquistech.quickautomationlite.testcases.call
 
 import android.content.Intent
 import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.data.AdbCommand
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
@@ -23,7 +24,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 10
+        return 2000
     }
 
     override fun onCreateScript(): List<Action> {
@@ -43,7 +44,7 @@ class VtCallTestUsingDialer : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+917209732588".toCharArray(), "com.google.android.dialer:id"))
+        actions.addAll(dialNoActions("+919821592522".toCharArray(), "com.google.android.dialer:id"))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.Scroll(ScrollDirection.UP))
         actions.add(Action.Delay(milli = 500))
@@ -70,13 +71,13 @@ class VtCallTestUsingDialer : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
+                Selector.ByContentDesc("End call"),
                 stepName = "Disconnect the call"
             )
         )
 
 
-
+        //actions.add(Action.SendAdbCommand(AdbCommand.COMMAND_END_CALL))
 
         return actions
     }

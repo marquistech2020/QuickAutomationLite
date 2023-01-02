@@ -1,6 +1,7 @@
 package com.marquistech.quickautomationlite.testcases.call
 
 import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.data.AdbCommand
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
@@ -85,6 +86,7 @@ class VtCallTestUsingPhonebook : TestFlow() {
             )
         )
 
+
         return actions
     }
 
@@ -93,7 +95,7 @@ class VtCallTestUsingPhonebook : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 2000
     }
 
     override fun onStartIteration(testName: String, count: Int) {

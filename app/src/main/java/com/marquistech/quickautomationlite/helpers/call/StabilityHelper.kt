@@ -129,22 +129,6 @@ class StabilityHelper : CallHelper() {
 
     }
 
-    @SuppressLint("MissingPermission")
-    override fun performActionUsingShell(command: String): Boolean {
-
-        var result = false
-
-        val tm = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-
-        if (tm.isInCall) {
-            uiDevice.executeShellCommand(command)
-
-            if (command == AdbCommand.COMMAND_END_CALL) {
-                result = tm.isInCall.not()
-            }
-        }
-        return result
-    }
 
 
 }

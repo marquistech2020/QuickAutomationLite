@@ -42,7 +42,7 @@ class VoiceCallTestUsingDialer : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+917011998220".toCharArray(), "com.google.android.dialer:id"))
+        actions.addAll(dialNoActions("+919821592522".toCharArray(), "com.google.android.dialer:id"))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
@@ -50,6 +50,8 @@ class VoiceCallTestUsingDialer : TestFlow() {
                 stepName = "Initiate the voice call"
             )
         )
+        actions.add(Action.ClickListItemByIndex(Selector.ByRes("com.google.android.dialer:id/select_dialog_listview"),0,"",0,""))
+        actions.add(Action.Delay(milli = 500))
         actions.add(Action.Delay(5))
         actions.add(
             Action.GetText(

@@ -1,5 +1,6 @@
 package com.marquistech.quickautomationlite.helpers.call
 
+import android.os.Build
 import androidx.test.uiautomator.*
 import com.marquistech.quickautomationlite.core.ScrollDirection
 import com.marquistech.quickautomationlite.core.Selector
@@ -14,13 +15,15 @@ open class CallHelper : Helper() {
         val uiSelector = UiSelector().className("android.widget.ListView")
 
         val uiObject = uiDevice.findObject(uiSelector)
+        val width = uiDevice.displayWidth
+        val height = uiDevice.displayHeight
 
         var isClearAll = false
 
         if (uiObject.exists()) {
             val childItem = uiObject.getChild(UiSelector().clickable(true))
             while (childItem.exists() && childItem.childCount != 0) {
-                uiDevice.swipe(542, 1005, 542, 157, 30)
+                uiDevice.swipe(width / 2, height / 2, width / 2, 0, 10)
             }
 
             isClearAll = childItem.exists().not()
@@ -254,6 +257,58 @@ open class CallHelper : Helper() {
         }
 
         return result
+    }
+
+    override fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlag: String
+    ): Boolean {
+
+        return try {
+            var uiSelector: UiSelector? = null
+
+
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector = UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+                is Selector.ByContentDesc -> {
+                    uiSelector = UiSelector().descriptionContains(selector.contentDesc)
+                }
+            }
+
+
+            var isClicked = false
+
+            var uiObject = uiDevice.findObject(uiSelector)
+
+            if (uiObject.exists()) {
+                val child = uiObject.getChild((UiSelector().clickable(true).index(position)))
+
+                if (child.exists()) {
+                    isClicked = child.click()
+                }
+
+            }
+
+            return isClicked
+        } catch (e: Exception) {
+            writeLog(tag, " Exception in performClick ${e.message}")
+            false
+        }
+
     }
 
 

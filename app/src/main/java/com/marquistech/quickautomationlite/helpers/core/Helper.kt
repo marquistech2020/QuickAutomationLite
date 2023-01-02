@@ -1,6 +1,7 @@
 package com.marquistech.quickautomationlite.helpers.core
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import androidx.test.uiautomator.Until
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.*
+import com.marquistech.quickautomationlite.data.AdbCommand
 
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import java.text.ParseException
@@ -221,8 +223,21 @@ open class Helper {
         return uiDevice.click(x, y)
     }
 
-    open fun performActionUsingShell(command: String): Boolean {
-        return false
+    @SuppressLint("MissingPermission")
+      fun performActionUsingShell(command: String): Boolean {
+
+        var result = false
+
+        val tm = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+
+        if (tm.isInCall) {
+            uiDevice.executeShellCommand(command)
+
+            if (command == AdbCommand.COMMAND_END_CALL) {
+                result = tm.isInCall.not()
+            }
+        }
+        return result
     }
 
     fun performEnable(type: Type, enable: Boolean): Boolean {
@@ -313,6 +328,14 @@ open class Helper {
 
     open fun performScroll(direction: ScrollDirection): Boolean {
         return false
+    }
+
+    fun wakeDevice(){
+        try {
+            uiDevice.wakeUp()
+        }catch (e:Exception){
+
+        }
     }
 
 

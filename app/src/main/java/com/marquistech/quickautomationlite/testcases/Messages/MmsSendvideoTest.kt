@@ -17,7 +17,7 @@ class MmsSendvideoTest : TestFlow() {
         return MmsHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1000
     }
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)

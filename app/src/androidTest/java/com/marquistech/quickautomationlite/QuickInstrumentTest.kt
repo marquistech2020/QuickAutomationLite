@@ -1,27 +1,22 @@
 package com.marquistech.quickautomationlite
 
 
-import android.util.Log
-import com.marquistech.quickautomationlite.testcases.Messages.*
-import com.marquistech.quickautomationlite.testcases.WifiOnOff
+import androidx.test.platform.app.InstrumentationRegistry
+import com.marquistech.quickautomationlite.testcases.TestFactory
 import org.junit.Test
 
 
 class QuickInstrumentTest {
-/*    @Rule
-    var collector = ErrorCollector()*/
 
     @Test
     fun testShow() {
 
-        try {
-            val test = WifiOnOff()
-            test.mainTest()
+        val code = InstrumentationRegistry.getArguments().getString("testCode", "0").toInt()
 
-            Log.e("TestCaseCount", "Error Catch ")
-        } catch (e: Exception) {
-            Log.e("TestCaseCount", "Error Catch ")
-        }
+        val factory = TestFactory()
+
+        val test = factory.getTest(code)
+        test?.mainTest()
 
     }
 
