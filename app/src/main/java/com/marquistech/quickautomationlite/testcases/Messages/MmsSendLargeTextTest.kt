@@ -49,6 +49,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
             reportList.add(it)
             fileName
         }
+        StorageHandler.createTestCaseLog2File(count,tag,fileName2,report)
     }
 
 

@@ -435,7 +435,7 @@ object StorageHandler {
         }
     }
 
-    fun createTestCaseLog2File(iteration:Int, testName: String,stepName:String,status :String,fileName:String, report: Report?) {
+    fun createTestCaseLog2File(iteration:Int, testName: String,fileName:String, report: Report?) {
         getLogsDirectory()?.let { dir ->
             val excelFileName =
                 dir.absolutePath + "/" + fileName + ".xls" //name of excel file
