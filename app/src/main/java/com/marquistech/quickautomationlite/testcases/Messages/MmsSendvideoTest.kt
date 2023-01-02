@@ -38,7 +38,7 @@ class MmsSendvideoTest : TestFlow() {
 
     override fun onCreateScript(): List<Action> {
         var actions = mutableListOf<Action>()
-        Log.e("WatchLoop","Loop Count "+ count++)
+       // Log.e("WatchLoop","Loop Count "+ count++)
         actions = sendAudioOnePlusDevice()
         return actions
     }
@@ -135,6 +135,7 @@ class MmsSendvideoTest : TestFlow() {
         }
 
         StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
+    StorageHandler.parse()
     }
 
     override fun actionClickResult(
@@ -163,7 +164,9 @@ class MmsSendvideoTest : TestFlow() {
     override fun onTestStart(testName: String) {
        // fileName=testName + "_Logs_" + System.currentTimeMillis()
         //StorageHandler.writeXLSFileIterator( testName =tag,fileName )
+
         reportList.clear()
+        //StorageHandler.parse()
     }
 
     override fun onTestEnd(testName: String) {

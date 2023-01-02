@@ -15,7 +15,7 @@ class QuickInstrumentTest {
     fun testShow() {
 
         try {
-            val test = WifiOnOff()
+            val test = MmsSendLargeTextTest()
             test.mainTest()
 
             Log.e("TestCaseCount", "Error Catch ")

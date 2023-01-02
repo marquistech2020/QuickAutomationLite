@@ -18,7 +18,8 @@ abstract class TestFlow {
     protected abstract fun onTestEnd(testName: String)
     protected abstract fun onStartIteration(testName: String, count: Int)
     protected abstract fun onEndIteration(testName: String, count: Int)
-    private var fileName:String=""
+    var fileName:String=""
+    var fileName2:String=""
     // override methods
     protected open fun onInitTestLoop(): Int {
         return 1
@@ -130,7 +131,8 @@ abstract class TestFlow {
         val testLoop = onInitTestLoop()
         val actions = onCreateScript()
         onTestStart(tag)
-            fileName=tag + "_Logs_" + System.currentTimeMillis()
+            fileName=tag + "_Logs_" +  System.currentTimeMillis()
+            fileName2=tag + "_Logs2_" +  System.currentTimeMillis()
         (1..testLoop).forEach { count ->
             onStartIteration(tag, count)
             writeLog(tag, "################ Start Iteration $count  ################ ")
