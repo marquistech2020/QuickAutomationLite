@@ -24,7 +24,7 @@ class VtCallTestUsingDialer : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2000
+        return 5
     }
 
     override fun onCreateScript(): List<Action> {

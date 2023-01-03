@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
 
         val button2 = findViewById<Button>(R.id.button2)
 
+        button1.setOnClickListener {
+            Log.e("TAG","button")
+        }
+
 
     }
 

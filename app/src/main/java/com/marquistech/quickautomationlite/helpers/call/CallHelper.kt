@@ -14,9 +14,13 @@ open class CallHelper : Helper() {
 
         val uiSelector = UiSelector().className("android.widget.ListView")
 
-        val uiObject = uiDevice.findObject(uiSelector)
+        var uiObject = uiDevice.findObject(uiSelector)
         val width = uiDevice.displayWidth
         val height = uiDevice.displayHeight
+
+        if (uiObject.exists().not()){
+            uiObject = uiDevice.findObject(UiSelector().className("android.widget.ScrollView"))
+        }
 
         var isClearAll = false
 
