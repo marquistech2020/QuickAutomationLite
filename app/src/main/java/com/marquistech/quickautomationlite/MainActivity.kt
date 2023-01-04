@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         val button1 = findViewById<Button>(R.id.button1)
 
-        val button2 = findViewById<Button>(R.id.button2)
+      //  val button2 = findViewById<Button>(R.id.button2)
 
         button1.setOnClickListener {
             Log.e("TAG","button")
