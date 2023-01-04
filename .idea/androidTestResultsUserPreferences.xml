@@ -24,6 +24,7 @@
                 <map>
                   <entry key="2f065dc8" value="120" />
                   <entry key="6662815b" value="120" />
+                  <entry key="9171a9c00822" value="120" />
                   <entry key="Duration" value="116" />
                   <entry key="OPPO" value="120" />
                   <entry key="OPPO&#10; CPH2455" value="120" />
@@ -32,11 +33,14 @@
                   <entry key="SKR8IZGYZ5554TWS" value="120" />
                   <entry key="TOY5GATK6TX87X9L" value="120" />
                   <entry key="Tests" value="386" />
+                  <entry key="Xiaomi&#10; 22111317PI" value="120" />
+                  <entry key="a6ff1d77" value="120" />
                   <entry key="a7f6689c" value="120" />
                   <entry key="realme" value="120" />
                   <entry key="realme&#10; RMX3312" value="120" />
                   <entry key="realme&#10; RMX3392" value="120" />
                   <entry key="realme&#10; RMX3561" value="120" />
+                  <entry key="realme&#10; RMX3709" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

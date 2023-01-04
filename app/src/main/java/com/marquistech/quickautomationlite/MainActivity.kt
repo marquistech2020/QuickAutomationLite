@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.marquistech.quickautomationlite.permission.PermissionActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,9 @@ class MainActivity : AppCompatActivity() {
 
         button1.setOnClickListener {
             Log.e("TAG","button")
+            val intent = Intent(baseContext, PermissionActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
 

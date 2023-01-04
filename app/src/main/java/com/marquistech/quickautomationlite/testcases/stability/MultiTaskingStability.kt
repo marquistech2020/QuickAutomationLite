@@ -14,7 +14,7 @@ class MultiTaskingStability : TestFlow() {
 
 
     override fun onInitTestLoop(): Int {
-        return 100
+        return 2000
     }
     override fun onCreateHelper(): Helper {
         return StabilityHelper()
@@ -24,7 +24,7 @@ class MultiTaskingStability : TestFlow() {
         val actions = mutableListOf<Action>()
         actions.add(Action.LaunchApp(AppSelector.ByAction(Intent.ACTION_DIAL)))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+917428091293".toCharArray(), "com.google.android.dialer:id"))
+        actions.addAll(dialNoActions("+919821592522".toCharArray(), "com.google.android.dialer:id"))
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByContentDesc("dial")))
         actions.add(Action.Delay(10))
