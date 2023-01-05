@@ -1,5 +1,4 @@
-
-import android.provider.Settings.ACTION_WIFI_SETTINGS
+package com.marquistech.quickautomationlite.testcases.wifi
 import android.util.Log
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
@@ -8,7 +7,6 @@ import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
-import com.marquistech.quickautomationlite.testcases.SendEmail
 
 /**
  * Created by Ashutosh on 09,November,2022,
@@ -82,7 +80,7 @@ class WifiEnbDsb : TestFlow() {
         )
         actions.add(
             Action.GetText(
-                Selector.ByText(WifiEnbDsb.WIFI_CONNECTED_SUCESSFULLY),
+                Selector.ByText(WIFI_CONNECTED_SUCESSFULLY),
                 stepName = "Wifi has connected Sucessfully"
             ),
         )
@@ -139,7 +137,7 @@ class WifiEnbDsb : TestFlow() {
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty() &&requestText == WifiEnbDsb.WIFI_CONNECTED_SUCESSFULLY) {
+        if (stepName.isNotEmpty() &&requestText == WIFI_CONNECTED_SUCESSFULLY) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
         writeLog(tag, "actionGetTextResult  result $result")

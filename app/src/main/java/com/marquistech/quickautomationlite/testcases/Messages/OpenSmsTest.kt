@@ -13,7 +13,7 @@ class OpenSmsTest : TestFlow() {
     private var count:Int=0;
 
     override fun onInitTestLoop(): Int {
-        return 4
+        return 1500
     }
 
     override fun onStartIteration(testName: String, count: Int) {

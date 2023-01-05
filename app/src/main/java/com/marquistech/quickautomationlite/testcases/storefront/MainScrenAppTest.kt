@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.storefront
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.helpers.core.Helper

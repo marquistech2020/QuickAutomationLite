@@ -1,25 +1,17 @@
-package com.marquistech.quickautomationlite.testcases
-
-/**
- * Created by Ashutosh on 16,November,2022,
- */
+package com.marquistech.quickautomationlite.testcases.email
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
-import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
+import com.marquistech.quickautomationlite.helpers.core.GmailHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
 /**
- * Created by Ashutosh on 14,November,2022,
+ * Created by Ashutosh on 11,November,2022,
  */
-class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
+class OpenEmail : TestFlow() {
     override fun onCreateHelper(): Helper {
-        return StoreFrontHelper()
-    }
-    override fun onInitTestLoop(): Int {
-        return 5
+     return GmailHelper()
     }
 
     override fun onCreateScript(): List<Action> {
@@ -29,85 +21,76 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-        // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
-        actions.add(Action.Delay(5))
-        actions.add(Action.Click(Selector.ByText("Install")))
-        actions.add(Action.Delay(10))
-        actions.add(Action.Click(Selector.ByText("OK")))
-        actions.add(Action.Delay(3))
-        actions.add(Action.Click(Selector.ByText("Uninstall")))
-        actions.add(Action.Delay(1))
+        actions.add(Action.Delay(second = 1))
+        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.gm"), stepName = "Launch Gmail APP"))
+        actions.add(Action.Delay(second =5))
+
+        /*
+        actions.add(Action.Click(Selector.ByText("Compose")))
+        actions.add(Action.Delay(second =2))
+
+        actions.add(
+            Action.SetText(
+                Selector.ByText("to"),
+                "ashrun@gmail.com"
+
+            )
+
+        )
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/peoplekit_listview_contact_name")))
+        actions.add(Action.SendEvent(EventType.ENTER))
 
 
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByCls("android.widget.FrameLayout"),
-            0,
-            "android.view.ViewGroup",
-            1,
-            testFlag = ""
-        ))
+        actions.add(Action.Delay(second =2))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.gm:id/subject_content"),
+                "Hello "
+
+            )
+
+        )
 
 
-        actions.add(Action.Delay(2))
+
+        actions.add(Action.SendEvent(EventType.ENTER))
+        actions.add(Action.Delay(second =2))
+        actions.add(
+            Action.SetText(
+                Selector.ByRes("com.google.android.gm:id/composearea_tap_trap_bottom"),
+                "Hello_Ashutosh_how_are_you"
+
+            )
+
+        )
+             actions.add(Action.Delay(second = 3))
+
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/add_attachment")))
+        actions.add(Action.Click(Selector.ByText("Attach file")))
+        actions.add(Action.Delay(second = 2))
+        actions.add(Action.Click(Selector.ByText("Images")))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.documentsui:id/icon_thumb")))
+        actions.add((Action.Click(Selector.ByText("SELECT"))))
+        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send")))
+        actions.add(Action.Delay(second = 2))
+
+        actions.add(
+            Action.GetText(
+                Selector.ByText("Sent"),
+
+            )
+        )
+
+         */
+        actions.add(Action.SendEvent(EventType.HOME))
         return actions
+
     }
 
-
-/*
-//for opening the App
-        actions.add(
-            Action.ClickListItemByIndex(
-                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-                0,
-                "android.view.View",
-                8,
-
-
-            ))
-        actions.add(Action.Delay(5))
-
-
- */
-
-/*
-        //For installing the App
-        actions.add(
-            Action.ClickListItemByIndex(
-                Selector.ByCls("android.view.ViewGroup"),
-                0,
-                "android.widget.Button",
-                0,
-            ))
-
-
-        actions.add(Action.Delay(30))
-
-        //For Uninstalling the app
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-            0,
-            "android.view.View",
-            5
-        ))
-
-
-        actions.add(Action.Delay(5))
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByCls("android.view.View"),
-            0,
-            "android.view.View",
-            2
-        ))
-        actions.add(Action.Delay(5))
-        return actions
-    }
-
- */
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,2)
+        report = Report(count,4)
 
 
     }
@@ -141,8 +124,7 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
         }
         StorageHandler.writeLog(tag, "actionClickResult result $result")
     }
-
-
+/*
     override fun actionGetTextResult(
         count: Int,
         result: String,
@@ -157,7 +139,7 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
 
     }
 
-
+ */
 
     override fun onEndIteration(testName: String, count: Int) {
         val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false
@@ -175,8 +157,6 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Open_Store_Front")
+        StorageHandler.writeXLSFile(reportList, "Open_Email")
     }
 }
-
-

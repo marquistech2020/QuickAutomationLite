@@ -1,17 +1,20 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.storefront
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.GmailHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
+import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
 
 /**
- * Created by Ashutosh on 11,November,2022,
+ * Created by Ashutosh on 16,November,2022,
  */
-class OpenEmail : TestFlow() {
+class OpenCloseStoreFrontTest : TestFlow() {
     override fun onCreateHelper(): Helper {
-     return GmailHelper()
+        return StoreFrontHelper()
+    }
+    override fun onInitTestLoop(): Int {
+        return 3
     }
 
     override fun onCreateScript(): List<Action> {
@@ -21,76 +24,15 @@ class OpenEmail : TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-        actions.add(Action.Delay(second = 1))
-        actions.add(Action.LaunchApp(AppSelector.ByPkg("com.google.android.gm"), stepName = "Launch Gmail APP"))
-        actions.add(Action.Delay(second =5))
-
-        /*
-        actions.add(Action.Click(Selector.ByText("Compose")))
-        actions.add(Action.Delay(second =2))
-
-        actions.add(
-            Action.SetText(
-                Selector.ByText("to"),
-                "ashrun@gmail.com"
-
-            )
-
-        )
-        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/peoplekit_listview_contact_name")))
-        actions.add(Action.SendEvent(EventType.ENTER))
-
-
-        actions.add(Action.Delay(second =2))
-        actions.add(
-            Action.SetText(
-                Selector.ByRes("com.google.android.gm:id/subject_content"),
-                "Hello "
-
-            )
-
-        )
-
-
-
-        actions.add(Action.SendEvent(EventType.ENTER))
-        actions.add(Action.Delay(second =2))
-        actions.add(
-            Action.SetText(
-                Selector.ByRes("com.google.android.gm:id/composearea_tap_trap_bottom"),
-                "Hello_Ashutosh_how_are_you"
-
-            )
-
-        )
-             actions.add(Action.Delay(second = 3))
-
-        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/add_attachment")))
-        actions.add(Action.Click(Selector.ByText("Attach file")))
-        actions.add(Action.Delay(second = 2))
-        actions.add(Action.Click(Selector.ByText("Images")))
-        actions.add(Action.Click(Selector.ByRes("com.google.android.documentsui:id/icon_thumb")))
-        actions.add((Action.Click(Selector.ByText("SELECT"))))
-        actions.add(Action.Click(Selector.ByRes("com.google.android.gm:id/send")))
-        actions.add(Action.Delay(second = 2))
-
-        actions.add(
-            Action.GetText(
-                Selector.ByText("Sent"),
-
-            )
-        )
-
-         */
+       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
+        actions.add(Action.Delay(milli = 1000))
         actions.add(Action.SendEvent(EventType.HOME))
         return actions
-
     }
-
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
-        report = Report(count,4)
+        report = Report(count,2)
 
 
     }
@@ -109,7 +51,6 @@ class OpenEmail : TestFlow() {
         if (stepName.isNotEmpty()) {
             report?.insertStep(stepName, if (result) "Pass" else "Fail")
         }
-
         StorageHandler.writeLog(tag, "actionLaunchAppResult  result $result")
     }
 
@@ -157,6 +98,11 @@ class OpenEmail : TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Open_Email")
+        StorageHandler.writeXLSFile(reportList, "Open_store_front")
+
+
+
     }
+
+
 }

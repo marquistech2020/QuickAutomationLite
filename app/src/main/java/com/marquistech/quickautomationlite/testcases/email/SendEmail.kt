@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.email
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
@@ -19,7 +19,7 @@ class SendEmail : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 500
+        return 1500
     }
 override fun onCreateScript(): List<Action> {
     val actions = mutableListOf<Action>()
@@ -124,7 +124,7 @@ override fun actionClickResult(
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty()&& requestText == SendEmail.MAIL_SENT_SUCESSFULLY) {
+        if (stepName.isNotEmpty()&& requestText == MAIL_SENT_SUCESSFULLY) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
         writeLog(tag, "actionGetTextResult  result $result")

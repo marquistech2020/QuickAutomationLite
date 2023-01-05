@@ -22,7 +22,7 @@ class VoiceCallTestUsingDialer : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 3
+        return 1500
     }
 
     override fun onCreateScript(): List<Action> {

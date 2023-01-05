@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.email
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
@@ -15,6 +15,7 @@ class SendEmailAttachment :TestFlow(){
     }
     companion object {
         private const val MAIL_SENT_SUCESSFULLY = "Sent"
+        private  const val MAIL_SENDING = "Sending"
     }
 
     override fun onInitTestLoop(): Int {
@@ -78,7 +79,7 @@ class SendEmailAttachment :TestFlow(){
         actions.add(Action.Delay(second = 4))
         actions.add(
             Action.GetText(
-                Selector.ByText(SendEmailAttachment.MAIL_SENT_SUCESSFULLY),
+                Selector.ByText(MAIL_SENT_SUCESSFULLY),
                 stepName = "Mail has been sent sucessfully from the sender"
             ),
         )
@@ -132,11 +133,14 @@ class SendEmailAttachment :TestFlow(){
     ) {
         val requestText = result.split("#").first()
         val resultText = result.split("#").last()
-        if (stepName.isNotEmpty()&& requestText == SendEmailAttachment.MAIL_SENT_SUCESSFULLY) {
+        if (stepName.isNotEmpty()&& requestText == MAIL_SENT_SUCESSFULLY) {
             report?.insertStep(stepName, if (resultText.isNotEmpty()) "Pass" else "Fail")
         }
-        StorageHandler.writeLog(tag, "actionGetTextResult  result $result")
+        else if(requestText == MAIL_SENDING) {
+            report!!.insertStep(stepName, "Failed")
 
+            StorageHandler.writeLog(tag, "actionGetTextResult  result $result")
+        }
     }
 
 
