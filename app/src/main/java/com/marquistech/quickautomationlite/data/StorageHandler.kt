@@ -435,18 +435,20 @@ object StorageHandler {
         }
     }
 
-    fun createTestCaseLog2File(iteration:Int, testName: String,fileName:String, report: Report?) {
+
+    fun createTestCaseLog2File(testName: String, fileName: String, report: Report?) {
         getLogsDirectory()?.let { dir ->
             val excelFileName =
                 dir.absolutePath + "/" + fileName + ".xls" //name of excel file
             var file = File(excelFileName)
             if (file.exists()) {
+
                 var wb = HSSFWorkbook(FileInputStream(excelFileName))
                 val sheet: HSSFSheet = wb.getSheet("Sheet1")
                 var lastRowNo: Int = sheet.lastRowNum
                 Log.e("LastRow", "LastRow No" + lastRowNo)
 
-                val hssRow: HSSFRow = sheet.createRow(lastRowNo)
+                val hssRow: HSSFRow = sheet.createRow(lastRowNo+1)
                 //   for (index in report!!.getColumnCount()){
                 val hssCellFirst: HSSFCell = hssRow.createCell(0)
                 val cs = wb.createCellStyle()
@@ -462,8 +464,12 @@ object StorageHandler {
                 val hssCellLast: HSSFCell = hssRow.createCell(columnValues.size + 1)
                 hssCellLast.setCellStyle(cs)
                 hssCellLast.setCellValue("" + report!!.status)
+                val fileOut = FileOutputStream(excelFileName)
 
-            }else{
+                wb.write(fileOut)
+                fileOut.flush()
+                fileOut.close()
+            } else {
                 val sheetName = "Sheet1" //name of sheet
                 val wb = HSSFWorkbook()
                 val sheet: HSSFSheet = wb.createSheet(sheetName)
@@ -493,9 +499,20 @@ object StorageHandler {
                 descRow.heightInPoints = 4 * sheet.defaultRowHeightInPoints
                 sheet.addMergedRegion(CellRangeAddress(1, 1, 3, 7))
 
-                var cellNo = 0
-                val row: HSSFRow = sheet.createRow(3)  // Header Row
+                val stepNameList: List<*> = report!!.getSteps().keys.toList()
 
+               var  rowNo = 3
+
+                stepNameList.forEachIndexed { index, any ->
+                    val stepRow: HSSFRow = sheet.createRow(rowNo + index)
+                    val stepCell: HSSFCell = stepRow.createCell(0)
+                    stepCell.setCellValue("STEP ${index + 1} : " + any)
+                    sheet.addMergedRegion(CellRangeAddress(rowNo + index, rowNo + index, 0, 1))
+                }
+
+                var cellNo = 0
+                var lastRowNo: Int = sheet.lastRowNum
+                val row: HSSFRow = sheet.createRow(lastRowNo+1)  // Header Row
 
 
                 val cellFirst: HSSFCell = row.createCell(cellNo)
@@ -517,10 +534,28 @@ object StorageHandler {
                 cellLast.setCellValue("STATUS")
                 cellLast.setCellStyle(getHeaderCellStyle(wb))
                 sheet.setColumnWidth(stepColNo, 25 * 256)
+//Code Comment for test
+                 lastRowNo = sheet.lastRowNum
 
+                val hssRow: HSSFRow = sheet.createRow(lastRowNo+1)
+                //   for (index in report!!.getColumnCount()){
+                val hssCellFirst: HSSFCell = hssRow.createCell(0)
+                //val cs = wb.createCellStyle()
 
-                //rowNo += 1
-
+                cs.alignment = HorizontalAlignment.CENTER
+                cs.alignment = HorizontalAlignment.CENTER
+                hssCellFirst.setCellStyle(cs)
+                hssCellFirst.setCellValue("" + report!!.iteration)
+                val columnValues: List<*> = report!!.getSteps().values.toList()
+                columnValues.forEachIndexed { colNoIndex, any ->
+                    val cell: HSSFCell = hssRow.createCell(colNoIndex + 1)
+                    cell.setCellStyle(cs)
+                    cell.setCellValue("" + any)
+                }
+                val hssCellLast: HSSFCell = hssRow.createCell(columnValues.size + 1)
+                hssCellLast.setCellStyle(cs)
+                hssCellLast.setCellValue("" + report!!.status)
+//Code Comment for Test
                 var totalPass = 0
                 var totalFail = 0
 
@@ -588,13 +623,13 @@ object StorageHandler {
     }
 
     @Throws(XmlPullParserException::class, IOException::class)
-    fun parse(  ): List<*> {
+    fun parse(): List<*> {
         var inps: InputStream? = null
         val parser: XmlPullParser = Xml.newPullParser()
         getLogsDirectory()?.let { dir ->
             val excelFileName =
                 dir.absolutePath + "/Input_file.xml"
-            inps= FileInputStream(excelFileName)
+            inps = FileInputStream(excelFileName)
             inps?.use { inputStream ->
                 //val parser: XmlPullParser = Xml.newPullParser()
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -603,45 +638,48 @@ object StorageHandler {
 
             }
         }
-        return readFeed(parser,inps)
+        return readFeed(parser, inps)
 
 
     }
+
     data class Entry(val title: String?, val summary: String?, val link: String?)
+
     @Throws(XmlPullParserException::class, IOException::class)
-    private fun readFeed(parser: XmlPullParser,inps:InputStream?): List<Entry> {
+    private fun readFeed(parser: XmlPullParser, inps: InputStream?): List<Entry> {
         val entries = mutableListOf<Entry>()
 
-        try{
+        try {
 
 
-       // parser.require(XmlPullParser.START_TAG, "ns", "Input")
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.eventType != XmlPullParser.START_TAG) {
-                continue
-            }
-
-            Log.e("XMLRead","Name "+ parser.name+" Text "+parser.nextText())
-
-            if(parser.name=="mtNumber"){
-                inps?.let {parser.setInput(inps,"09999999999")
-
+            // parser.require(XmlPullParser.START_TAG, "ns", "Input")
+            while (parser.next() != XmlPullParser.END_TAG) {
+                if (parser.eventType != XmlPullParser.START_TAG) {
+                    continue
                 }
 
+                Log.e("XMLRead", "Name " + parser.name + " Text " + parser.nextText())
+
+                if (parser.name == "mtNumber") {
+                    inps?.let {
+                        parser.setInput(inps, "09999999999")
+
+                    }
+
+                }
+                // Starts by looking for the entry tag
+                if (parser.name == "entry") {
+                    //   entries.add(readEntry(parser))
+                } else {
+                    // skip(parser)
+                }
             }
-            // Starts by looking for the entry tag
-            if (parser.name == "entry") {
-             //   entries.add(readEntry(parser))
-            } else {
-               // skip(parser)
-            }
-        }
-        }catch (e:Exception){
-            Log.e("XMLRead","Error "+ e.message)
+        } catch (e: Exception) {
+            Log.e("XMLRead", "Error " + e.message)
         }
         return entries
 
-        }
+    }
 
 
     fun writeCrash(Tag: String, e: Exception) {

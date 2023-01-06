@@ -26,6 +26,7 @@ class MmsReceivedAudioTest : TestFlow() {
         report?.let {
             reportList.add(it)
         }
+        StorageHandler.createTestCaseLog2File(tag,fileName2,report)
     }
 
 

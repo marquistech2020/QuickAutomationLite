@@ -151,8 +151,9 @@ abstract class TestFlow {
             preconditionTest()
             val testLoop = onInitTestLoop()
             val actions = onCreateScript()
-            onTestStart(tag)
             fileName = tag + "_Logs_" + System.currentTimeMillis()
+            fileName2 = tag + "_Logs2_" + System.currentTimeMillis()
+            onTestStart(tag)
             (1..testLoop).forEach { count ->
                 helper.wakeDevice()
                 onStartIteration(tag, count)
@@ -168,6 +169,7 @@ abstract class TestFlow {
             }
             onTestEnd(tag)
         } catch (e: Exception) {
+            onTestEnd(tag)
             Log.e("MainTest", "Exception " + e.message)
             StorageHandler.writeCrash(tag,e)
         }

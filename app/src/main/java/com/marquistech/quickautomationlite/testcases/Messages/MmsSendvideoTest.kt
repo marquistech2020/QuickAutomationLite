@@ -12,7 +12,7 @@ class MmsSendvideoTest : TestFlow() {
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     private var count:Int=0
-    private var fileName:String=""
+
     override fun onCreateHelper(): Helper {
         return MmsHelper()
     }
@@ -32,6 +32,7 @@ class MmsSendvideoTest : TestFlow() {
         report?.let {
             reportList.add(it)
         }
+        StorageHandler.createTestCaseLog2File(tag,fileName2,report)
     }
 
 

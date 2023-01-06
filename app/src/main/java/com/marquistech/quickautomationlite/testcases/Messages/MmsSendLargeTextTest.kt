@@ -26,17 +26,19 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
 
     override fun onTestStart(testName: String) {
         reportList.clear()
+
     }
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "MMS_sendLargeText")
     }
     override fun onInitTestLoop(): Int {
-        return 2
+        return 3
     }
 
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
+
     }
 
 
@@ -49,7 +51,8 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
             reportList.add(it)
             fileName
         }
-        StorageHandler.createTestCaseLog2File(count,tag,fileName2,report)
+
+        StorageHandler.createTestCaseLog2File(tag,fileName2,report)
     }
 
 
