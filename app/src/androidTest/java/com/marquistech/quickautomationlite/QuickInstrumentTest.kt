@@ -11,6 +11,7 @@ class QuickInstrumentTest {
     @Test
     fun testShow() {
 
+
         val code = InstrumentationRegistry.getArguments().getString("testCode", "117").toInt()
 
         val factory = TestFactory()

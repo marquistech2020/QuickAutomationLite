@@ -1,18 +1,22 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.testcases.storefront
+
+/**
+ * Created by Ashutosh on 16,November,2022,
+ */
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
+import com.marquistech.quickautomationlite.helpers.storefront.StoreFrontHelper
 
 /**
  * Created by Ashutosh on 14,November,2022,
  */
-class OpenStoreFrontAppInUnTest :TestFlow() {
+class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
     override fun onCreateHelper(): Helper {
-       return StoreFrontHelper()
+        return StoreFrontHelper()
     }
     override fun onInitTestLoop(): Int {
         return 5
@@ -25,9 +29,31 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
+        // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
+       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
+        actions.add(Action.Delay(5))
+        actions.add(Action.Click(Selector.ByText("Install")))
         actions.add(Action.Delay(10))
+        actions.add(Action.Click(Selector.ByText("OK")))
+        actions.add(Action.Delay(3))
+        actions.add(Action.Click(Selector.ByText("Uninstall")))
+        actions.add(Action.Delay(1))
+
+
+        actions.add(Action.ClickListItemByIndex(
+            Selector.ByCls("android.widget.FrameLayout"),
+            0,
+            "android.view.ViewGroup",
+            1,
+            testFlag = ""
+        ))
+
+
+        actions.add(Action.Delay(2))
+        return actions
+    }
+
+
 /*
 //for opening the App
         actions.add(
@@ -44,15 +70,15 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
 
  */
 
-
+/*
         //For installing the App
         actions.add(
             Action.ClickListItemByIndex(
-                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
+                Selector.ByCls("android.view.ViewGroup"),
                 0,
-                "android.view.View",
-                7,
-                "App is open Successfully ", testFlag = ""))
+                "android.widget.Button",
+                0,
+            ))
 
 
         actions.add(Action.Delay(30))
@@ -76,6 +102,8 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         actions.add(Action.Delay(5))
         return actions
     }
+
+ */
     private val reportList = mutableListOf<Report>()
     private var report: Report? = null
     override fun onStartIteration(testName: String, count: Int) {
@@ -128,6 +156,9 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
         writeLog(tag, "actionGetTextResult  result $result")
 
     }
+
+
+
     override fun onEndIteration(testName: String, count: Int) {
         val isFailed = report?.getSteps()?.values?.contains("Fail") ?: false
         report?.status = if (isFailed) "Fail" else "Pass"
@@ -144,7 +175,7 @@ class OpenStoreFrontAppInUnTest :TestFlow() {
     }
 
     override fun onTestEnd(testName: String) {
-        StorageHandler.writeXLSFile(reportList, "Open_Store_Front_In_Un")
+        StorageHandler.writeXLSFile(reportList, "Open_Store_Front")
     }
 }
 

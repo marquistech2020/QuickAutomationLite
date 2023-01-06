@@ -12,23 +12,32 @@ class MmsHelper : Helper() {
 
     override fun clearRecentApps(): Boolean {
 
+
         val uiSelector = UiSelector().className("android.widget.ListView")
 
-        val lv = uiDevice.findObject(uiSelector)
+        var uiObject = uiDevice.findObject(uiSelector)
+        val width = uiDevice.displayWidth
+        val height = uiDevice.displayHeight
 
-        lv.let { list ->
-
-
-            while (list.getChild(UiSelector().className("android.widget.FrameLayout"))
-                    .exists()
-            ) {
-                uiDevice.swipe(542, 1005, 542, 157, 50)
-            }
+        if (uiObject.exists().not()){
+            uiObject = uiDevice.findObject(UiSelector().className("android.widget.ScrollView"))
         }
 
-        return lv.exists().not()
+        var isClearAll = false
+
+        if (uiObject.exists()) {
+            val childItem = uiObject.getChild(UiSelector().clickable(true))
+            while (childItem.exists() && childItem.childCount != 0) {
+                uiDevice.swipe(width / 2, height / 2, width / 2, 0, 10)
+            }
+
+            isClearAll = childItem.exists().not()
+        }
+
+        return isClearAll
 
     }
+
 
 
     override fun performClick(selector: Selector, position: Int, lgClick: Boolean): Boolean {

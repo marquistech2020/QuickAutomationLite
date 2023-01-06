@@ -1,33 +1,49 @@
-package com.marquistech.quickautomationlite.helpers.core
+package com.marquistech.quickautomationlite.helpers.wifi
 
+import android.util.Log
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
+import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
+import com.marquistech.quickautomationlite.helpers.core.Helper
 
 /**
- * Created by Ashutosh on 11,November,2022,
+ * Created by Ashutosh on 09,November,2022,
  */
-class GmailHelper : Helper() {
+class WifiEnbDsbHelper : Helper() {
+
     override fun clearRecentApps(): Boolean {
 
 
         val uiSelector = UiSelector().className("android.widget.ListView")
 
-        val lv = uiDevice.findObject(uiSelector)
+        var uiObject = uiDevice.findObject(uiSelector)
+        val width = uiDevice.displayWidth
+        val height = uiDevice.displayHeight
 
-        lv.let { list ->
-
-
-            while (list.getChild(UiSelector().className("android.widget.FrameLayout"))
-                    .exists()
-            ) {
-                uiDevice.swipe(542, 1005, 542, 157, 30)
-            }
+        if (uiObject.exists().not()){
+            uiObject = uiDevice.findObject(UiSelector().className("android.widget.ScrollView"))
         }
 
-        return lv.exists().not()
+        var isClearAll = false
+
+        if (uiObject.exists()) {
+            val childItem = uiObject.getChild(UiSelector().clickable(true))
+            while (childItem.exists() && childItem.childCount != 0) {
+                uiDevice.swipe(width / 2, height / 2, width / 2, 0, 10)
+            }
+
+            isClearAll = childItem.exists().not()
+        }
+
+        return isClearAll
 
     }
+
+
+
     override fun performClick(selector: Selector, position: Int, isLongClick: Boolean): Boolean {
         return try {
             var uiSelector: UiSelector? = null
@@ -66,15 +82,14 @@ class GmailHelper : Helper() {
                         } else false
                     }
                 }
-
             }
-
             return isClicked
         } catch (e: Exception) {
             StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
             false
         }
     }
+
     override fun performSetText(selector: Selector, text: String): Boolean {
         uiDevice.executeShellCommand("input text $text")
         return true
@@ -126,10 +141,25 @@ class GmailHelper : Helper() {
                     }
                 }
             }
-
             "$reqStr#$outputText"
         } catch (e: Exception) {
             "$reqStr#"
         }
     }
+    private fun getItemAddNetwork(): Boolean {
+
+        val settingsItem = UiScrollable(UiSelector().className("android.widget.LinearLayout"))
+        val actions = mutableListOf<Action>()
+        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
+        val about: UiObject = settingsItem.getChildByText(
+            UiSelector().className("android.widget.RelativeLayout"),"Add network")
+        about.click()
+
+
+
+        return true
+    }
+
+
 }
+

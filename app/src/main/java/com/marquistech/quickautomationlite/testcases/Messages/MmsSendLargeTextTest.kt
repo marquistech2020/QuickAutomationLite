@@ -33,6 +33,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         StorageHandler.writeXLSFile(reportList, "MMS_sendLargeText")
     }
     override fun onInitTestLoop(): Int {
+        return 1500
         return 3
     }
 
@@ -79,7 +80,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.google.android.apps.messaging:id/recipient_text_view"),
-                "7011046214"
+                "9821592522"
                 ,stepName = "")
 
         )
