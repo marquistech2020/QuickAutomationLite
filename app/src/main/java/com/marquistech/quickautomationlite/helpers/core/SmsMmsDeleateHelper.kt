@@ -55,7 +55,7 @@ class SmsMmsDeleateHelper : Helper() {
                 val uiObject = uiDevice.findObject(uiSelector)
 
                 if (uiObject.exists()) {
-                    if (uiObject.childCount == 0) {
+                    return  if (uiObject.childCount == 0) {
                         uiObject.click()
                     } else {
                         uiObject.getChild(UiSelector().clickable(true).index(position)).click()
@@ -66,7 +66,7 @@ class SmsMmsDeleateHelper : Helper() {
 
 
 
-            return true
+            return false
         } catch (e: Exception) {
             Log.e("Helper", " exception ${e.message}")
             false
@@ -96,14 +96,14 @@ class SmsMmsDeleateHelper : Helper() {
         uiSelector?.let {
             var uiObj = uiDevice.findObject(it)
             if (uiObj.exists()) {
-                uiObj.setText(text)
+               return uiObj.setText(text)
             }
 
 
             waitFor(1)
 
         }
-        return true
+        return false
     }
 
     override fun performGetText(selector: Selector, position: Int): String {
