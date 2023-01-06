@@ -4,7 +4,7 @@ import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
+import com.marquistech.quickautomationlite.helpers.wifi.WifiEnbDsbHelper
 
 /**
  * Created by Ashutosh on 10,November,2022,
@@ -16,7 +16,7 @@ class WifiOnOff :TestFlow() {
         return WifiEnbDsbHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 8000
+        return 1500
     }
 
     override fun onCreateScript(): List<Action> {

@@ -6,7 +6,7 @@ import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.WifiEnbDsbHelper
+import com.marquistech.quickautomationlite.helpers.wifi.WifiEnbDsbHelper
 
 /**
  * Created by Ashutosh on 09,November,2022,

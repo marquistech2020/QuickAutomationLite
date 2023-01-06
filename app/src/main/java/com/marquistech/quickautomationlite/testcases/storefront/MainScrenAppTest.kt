@@ -2,7 +2,7 @@ package com.marquistech.quickautomationlite.testcases.storefront
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
+import com.marquistech.quickautomationlite.helpers.storefront.StoreFrontHelper
 
 /**
  * Created by ashutosh on 06,December,2022,

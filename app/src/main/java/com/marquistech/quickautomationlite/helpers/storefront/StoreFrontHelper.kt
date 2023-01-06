@@ -1,37 +1,45 @@
-package com.marquistech.quickautomationlite.helpers.core
+package com.marquistech.quickautomationlite.helpers.storefront
 
 import android.util.Log
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
-import com.marquistech.quickautomationlite.core.Action
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler
+import com.marquistech.quickautomationlite.helpers.core.Helper
+
 
 /**
- * Created by Ashutosh on 09,November,2022,
+ * Created by Ashutosh on 14,November,2022,
  */
-class WifiEnbDsbHelper : Helper() {
-
+class StoreFrontHelper : Helper() {
     override fun clearRecentApps(): Boolean {
+
+
         val uiSelector = UiSelector().className("android.widget.ListView")
 
-        val lv = uiDevice.findObject(uiSelector)
+        var uiObject = uiDevice.findObject(uiSelector)
+        val width = uiDevice.displayWidth
+        val height = uiDevice.displayHeight
 
-        lv.let { list ->
-
-
-            while (list.getChild(UiSelector().className("android.widget.FrameLayout"))
-                    .exists()
-            ) {
-                uiDevice.swipe(542, 1005, 542, 157, 30)
-            }
+        if (uiObject.exists().not()){
+            uiObject = uiDevice.findObject(UiSelector().className("android.widget.ScrollView"))
         }
 
-        return lv.exists().not()
+        var isClearAll = false
+
+        if (uiObject.exists()) {
+            val childItem = uiObject.getChild(UiSelector().clickable(true))
+            while (childItem.exists() && childItem.childCount != 0) {
+                uiDevice.swipe(width / 2, height / 2, width / 2, 0, 10)
+            }
+
+            isClearAll = childItem.exists().not()
+        }
+
+        return isClearAll
 
     }
-
 
     override fun performClick(selector: Selector, position: Int, isLongClick: Boolean): Boolean {
         return try {
@@ -54,13 +62,9 @@ class WifiEnbDsbHelper : Helper() {
                 }
                 else -> {}
             }
-
-
             var isClicked = false
-
             uiSelector?.let {
                 val uiObject = uiDevice.findObject(uiSelector)
-
                 if (uiObject.exists()) {
                     isClicked = if (uiObject.childCount == 0 || isResId) {
                         if (isLongClick) uiObject.longClick() else uiObject.click()
@@ -72,13 +76,13 @@ class WifiEnbDsbHelper : Helper() {
                     }
                 }
             }
+
             return isClicked
         } catch (e: Exception) {
             StorageHandler.writeLog("Helper", " exception ${e.cause?.message}")
             false
         }
     }
-
     override fun performSetText(selector: Selector, text: String): Boolean {
         uiDevice.executeShellCommand("input text $text")
         return true
@@ -107,7 +111,6 @@ class WifiEnbDsbHelper : Helper() {
                 }
                 else -> {}
             }
-
             var outputText = ""
 
             uiSelector?.let {
@@ -130,25 +133,67 @@ class WifiEnbDsbHelper : Helper() {
                     }
                 }
             }
+
             "$reqStr#$outputText"
         } catch (e: Exception) {
             "$reqStr#"
         }
     }
-    private fun getItemAddNetwork(): Boolean {
 
-        val settingsItem = UiScrollable(UiSelector().className("android.widget.LinearLayout"))
-        val actions = mutableListOf<Action>()
-        Log.e("Watcher", "ChildCount"+settingsItem.childCount)
-        val about: UiObject = settingsItem.getChildByText(
-            UiSelector().className("android.widget.RelativeLayout"),"Add network")
-        about.click()
+    override fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlag: String
+    ): Boolean {
+        return try {
+            var uiSelector: UiSelector? = null
+
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector =UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+                else -> {}
+            }
+            uiSelector?.let {
+                val uiObject = UiScrollable(uiSelector)
+                Log.e("ListItemCount","Count "+uiObject.childCount)
+
+                if (uiObject.exists()){
+                    if(uiObject.childCount==0){
+                        uiObject.click()
+                    }else{
+                        val item: UiObject = uiObject.getChild(UiSelector()
+                            .className(itemClassname).instance(itemSearchIndex))
+                        if(item.exists()) {
+                            item.getChild(UiSelector()
+                                .className(itemClassname).instance(itemSearchIndex))
+                                .clickAndWaitForNewWindow(200)
+
+                            //item.dragTo(item,200)
+                        }
+                    }
+
+                }
+            }
 
 
-
-        return true
+            return true
+        } catch (e: Exception) {
+            Log.e("Helper", " exception ${e.message}")
+            false
+        }
     }
-
 
 }
 

@@ -3,7 +3,7 @@ package com.marquistech.quickautomationlite.testcases.email
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
-import com.marquistech.quickautomationlite.helpers.core.GmailHelper
+import com.marquistech.quickautomationlite.helpers.mail.GmailHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
 /**

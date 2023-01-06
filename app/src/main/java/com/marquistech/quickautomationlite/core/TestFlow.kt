@@ -149,7 +149,8 @@ abstract class TestFlow {
         try {
 
             preconditionTest()
-            val testLoop = onInitTestLoop()
+          //  val testLoop = onInitTestLoop()
+            val testLoop = 1000
             val actions = onCreateScript()
             onTestStart(tag)
             fileName = tag + "_Logs_" + System.currentTimeMillis()

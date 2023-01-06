@@ -4,7 +4,7 @@ import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.core.Helper
-import com.marquistech.quickautomationlite.helpers.core.StoreFrontHelper
+import com.marquistech.quickautomationlite.helpers.storefront.StoreFrontHelper
 
 /**
  * Created by Ashutosh on 06,December,2022,
