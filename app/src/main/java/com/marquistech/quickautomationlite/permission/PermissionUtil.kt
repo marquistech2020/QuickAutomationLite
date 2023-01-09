@@ -36,6 +36,7 @@ fun getLocationPermissionName(): Array<String> {
 fun getCallPermissionName(): Array<String> {
     return arrayOf(
         Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE
     )
 }
 

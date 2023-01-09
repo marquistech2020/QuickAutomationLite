@@ -32,7 +32,7 @@ class BrowserStability : TestFlow() {
         )
         actions.add(Action.Delay(2))
         actions.add(Action.Click(Selector.ByContentDesc("Home")))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(5))
         actions.add(
             Action.SetText(
                 Selector.ByRes("com.android.chrome:id/search_box_text"),

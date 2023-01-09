@@ -37,18 +37,20 @@ class OpenStoreAppDownload :TestFlow() {
                 , testFlag = ""))
         actions.add(Action.Delay(15))
 
-        //For opening the app oppo F19:
-        /*
-        actions.add(Action.ClickListItemByIndex(
-            Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-            0,
-            "android.view.View",
-            6))
-        actions.add(Action.Delay(8))
-        actions.add(Action.SendEvent(EventType.HOME))
 
-         */
-        actions.add(Action.Delay(10))
+
+        //For opening the app oppo F19:
+
+        actions.add(
+            Action.ClickListItemByIndex(
+                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
+                0,
+                "android.view.View",
+                10,
+
+
+                ))
+        actions.add(Action.Delay(5))
         actions.add(Action.SendEvent(EventType.HOME))
         return actions
     }

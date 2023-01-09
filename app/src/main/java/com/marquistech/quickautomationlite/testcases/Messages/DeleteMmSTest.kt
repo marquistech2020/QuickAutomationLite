@@ -10,7 +10,7 @@ class DeleteMmSTest : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 50
     }
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)
@@ -63,7 +63,7 @@ class DeleteMmSTest : TestFlow() {
         actions.add(Action.Click(Selector.ByRes("android:id/button1")))*/
 
         actions.add(Action.Delay(6))
-        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","070110 46214", stepName = "Contact Chat screen open"))
+        actions.add(Action.ClickListItem(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"android.widget.RelativeLayout","092891 82774", stepName = "Contact Chat screen open"))
 
         actions.add(Action.Delay(5))
         actions.add(Action.GetTextListItemByIndex(Selector.ByCls("android.support.v7.widget.RecyclerView"),0,"com.google.android.apps.messaging:id/conversation_message_view",6, stepName = "Received Message Type", testFlag = UtilsClass.Received_MMS_Type))

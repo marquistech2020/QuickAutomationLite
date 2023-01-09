@@ -34,7 +34,7 @@ class MmsSendLargeTextTest ( ) : TestFlow() {
     }
     override fun onInitTestLoop(): Int {
         return 1500
-        return 3
+
     }
 
     override fun onStartIteration(testName: String, count: Int) {

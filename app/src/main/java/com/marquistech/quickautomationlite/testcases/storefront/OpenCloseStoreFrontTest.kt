@@ -14,7 +14,7 @@ class OpenCloseStoreFrontTest : TestFlow() {
         return StoreFrontHelper()
     }
     override fun onInitTestLoop(): Int {
-        return 3
+        return 3000
     }
 
     override fun onCreateScript(): List<Action> {
@@ -24,7 +24,7 @@ class OpenCloseStoreFrontTest : TestFlow() {
         actions.add(Action.SendEvent(EventType.RECENT_APP))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
+         actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps"), stepName = "Play store is open sucessfully"))
         actions.add(Action.Delay(milli = 1000))
         actions.add(Action.SendEvent(EventType.HOME))
         return actions
@@ -99,8 +99,6 @@ class OpenCloseStoreFrontTest : TestFlow() {
 
     override fun onTestEnd(testName: String) {
         StorageHandler.writeXLSFile(reportList, "Open_store_front")
-
-
 
     }
 

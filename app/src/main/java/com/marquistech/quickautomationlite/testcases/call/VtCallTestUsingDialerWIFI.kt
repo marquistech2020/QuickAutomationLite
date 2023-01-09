@@ -21,7 +21,7 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1500
     }
 
     override fun onCreateScript(): List<Action> {
@@ -41,7 +41,7 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = true, stepName = "Enable wifi"))
         actions.add(Action.Delay(1))
-        actions.addAll(dialNoActions("+917011998220".toCharArray(), "com.google.android.dialer:id"))
+        actions.addAll(dialNoActions("+919289229038".toCharArray(), "com.google.android.dialer:id"))
         //actions.addAll(dialNoActions("+919650108704".toCharArray()))
         actions.add(Action.Delay(milli = 500))
         actions.add(
