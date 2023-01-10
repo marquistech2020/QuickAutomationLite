@@ -31,22 +31,19 @@ class VoiceCallTestReceive : TestFlow() {
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
-        actions.add(Action.Delay(20))
-        actions.add(Action.ClickBYCordinate(780, 416))
-        actions.add(Action.Delay(5))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.ClickBYCordinate(PanelArea.RECEIVE_CALL, stepName = "Receive video call"))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Swipe(selector = Selector.ByRes("com.google.android.dialer:id/incoming_call_puck_container"), steps = 10))
+        actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.GetText(
                 Selector.ByRes("com.google.android.dialer:id/contactgrid_bottom_timer"),
                 stepName = "Received voice call"
             )
         )
-        actions.add(Action.Delay(milli = 500))
-        actions.add(
-            Action.Click(
-                Selector.ByContentDesc("End call"),
-                stepName = "Disconnect the call"
-            )
-        )
+
+        actions.add(Action.Delay(10))
 
         return actions
     }

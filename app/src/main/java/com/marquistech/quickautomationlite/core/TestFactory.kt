@@ -1,10 +1,12 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.core
 
 import com.marquistech.quickautomationlite.testcases.wifi.WifiEnbDsb
 import com.marquistech.quickautomationlite.core.TestFlow
 import com.marquistech.quickautomationlite.testcases.email.OpenEmail
 import com.marquistech.quickautomationlite.testcases.email.SendEmail
 import com.marquistech.quickautomationlite.testcases.email.SendEmailAttachment
+import WifiEnbDsb
+import com.marquistech.quickautomationlite.testcases.*
 import com.marquistech.quickautomationlite.testcases.Messages.*
 import com.marquistech.quickautomationlite.testcases.call.*
 import com.marquistech.quickautomationlite.testcases.stability.BrowserStability
@@ -48,6 +50,7 @@ class TestFactory {
         130 -> WifiOnOff()
         131 -> OpenStoreAppDownload()
         132 -> MainScrenAppTest()
+        133 -> VoiceCallTestUsingHistory()
 
         else -> null
     }

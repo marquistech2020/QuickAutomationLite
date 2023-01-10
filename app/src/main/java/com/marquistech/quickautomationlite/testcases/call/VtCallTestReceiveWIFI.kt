@@ -31,15 +31,11 @@ class VtCallTestReceiveWIFI : TestFlow() {
 
         actions.add(Action.SendEvent(EventType.HOME))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SendEvent(EventType.RECENT_APP))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps("Clear all apps from recent"))
-        actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
         actions.add(Action.SetEnable(Type.WIFI, enable = true, stepName = "Enable wifi"))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.ClickBYCordinate(PanelArea.RECEIVE_CALL, stepName = "Receive video call"))
         actions.add(Action.Delay(milli = 500))
-        actions.add(Action.Delay(10))
-        actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
+        actions.add(Action.Swipe(selector = Selector.ByRes("com.google.android.dialer:id/incoming_call_puck_container"), steps = 10))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.GetText(
@@ -47,13 +43,8 @@ class VtCallTestReceiveWIFI : TestFlow() {
                 stepName = "Video call established"
             )
         )
-        actions.add(Action.Delay(5))
-        actions.add(
-            Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
-                stepName = "Disconnect the video call"
-            )
-        )
+
+        actions.add(Action.Delay(10))
 
 
 

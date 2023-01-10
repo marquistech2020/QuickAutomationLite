@@ -31,11 +31,15 @@ class BrowserStability : TestFlow() {
             )
         )
         actions.add(Action.Delay(2))
-        actions.add(Action.Click(Selector.ByContentDesc("Home")))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/home_button")))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/url_bar")))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.Click(Selector.ByText("Search or type web address")))
+        actions.add(Action.Delay(milli = 200))
         actions.add(
             Action.SetText(
-                Selector.ByRes("com.android.chrome:id/search_box_text"),
+                Selector.ByText("Search or type web address"),
                 "http://www.att.com"
             )
         )
@@ -44,6 +48,7 @@ class BrowserStability : TestFlow() {
         actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/menu_button")))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.Click(Selector.ByContentDesc("Bookmark")))
+        actions.add(Action.Delay(milli = 200))
 
         return actions
 
@@ -60,7 +65,7 @@ class BrowserStability : TestFlow() {
             )
         )
         actions.add(Action.Delay(2))
-        actions.add(Action.Click(Selector.ByContentDesc("Home")))
+        actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/home_button")))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/menu_button")))
         actions.add(Action.Delay(milli = 500))
@@ -69,6 +74,7 @@ class BrowserStability : TestFlow() {
         actions.add(Action.Click(Selector.ByText("Mobile bookmarks")))
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.Click(Selector.ByText("www.att.com"), stepName = stepName))
+        actions.add(Action.Delay(10))
         return actions
     }
 
@@ -76,40 +82,42 @@ class BrowserStability : TestFlow() {
     private fun openTopWebSites(stepName: String, website: MutableList<String>): List<Action> {
         val actions = mutableListOf<Action>()
 
-        actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(
-            Action.LaunchApp(
-                AppSelector.ByPkg("com.android.chrome")
-            )
-        )
-        actions.add(Action.Delay(2))
-        actions.add(Action.Click(Selector.ByContentDesc("Home")))
+        actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/home_button")))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/url_bar")))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.Click(Selector.ByText("Search or type web address")))
         actions.add(Action.Delay(milli = 200))
         website.forEach {
             if (website.indexOf(it) == 0) {
                 actions.add(
                     Action.SetText(
-                        Selector.ByRes("com.android.chrome:id/search_box_text"),
+                        Selector.ByText("Search or type web address"),
                         it
                     )
                 )
                 actions.add(Action.Delay(milli = 200))
                 actions.add(Action.SendEvent(EventType.ENTER,stepName = "$stepName launching $it"))
-                actions.add(Action.Delay(5))
+                actions.add(Action.Delay(10))
 
             } else {
+                actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/menu_button")))
+                actions.add(Action.Delay(milli = 200))
                 actions.add(Action.Click(Selector.ByContentDesc("New tab")))
+                actions.add(Action.Delay(milli = 200))
+                actions.add(Action.Click(Selector.ByRes("com.android.chrome:id/url_bar")))
+                actions.add(Action.Delay(milli = 200))
+                actions.add(Action.Click(Selector.ByText("Search or type web address")))
                 actions.add(Action.Delay(milli = 200))
                 actions.add(
                     Action.SetText(
-                        Selector.ByRes("com.android.chrome:id/search_box_text"),
+                        Selector.ByText("Search or type web address"),
                         it
                     )
                 )
                 actions.add(Action.Delay(milli = 200))
                 actions.add(Action.SendEvent(EventType.ENTER,stepName = "$stepName launching $it"))
-                actions.add(Action.Delay(5))
+                actions.add(Action.Delay(10))
 
             }
 
@@ -122,6 +130,12 @@ class BrowserStability : TestFlow() {
     override fun onCreateScript(): List<Action> {
         val actions = mutableListOf<Action>()
 
+        actions.add(Action.SendEvent(EventType.HOME))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.SendEvent(EventType.RECENT_APP))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.ClearRecentApps("Clear all apps from recent"))
+        actions.add(Action.Delay(milli = 500))
         actions.addAll(navigateToLink("Navigate to a link"))
 
         val websites = mutableListOf(

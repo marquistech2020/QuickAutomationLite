@@ -5,6 +5,7 @@ import com.marquistech.quickautomationlite.data.StorageHandler
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.data.reports.Report
 import com.marquistech.quickautomationlite.helpers.call.CallHelper
+import com.marquistech.quickautomationlite.helpers.core.CordinateHelper
 import com.marquistech.quickautomationlite.helpers.core.Helper
 
 class VtCallTestReceive : TestFlow() {
@@ -26,15 +27,12 @@ class VtCallTestReceive : TestFlow() {
         val actions = mutableListOf<Action>()
 
         actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.SendEvent(EventType.RECENT_APP))
-        actions.add(Action.Delay(milli = 500))
-        actions.add(Action.ClearRecentApps("Clear all apps from recent"))
-        actions.add(Action.SendEvent(EventType.HOME))
-        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Delay(milli = 200))
         actions.add(Action.SetEnable(Type.WIFI, enable = false, stepName = "Disable wifi"))
-        actions.add(Action.Delay(20))
-        actions.add(Action.ClickBYCordinate(780, 416, stepName = "Receive video call"))
+        actions.add(Action.Delay(milli = 200))
+        actions.add(Action.ClickBYCordinate(PanelArea.RECEIVE_CALL, stepName = "Receive video call"))
+        actions.add(Action.Delay(milli = 500))
+        actions.add(Action.Swipe(selector = Selector.ByRes("com.google.android.dialer:id/incoming_call_puck_container"), steps = 10))
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.GetText(
@@ -42,13 +40,8 @@ class VtCallTestReceive : TestFlow() {
                 stepName = "Video call established"
             )
         )
-        actions.add(Action.Delay(milli = 500))
-        actions.add(
-            Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
-                stepName = "Disconnect the video call"
-            )
-        )
+
+        actions.add(Action.Delay(10))
 
         return actions
     }

@@ -12,13 +12,12 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.telecom.TelecomManager
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.Until
+import androidx.test.uiautomator.*
 import com.google.android.gms.location.*
 import com.marquistech.quickautomationlite.callbacks.ResultCompleteCallback
 import com.marquistech.quickautomationlite.core.*
@@ -35,6 +34,7 @@ open class Helper {
     val context: Context
     val uiDevice: UiDevice
     var tag: String
+    //val callStateListener = CallStateListener()
     private val fusedLocationClient: FusedLocationProviderClient
 
 
@@ -61,6 +61,21 @@ open class Helper {
             wifiManager.isWifiEnabled.not()
         }
 
+    }
+
+    @Suppress("DEPRECATION")
+    private fun changePhoneStateListener(register: Boolean): Boolean {
+        /*val telephony = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
+        if (register) {
+            telephony.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+            writeLog(tag, "changePhoneStateListener register")
+        } else {
+            telephony.listen(callStateListener, PhoneStateListener.LISTEN_NONE)
+            writeLog(tag, "changePhoneStateListener unregister")
+        }*/
+
+        return true
     }
 
 
@@ -159,26 +174,46 @@ open class Helper {
         }
     }
 
-    open fun performSwipe(coordinate: Coordinate, steps: Int): Boolean {
-        return uiDevice.swipe(
-            coordinate.startX,
-            coordinate.startY,
-            coordinate.endX,
-            coordinate.endY,
-            steps
-        )
+    open fun performSwipe(coordinate: Coordinate?, selector: Selector?, steps: Int): Boolean {
+
+        coordinate?.let {
+            return uiDevice.swipe(
+                coordinate.startX,
+                coordinate.startY,
+                coordinate.endX,
+                coordinate.endY,
+                steps
+            )
+        }
+
+        return false
     }
 
     open fun performSwitch(selector: Selector): Boolean {
         return false
     }
-    open fun performListItemClickByText(selector: Selector, position: Int, itemClassname:String, itemSearch:String, testFlagName:String = ""): Boolean {
+
+    open fun performListItemClickByText(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearch: String,
+        testFlagName: String = ""
+    ): Boolean {
         return false
     }
-    open fun performListItemClickByIndex(selector: Selector, position: Int,itemClassname:String,itemSearchIndex:Int,testFlag:String = ""): Boolean {
+
+    open fun performListItemClickByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlag: String = ""
+    ): Boolean {
         return false
     }
-    open fun dateFormate(dateStr:String): Date? {
+
+    open fun dateFormate(dateStr: String): Date? {
         val knownPatterns: MutableList<SimpleDateFormat> = ArrayList<SimpleDateFormat>()
         knownPatterns.add(SimpleDateFormat("MM/d/yy, HH:mm a"))
         knownPatterns.add(SimpleDateFormat("MM/dd/yy, HH:mm a"))
@@ -208,23 +243,51 @@ open class Helper {
 
         return null
     }
-    fun performListItemEvent(listItemEvent: ListItemEvent ,uiObject: UiObject,steps: Int): Boolean {
+
+    fun performListItemEvent(
+        listItemEvent: ListItemEvent,
+        uiObject: UiObject,
+        steps: Int
+    ): Boolean {
         return when (listItemEvent) {
             ListItemEvent.Click ->
                 uiObject.click()
-            ListItemEvent.DRAG -> uiObject.dragTo(uiObject,steps)
+            ListItemEvent.DRAG -> uiObject.dragTo(uiObject, steps)
 
         }
     }
-    open fun performListItemGetTextByIndex(selector: Selector, position: Int, itemClassname:String, itemSearchIndex:Int, testFlagName:String): String {
+
+    open fun performListItemGetTextByIndex(
+        selector: Selector,
+        position: Int,
+        itemClassname: String,
+        itemSearchIndex: Int,
+        testFlagName: String
+    ): String {
         return ""
     }
-    fun performClickByCordinate(x: Int, y: Int): Boolean {
-        return uiDevice.click(x, y)
+
+    fun performClickByCordinate(panelArea: PanelArea): Boolean {
+
+        var x = -1
+        var y = -1
+
+        when (panelArea) {
+            PanelArea.RECEIVE_CALL -> {
+                x = uiDevice.displayWidth / 2
+                y = uiDevice.displayHeight / 10
+            }
+        }
+
+        if (x != -1 && y != -1) {
+            return uiDevice.click(x, y)
+        }
+
+        return false
     }
 
     @SuppressLint("MissingPermission")
-      fun performActionUsingShell(command: String): Boolean {
+    fun performActionUsingShell(command: String): Boolean {
 
         var result = false
 
@@ -243,6 +306,7 @@ open class Helper {
     fun performEnable(type: Type, enable: Boolean): Boolean {
         return when (type) {
             Type.WIFI -> changeWifiSetting(enable)
+            Type.LISTEN_CALL -> changePhoneStateListener(enable)
         }
     }
 
@@ -318,8 +382,8 @@ open class Helper {
 
     }
 
-    fun waitDevice(time:Long){
-        uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")),time)
+    fun waitDevice(time: Long) {
+        uiDevice.wait(Until.hasObject(By.text("aaaaaaaaaa")), time)
     }
 
     open fun performSwitchApp(loop: Int, endToPackage: String): Boolean {
@@ -330,14 +394,36 @@ open class Helper {
         return false
     }
 
-    fun wakeDevice(){
+    fun wakeDevice() {
         try {
             uiDevice.wakeUp()
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
         }
     }
 
+
+    /**
+     * Listener to detect phone states
+     */
+    @Suppress("DEPRECATION")
+    class CallStateListener : PhoneStateListener() {
+        @SuppressLint("MissingPermission")
+        override fun onCallStateChanged(state: Int, phoneNumber: String) {
+            super.onCallStateChanged(state, phoneNumber)
+            when (state) {
+                TelephonyManager.CALL_STATE_IDLE -> {
+                    writeLog("CallStateListener", "IDLE")
+                }
+                TelephonyManager.CALL_STATE_OFFHOOK -> {
+                    writeLog("CallStateListener", "OFFHOOK")
+                }
+                TelephonyManager.CALL_STATE_RINGING -> {
+                    writeLog("CallStateListener", "Ringing")
+                }
+            }
+        }
+    }
 
 }
 
