@@ -208,7 +208,7 @@ abstract class TestFlow {
             }
             is Action.ClickBYCordinate -> {
                 writeLog(tag, "ClickByAxis")
-                val isDone = helper.performClickByCordinate(action.x, action.y)
+                val isDone = helper.performClickByCordinate(action.panelArea)
                 actionClickByCoordinateResult(count, isDone, action.stepName)
                 StorageHandler.createTestCaseLogFile(
                     count,
@@ -304,7 +304,7 @@ abstract class TestFlow {
 
             is Action.Swipe -> {
                 writeLog(tag, "Swipe")
-                val isDone = helper.performSwipe(action.coordinate, action.steps)
+                val isDone = helper.performSwipe(action.coordinate,action.selector, action.steps)
                 actionSwipeResult(count, isDone, action.stepName)
                 StorageHandler.createTestCaseLogFile(
                     count,

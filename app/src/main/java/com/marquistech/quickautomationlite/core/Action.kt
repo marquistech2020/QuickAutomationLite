@@ -10,7 +10,7 @@ sealed class Action {
         var stepName: String = ""
     ) : Action()
 
-    data class Swipe(val coordinate: Coordinate, val steps: Int, var stepName: String = "") :
+    data class Swipe(var coordinate: Coordinate? = null,val steps: Int,var stepName: String = "",var selector: Selector? = null) :
         Action()
 
     data class Drag(val coordinate: Coordinate, val steps: Int, var stepName: String = "") :
@@ -53,7 +53,7 @@ sealed class Action {
     ) : Action()
 
     data class ClearRecentApps(val stepName: String = "") : Action()
-    data class ClickBYCordinate(val x: Int, val y: Int, var stepName: String = "") : Action()
+    data class ClickBYCordinate(val panelArea: PanelArea, var stepName: String = "") : Action()
     data class SendAdbCommand(val command: String, var stepName: String = "") : Action()
     data class SetEnable(val type: Type, val enable: Boolean, var stepName: String = "") : Action()
     data class SwitchToEachApp(
@@ -96,7 +96,11 @@ enum class ListItemEvent {
 }
 
 enum class Type {
-    WIFI
+    WIFI,LISTEN_CALL
+}
+
+enum class PanelArea {
+    RECEIVE_CALL
 }
 
 enum class ScrollDirection {

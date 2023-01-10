@@ -67,7 +67,7 @@ class VtCallTestUsingDialerWIFI : TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(
             Action.Click(
-                Selector.ByRes("com.google.android.dialer:id/videocall_end_call"),
+                Selector.ByContentDesc("End call"),
                 stepName = "Disconnect the call"
             )
         )

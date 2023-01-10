@@ -1,11 +1,16 @@
 package com.marquistech.quickautomationlite.helpers.call
 
-import android.os.Build
+import android.annotation.SuppressLint
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
+import android.text.TextUtils
 import androidx.test.uiautomator.*
+import com.marquistech.quickautomationlite.core.Coordinate
 import com.marquistech.quickautomationlite.core.ScrollDirection
 import com.marquistech.quickautomationlite.core.Selector
 import com.marquistech.quickautomationlite.data.StorageHandler.writeLog
 import com.marquistech.quickautomationlite.helpers.core.Helper
+import java.util.*
 
 open class CallHelper : Helper() {
 
@@ -18,7 +23,7 @@ open class CallHelper : Helper() {
         val width = uiDevice.displayWidth
         val height = uiDevice.displayHeight
 
-        if (uiObject.exists().not()){
+        if (uiObject.exists().not()) {
             uiObject = uiDevice.findObject(UiSelector().className("android.widget.ScrollView"))
         }
 
@@ -315,6 +320,54 @@ open class CallHelper : Helper() {
 
     }
 
+    override fun performSwipe(coordinate: Coordinate?, selector: Selector?, steps: Int): Boolean {
+
+        coordinate?.let {
+            return uiDevice.swipe(
+                coordinate.startX,
+                coordinate.startY,
+                coordinate.endX,
+                coordinate.endY,
+                steps
+            )
+        }
+
+        var result = false
+
+        selector?.let {
+
+            var uiSelector: UiSelector? = null
+
+            when (selector) {
+                is Selector.ByCls -> {
+                    uiSelector = UiSelector().className(selector.clsName)
+                }
+                is Selector.ByPkg -> {
+                    uiSelector = UiSelector().packageName(selector.pkgName)
+                }
+                is Selector.ByRes -> {
+                    uiSelector = UiSelector().resourceId(selector.resName)
+                }
+                is Selector.ByText -> {
+                    uiSelector = UiSelector().text(selector.text)
+                }
+                is Selector.ByContentDesc -> {
+                    uiSelector = UiSelector().descriptionContains(selector.contentDesc)
+                }
+            }
+
+            uiSelector.let {
+                val uiObject = uiDevice.findObject(uiSelector)
+
+                if (uiObject.exists()) {
+                    result = uiObject.swipeUp(steps)
+                }
+            }
+        }
+
+        return result
+    }
+
 
     fun testWatcher() {
 
@@ -336,6 +389,7 @@ open class CallHelper : Helper() {
         uiDevice.runWatchers()
 
     }
+
 
 
 }

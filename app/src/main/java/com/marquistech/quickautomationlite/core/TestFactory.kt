@@ -1,7 +1,7 @@
-package com.marquistech.quickautomationlite.testcases
+package com.marquistech.quickautomationlite.core
 
 import WifiEnbDsb
-import com.marquistech.quickautomationlite.core.TestFlow
+import com.marquistech.quickautomationlite.testcases.*
 import com.marquistech.quickautomationlite.testcases.Messages.*
 import com.marquistech.quickautomationlite.testcases.call.*
 import com.marquistech.quickautomationlite.testcases.stability.BrowserStability
@@ -41,6 +41,7 @@ class TestFactory {
         128 -> SendEmailAttachment()
         129 -> WifiEnbDsb()
         130 -> WifiOnOff()
+        133 -> VoiceCallTestUsingHistory()
 
         else -> null
     }
