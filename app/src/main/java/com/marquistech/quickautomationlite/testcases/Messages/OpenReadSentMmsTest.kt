@@ -11,7 +11,7 @@ class OpenReadSentMmsTest : TestFlow() {
 
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 800
     }override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 5)
     }
@@ -69,7 +69,7 @@ class OpenReadSentMmsTest : TestFlow() {
                 Selector.ByCls("android.support.v7.widget.RecyclerView"),
                 0,
                 "android.widget.RelativeLayout",
-                "070110 46214"
+                "077999 52285"
                 , stepName = "Open Chat Window","")
         )
         actions.add(Action.Delay(3))

@@ -33,7 +33,14 @@ class VoiceCallTestUsingHistory : TestFlow() {
         actions.add(Action.Click(Selector.ByRes("com.google.android.dialer:id/tab_call_history")));
         actions.add(Action.Delay(1))
         actions.add(Action.Click(Selector.ByRes("com.google.android.dialer:id/call_button"), stepName = "Initiate the voice call"))
-        actions.add(Action.Delay(5))
+        actions.add(Action.Delay(2))
+        actions.add(
+            Action.GetText(
+                Selector.ByRes("com.google.android.dialer:id/contactgrid_bottom_timer"),
+                stepName = "Call received by other side"
+            )
+        )
+        actions.add(Action.Delay(10))
         actions.add(
             Action.Click(
                 Selector.ByContentDesc("End call"),
@@ -49,7 +56,7 @@ class VoiceCallTestUsingHistory : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1000
     }
 
     override fun onStartIteration(testName: String, count: Int) {

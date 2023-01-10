@@ -48,6 +48,8 @@ class TestFactory {
         130 -> WifiOnOff()
         131 -> OpenStoreAppDownload()
         132 -> MainScrenAppTest()
+        133-> VoiceCallTestUsingHistory()
+        134-> StorefrontStability()
 
         else -> null
     }

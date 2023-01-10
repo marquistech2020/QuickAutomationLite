@@ -10,7 +10,7 @@ class DeleteMmSTest : TestFlow() {
     private var report: Report? = null
 
     override fun onInitTestLoop(): Int {
-        return 50
+        return 100
     }
     override fun onStartIteration(testName: String, count: Int) {
         report = Report(count, 4)

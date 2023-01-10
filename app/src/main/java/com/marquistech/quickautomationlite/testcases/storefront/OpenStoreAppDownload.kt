@@ -1,4 +1,4 @@
-package com.marquistech.quickautomationlite.testcases.storefront
+package com.marquistech.quickautomationlite.testcases
 
 import com.marquistech.quickautomationlite.core.*
 import com.marquistech.quickautomationlite.data.StorageHandler
@@ -15,7 +15,7 @@ class OpenStoreAppDownload :TestFlow() {
     }
 
     override fun onInitTestLoop(): Int {
-        return 2
+        return 1000
     }
 
     override fun onCreateScript(): List<Action> {
@@ -26,31 +26,23 @@ class OpenStoreAppDownload :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme"), stepName = "Browse-me App is open Sucessfully"))
-       // for installing the app oppo F19 :
-        actions.add(
-            Action.ClickListItemByIndex(
-                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-                0,
-                "android.view.View",
-                7,
-                stepName = "App is open sucessfully"
-                , testFlag = ""))
+        // for installing the app oppo F19 :
+        actions.add(Action.Click(Selector.ByContentDesc("Open")))
+
         actions.add(Action.Delay(15))
 
-
-
         //For opening the app oppo F19:
+        /*
+        actions.add(Action.ClickListItemByIndex(
+            Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
+            0,
+            "android.view.View",
+            6))
+        actions.add(Action.Delay(8))
+        actions.add(Action.SendEvent(EventType.HOME))
 
-        actions.add(
-            Action.ClickListItemByIndex(
-                Selector.ByCls("androidx.compose.ui.platform.ComposeView"),
-                0,
-                "android.view.View",
-                10,
+         */
 
-
-                ))
-        actions.add(Action.Delay(5))
         actions.add(Action.SendEvent(EventType.HOME))
         return actions
     }

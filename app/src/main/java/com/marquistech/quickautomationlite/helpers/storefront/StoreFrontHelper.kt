@@ -60,6 +60,9 @@ class StoreFrontHelper : Helper() {
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
                 }
+                is Selector.ByContentDesc -> {
+                    uiSelector = UiSelector().descriptionContains(selector.contentDesc)
+                }
                 else -> {}
             }
             var isClicked = false
@@ -162,6 +165,9 @@ class StoreFrontHelper : Helper() {
                 }
                 is Selector.ByText -> {
                     uiSelector = UiSelector().text(selector.text)
+                }
+                is Selector.ByContentDesc -> {
+                    uiSelector = UiSelector().descriptionContains(selector.contentDesc)
                 }
                 else -> {}
             }

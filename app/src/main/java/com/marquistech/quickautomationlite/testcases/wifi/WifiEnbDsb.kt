@@ -55,7 +55,6 @@ class WifiEnbDsb : TestFlow() {
             Action.SetText(
                 Selector.ByText("Hotspot name(required)"),
                 "Android-Wifi"
-
             )
 
 

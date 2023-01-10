@@ -30,14 +30,18 @@ class OpenStoreFrontAppInUnRealmeTest :TestFlow() {
         actions.add(Action.Delay(milli = 500))
         actions.add(Action.ClearRecentApps("Clear all Apps from Recent"))
         // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
-       // actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
+        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
         actions.add(Action.Delay(5))
-        actions.add(Action.Click(Selector.ByText("Install")))
-        actions.add(Action.Delay(10))
-        actions.add(Action.Click(Selector.ByText("OK")))
+        actions.add(Action.Click(Selector.ByContentDesc("Install")))
+        actions.add(Action.Delay(20))
+         actions.add(Action.Click(Selector.ByRes("com.realme.securitycheck:id/finish")))
         actions.add(Action.Delay(3))
-        actions.add(Action.Click(Selector.ByText("Uninstall")))
+        actions.add(Action.Click(Selector.ByContentDesc("Open")))
+        actions.add(Action.Delay(10))
+        actions.add(Action.LaunchApp(AppSelector.ByUri("http://play.google.com/store/apps/details?id=com.snehitech.browseme")))
+        actions.add(Action.Click(Selector.ByContentDesc("Uninstall")))
         actions.add(Action.Delay(1))
+        actions.add(Action.Click(Selector.ByContentDesc("Uninstall")))
 
 
         actions.add(Action.ClickListItemByIndex(
